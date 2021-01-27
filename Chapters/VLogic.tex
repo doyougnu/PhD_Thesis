@@ -1,0 +1,207 @@
+\label{sec:vlogic}
+
+In this section, we present the logic of variational satisfiability problems.
+%
+The logic is a conservative extension of classic two-valued logic (\pl{})
+with a \emph{choice} construct from the choice
+calculus~\cite{EW11tosem,Walk13thesis}, a formal language for describing
+variation. We call the new logic \vpl{}, short for variational propositional
+logic, and refer to \vpl{} expressions as \emph{variational formulas}.
+%
+This section defines the syntax and semantics of \vpl{} and uses it to encode
+the example from Section~\ref{sec:bkgrnd}.
+
+
+\begin{figure}
+  \begin{subfigure}[t]{\linewidth}
+    \centering
+    \input{Figures/Vsat_Logic_syntax}
+    \caption{Syntax of \vpl{}.}%
+    \label{fig:cc:stx}
+  \end{subfigure}
+%
+  \begin{subfigure}[t]{\linewidth}
+    \input{Figures/Vsat_Logic_semantics}
+    \centering
+    \caption{Configuration semantics of \vpl{}.}%
+    \label{fig:cc:cfg}
+  \end{subfigure}
+%
+  \begin{subfigure}[t]{\linewidth}
+    \input{Figures/Vsat_Logic_laws}
+    \centering
+    \caption{\vpl{} equivalence laws}%
+    \label{fig:cc:eqv}
+  \end{subfigure}
+\caption{Formal definition of \vpl{}.}%
+\label{fig:cc}
+\end{figure}
+%
+
+\paragraph{Syntax}
+%
+The syntax of variational propositional logic is given in
+Figure~\ref{fig:cc:stx}. It extends the propositional formula notation of \pl{}
+with a single new connective called a \emph{choice} from the choice calculus.
+%
+A choice $\chc[D]{f_1,f_2}$ represents either $f_1$ or $f_2$ depending on the
+Boolean value of its \emph{dimension} $D$. We call $f_1$ and $f_2$ the
+\emph{alternatives} of the choice.
+%
+Although dimensions are Boolean variables, the set of dimensions is disjoint
+from the set of variables from \pl{}, which may be referenced in the leaves of
+a formula. We use lowercase letters to range over variables and uppercase
+letters for dimensions.
+
+The syntax of \vpl{} does not include derived logical connectives, such as
+$\rightarrow$ and $\leftrightarrow$. However, such forms can be defined
+  from other primitives and are assumed throughout the paper.
+
+\paragraph{Semantics}
+%
+Conceptually, a variational formula represents several propositional logic
+formulas at once, which can be obtained by resolving all of the choices. For
+software product-line researchers, it is useful to think of \vpl{} as analogous
+to \cpp{ifdef}-annotated \pl{}, where choices correspond to a
+disciplined~\cite{LKA:AOSD11} application of \cpp{ifdef} annotations.
+%
+From a logical perspective, following the many-valued logic of
+Kleene~\cite{kleene1968introduction,Rescher1969-RESML}, the intuition behind
+\vpl{} is that a choice is a placeholder for two equally possible alternatives
+that is deterministically resolved by reference to an external environment.
+%
+In this sense, \vpl{} deviates from other many-valued logics, such as modal
+logic~\cite{sep-logic-modal}, because a choice \emph{waits} until there is
+enough information to choose an alternative (i.e., until the formula is
+\emph{configured}).
+
+
+The \emph{configuration semantics} of \vpl{} is given in
+Figure~\ref{fig:cc:cfg} and describes how choices are eliminated from a
+formula. The semantics is parameterized by a \emph{configuration}\ $C$, which is
+a partial function from dimensions to Boolean values.
+%
+The first four cases of the semantics simply propagate configuration down the
+formula, terminating at the leaves. The case for choices is the interesting one:
+if the dimension of the choice is defined in the configuration, then the choice
+is replaced by its left or right alternative corresponding to the associated
+value of the dimension in the configuration. If the dimension is undefined in
+the configuration, then the choice is left intact and configuration propagates
+into the choice's alternatives.
+
+
+If a configuration $C$ eliminates all choices in a formula $f$, we call $C$
+\emph{total} with respect to $f$. If $C$ does \emph{not} eliminate all choices
+in $f$ (i.e., a dimension used in $f$ is undefined in $C$), we call $C$
+\emph{partial} with respect to $f$.
+%
+We call a choice-free formula \emph{plain}, and call the set of all plain
+formulas that can be obtained from $f$ (by configuring it with every possible
+total configuration) the \emph{variants} of $f$.
+
+
+To illustrate the semantics of \vpl{}, consider the formula
+$p\wedge\chc[A]{q,r}$, which has two variants: $p\wedge q$ when $C(A)=\true$
+and $p\wedge r$ when $C(A)=\false$.
+%
+From the semantics, it follows that choices in the same dimension are
+\emph{synchronized} while choices in different dimensions are
+\emph{independent}. For example, $\chc[A]{p,q}\wedge\chc[B]{r,s}$ has four
+variants, while $\chc[A]{p,q}\wedge\chc[A]{r,s}$ has only two ($p\wedge r$ and
+$q\wedge s$).
+%
+It also follows from the semantics that nested choices in the same dimension
+contain redundant alternatives; that is, inner choices are \emph{dominated} by
+outer choices in the same dimension. For example, $\chc[A]{p,\chc[A]{r,s}}$ is
+equivalent to $\chc[A]{p,s}$ since the alternative $r$ cannot be reached by any
+configuration.
+%
+As the previous example illustrates, the representation of a \vpl{} formula is
+not unique; that is, the same set of variants may be encoded by different
+formulas. Figure~\ref{fig:cc:eqv} defines a set of equivalence laws for
+\vpl{} formulas. These laws follow directly from the configuration semantics in
+Figure~\ref{fig:cc:cfg} and can be used to derive semantics-preserving
+transformations of \vpl{} formulas.
+%
+For example, we can simplify the formula $\chc[A]{p\vee q, p\vee r}$ by first
+applying the \rn{Or} law to obtain $\chc[A]{p,p}\vee\chc[A]{q,r}$, then applying
+the \rn{Idemp} law to the first argument to obtain $p\vee\chc[A]{q,r}$ in which
+the redundant $p$ has been factored out of the choice.
+%
+\paragraph{Running example}
+To demonstrate the application of \vpl{}, we encode the evolving Linux kernel
+feature model from the background as a variational formula. Recall that
+variation in this domain arises from changes in the logical structure of the
+feature model between kernel versions. Our goal is to construct a single
+variational formula that encodes the set of all feature models as variants.
+Ideally, this variational formula should also maximize sharing among the feature
+models in order to avoid redundant analysis later.
+
+Every set of plain formulas can be encoded as a variational formula
+systematically by first constructing a nested choice containing all of the
+individual variables as alternatives, then factoring out shared subexpressions
+by applying the laws in Figure~\ref{fig:cc:eqv}. For sets of feature models this would
+correspond to a nested choice containing all of the individual feature models as
+alternatives, then factoring out commonalities in the variational formula.
+%
+Unfortunately, the process of globally minimizing a variational formula in this
+way is hard\footnote{We hypothesize that it is equivalent to BDD minimization,
+which is NP-complete, but the equivalence has not been proved;
+see~\cite{Walk14onward}.} since often we must apply an arbitrary number of laws
+right-to-left in order to set up a particular sequence of left-to-right
+applications that factor out commonalities.
+
+Due to the difficulty of minimization, we instead demonstrate how one can build
+such a formula \emph{incrementally}.
+%
+Our variational formula will use the dimensions $\Lx{1},\ldots,\Lx{n}$ to refer
+to changes introduced in the feature model in the corresponding version of the Linux
+kernel.
+%
+We begin by combining \FM{0} and \FM{2} since the differences between the two
+are smaller than between other pairs of feature models in our example. Feature
+models may be combined in any order as long as the variants in the resulting
+formula correspond to their plain counterparts. The only change between \FM{0}
+and \FM{2} is the addition of $\kf{mitigations}$ and is captured by a choice in
+dimension \Lx{2}. The change is nested in the left alternative so that it will
+be included for any configuration where \Lx{2} is \true. This yields the
+following variational formula.
+%
+\begin{equation*}
+  f_{\FM{02}} =
+  \chc[\Lx{2}]{\Fmitigate,\tru}
+  \leftrightarrow c_{0.0} \wedge c_{1} \wedge \ldots \wedge c_{n}
+\end{equation*}
+%
+%
+We exploit the fact that $\wedge$ forms a monoid with \tru{} to recover a
+formula equivalent to \FM{0} for configurations where \Lx{2} is \false.
+
+Next we combine $f_{\text{\FM{02}}}$ with \FM{1} to obtain a variational formula
+that captures the feature models of versions \Lx{0}, \Lx{1}, and \Lx{2}. As
+before, every change in \FM{1} is wrapped in a choice in dimension \Lx{1}. The
+choice in \Lx{2} is nested in the right alternative of a choice in \Lx{1}
+because that change is not present in \Lx{1}:
+%
+\begin{align*}
+  f_{\FM{012}}
+    &= \chc[\Lx{1}]{(\Fspectre \vee \Flone),
+         \chc[\Lx{2}]{\Fmitigate,\tru}} \\
+    &\quad \leftrightarrow
+      \chc[\Lx{1}]{(c_{0.0} \wedge (\Fnospec \rightarrow f_j), c_{0.0}} \\
+    &\quad \wedge
+      \chc[\Lx{1}]{c_{1.0},\tru} \wedge c_1 \wedge
+        \chc[\Lx{1}]{(\Fpti \rightarrow c_{i.1}), \tru} \wedge \ldots \wedge c_{n}
+\end{align*}
+%
+%
+Now that we have constructed the variational formula we need to ensure that it
+encodes all variants of interest and nothing else. In this example, this is
+relatively easy to confirm by enumerating all total configurations involving
+\Lx{1} and \Lx{2}. However, we'll return to the general case in the discussion
+of variational models in Section~\ref{sec:impl}.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../main"
+%%% End:

@@ -1,0 +1,14 @@
+\begin{syntax}
+  t & \Coloneqq{} & r \quad|\quad \tru{} \quad|\quad \fls{}
+  & \textit{Variables and Boolean literals} \\
+  \otimes & \Coloneqq{} & < \,\;|\;\; \leq \;\:\,|\;\; \geq \,\;|\;\;  > \,\;|\  \equiv & \emph{Binary relations}\\
+  [1.5ex]
+
+
+  f & \Coloneqq{} & t    & \textit{Terminal} \\
+  & | & \neg{} f       & \textit{Negate} \\
+  & | & f \vee{} f     & \textit{Or} \\
+  & | & f \wedge{} f   & \textit{And} \\
+  & | & ar \otimes{} ar  & \emph{Integer comparisons} \\
+  & | & \chc[D]{f,f} & \textit{Choice} \\
+\end{syntax}

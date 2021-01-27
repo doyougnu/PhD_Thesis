@@ -1,0 +1,15 @@
+\begin{subfigure}[t]{\textwidth}
+  \begin{tabbing}
+  \qquad \= $\_Sat \rightarrow (\neg \AV{} \wedge \neg \BV{}) \vee (\neg \AV{} \wedge \BV{}) \vee (\AV{} \wedge \neg \BV{}) \vee (\AV{} \wedge \BV)$ \\
+  \> \iV{}\quad\hspace{1.7ex}\=$\rightarrow$ ($\kf{ite}$ ($\AV{} \wedge \BV{}$)\; \=0 \\
+  \> \> \> ($\kf{ite}$\; ($\AV{} \wedge \neg \BV{}$)\; \=0 \\
+  \> \> \> \> ($\kf{ite}$\; ($\neg \AV{} \wedge \neg \BV{}$)\; -1 $\kf{Und}$))) \\
+
+  \> \cV{}\quad\hspace{1.7ex}\=$\rightarrow$ ($\kf{ite}$ ($\AV{} \wedge \BV{}$)\; \=0 \\
+  \> \> \> ($\kf{ite}$\; ($\AV{} \wedge \neg \BV{}$)\; \=1 \\
+  \> \> \> \> ($\kf{ite}$\; ($\neg \AV{} \wedge \neg \BV{}$)\; 0 $\kf{Und}$))) \\
+
+  \> \aV{}\quad\hspace{1.7ex}\=$\rightarrow$ ($\kf{ite}$ ($\neg \AV{} \wedge \BV{}$)\; \tru{} $\kf{Und}$)\\
+  \> \bV{}\quad\hspace{1.7ex}\=$\rightarrow$ ($\kf{ite}$ ($\AV{} \wedge \BV{}$)\; -10 $\kf{Und}$)
+\end{tabbing}
+\end{subfigure}

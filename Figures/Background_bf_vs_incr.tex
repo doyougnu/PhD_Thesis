@@ -1,12 +1,11 @@
 \begin{figure}[h]
   \begin{subfigure}[t]{.45\textwidth}
-    \vskip 0pt
     \input{Figures/Background_brute_force_flow}
     \caption{Brute force procedure, no reuse between solver calls.}%
     \label{fig:bkg:bf}
   \end{subfigure}%
+  \vfill
   \begin{subfigure}[t]{.45\textwidth}
-    \vskip 0pt
     \input{Figures/Background_incr_flow}
     \caption{Incremental procedure, reuse defined by pop and push calls.}%
       % sat calls share state that is determined by }
