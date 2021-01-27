@@ -1,0 +1,35 @@
+\begin{align*}
+  \chc[D]{f,f}
+    & \equiv f
+    & \rn{Idemp} \\
+  \chc[D]{\chc[D]{f_1,f_2},f_3}
+    & \equiv \chc[D]{f_1,f_3}
+    & \rn{Dom-L} \\
+  \chc[D]{f_1,\chc[D]{f_2,f_3}}
+    & \equiv \chc[D]{f_1,f_3}
+    & \rn{Dom-R} \\
+  \chc[D_1]{\chc[D_2]{f_1,f_2},\chc[D_2]{f_3,f_4}}
+    & \equiv \chc[D_2]{\chc[D_1]{f_1,f_3},\chc[D_1]{f_2,f_4}}
+    & \rn{Swap} \\
+  \chc[D]{\neg f_1,\neg f_2}
+    & \equiv \neg\chc[D]{f_1,f_2}
+    & \rn{Neg} \\
+  \chc[D]{f_1\vee f_3,\;f_2\vee f_4}
+    & \equiv \chc[D]{f_1,f_2}\vee\chc[D]{f_3,f_4}
+    & \rn{Or} \\
+  \chc[D]{f_1\wedge f_3,\;f_2\wedge f_4}
+    & \equiv \chc[D]{f_1,f_2}\wedge\chc[D]{f_3,f_4}
+    & \rn{And} \\
+  \chc[D]{f_1\wedge f_2,f_1}
+    & \equiv f_1\wedge\chc[D]{f_2,\tru}
+    & \rn{And-L} \\
+  \chc[D]{f_1\vee f_2,f_1}
+    & \equiv f_1\vee\chc[D]{f_2,\fls}
+    & \rn{Or-L} \\
+  \chc[D]{f_1,f_1\wedge f_2}
+    & \equiv f_1\wedge \chc[D]{\tru,f_2}
+    & \rn{And-R} \\
+  \chc[D]{f_1,f_1\vee f_2}
+    & \equiv f_1\vee\chc[D]{\fls,f_2}
+    & \rn{Or-R}
+\end{align*}

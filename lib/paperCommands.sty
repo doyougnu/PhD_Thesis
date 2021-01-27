@@ -1,0 +1,107 @@
+\NeedsTeXFormat{LaTeX2e}
+
+%
+% Macros defined just for this paper
+%
+\ProvidesPackage{paperCommands}
+
+\RequirePackage{xcolor} \RequirePackage{xargs} %\RequirePackage{cc}
+\RequirePackage[colorinlistoftodos,prependcaption,textwidth=4.5em,textsize=tiny]{todonotes}
+\setlength{\marginparwidth}{4.5em}
+
+%% Todos
+\newcommandx{\change}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
+\newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
+\newcommandx{\unsure}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
+\newcommandx{\addcitation}[2][1=]{\todo[linecolor=olive,backgroundcolor=olive!25,bordercolor=olive,#1]{#2}}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+%%%%%% Convenient commands for the paper
+\newcommand{\kf}[1]{\mathit{#1}}              %% fix kerning
+
+% inline TODOs
+\newcommand{\itodo}[1]{\{{\color{red} #1}\}}
+
+% macros for the major characters
+\newcommand{\sat}{SAT}
+\newcommand{\smt}{SMT}
+\newcommand{\vsat}{VSAT}
+\newcommand{\vpl}{VPL}
+\newcommand{\hquad}{\hspace{0.5em}}
+\newcommand{\ifdf}{\texttt{\#ifdef}}
+\newcommand{\pl}{{C\textsubscript{2}}}  %% propositional logic
+
+%% bool values for propositions
+\newcommand{\fls}{\texttt{F}}
+\newcommand{\tru}{\texttt{T}}
+
+%% Convenient name macros
+\newcommand{\christian}{Kästner \etal}
+\newcommand{\tc}{TypeChef}
+\newcommand{\bsybx}{BusyBox}
+\newcommand{\linux}{Linux}
+
+%%% Research questions to be answered
+\newcommand{\resQ}[1]{\textbf{RQ#1}}
+
+%%% CUSTOM COMMANDS
+\newcommand{\paul}[1]{\todo[color=yellow]{Paul: #1}}
+\newcommand{\eric}[1]{\todo[color=pink]{#1 -E}}
+
+\providecommand{\eg}[0]{e.g\xperiod}
+\providecommand{\ie}[0]{i.e\xperiod}
+\providecommand{\etal}[0]{et~al\xperiod}
+\providecommand{\cf}[0]{cf\xperiod}
+\providecommand{\aka}[0]{aka\xperiod}
+\providecommand{\ia}[0]{i.a\xperiod}
+\providecommand{\wrt}[0]{w.r.t\xperiod}
+
+\renewcommand*{\figureautorefname}{Fig.}
+\renewcommand*{\equationautorefname}{Eq.}
+\ifcsname sectionautorefname\endcsname
+\renewcommand*{\sectionautorefname}{Sec.}
+\fi
+\ifcsname subsectionautorefname\endcsname
+\renewcommand*{\subsectionautorefname}{Sec.}
+\fi
+\ifcsname subsubsectionautorefname\endcsname
+\renewcommand*{\subsubsectionautorefname}{Sec.}
+\fi
+\newcommand{\lstnumberautorefname}{Line}
+
+%%%%%%%%%%%%%%%%%%%% background example helpers
+\newcommand{\mkVar}[1]{\ensuremath{\kf{#1}}}
+\newcommand{\pV}{\mkVar{p}}
+\newcommand{\qV}{\mkVar{q}}
+\newcommand{\rV}{\mkVar{r}}
+\newcommand{\fV}{\mkVar{f}}
+\newcommand{\gV}{\mkVar{g}}
+\newcommand{\iV}{\mkVar{i}}
+\newcommand{\aV}{\mkVar{a}}
+\newcommand{\bV}{\mkVar{b}}
+\newcommand{\cV}{\mkVar{c}}
+\newcommand{\dV}{\mkVar{d}}
+\newcommand{\eV}{\mkVar{e}}
+\newcommand{\zV}{\mkVar{z}}
+\newcommand{\AV}{\mkVar{A}}
+\newcommand{\BV}{\mkVar{B}}
+\newcommand{\G}{\mkVar{G}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% VPL Figures
+\newcommand{\true}[0]{\OB{\mathsf{true}}}
+\newcommand{\false}[0]{\OB{\mathsf{false}}}
+\newcommand{\unit}[0]{\ensuremath{\bullet{}}}
+\newcommand{\ap}[1]{\{#1\}}
+\newcommand{\vc}[1]{\ensuremath{\kf{vc}_{#1}}}         % fmf macro w/ subscript
+\newcommand{\vcT}{\vc{True}}                    % fmf with true subscript
+\newcommand{\vcF}{\vc{False}}
+\newcommand{\mdl}[1]{$\kf{mdl_{#1}}$}           % model macro
+\newcommand{\mdls}{$mdls$}                           % mdls helper
+\newcommand{\SatVar}{\ensuremath{\_Sat}}                        %_Sat
+\newcommand{\SatModel}{\mdl{Sat}}
+\newcommand{\Satfmf}{\vc{_{\_Sat}}}
+\newcommand{\lift}[1]{\ensuremath{#1^{\chcL{}\chcR{}}}}
+\newcommand{\nats}[0]{\ensuremath{\mathbb{N}_{0}}}

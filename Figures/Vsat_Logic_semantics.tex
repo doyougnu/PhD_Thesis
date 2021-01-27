@@ -1,0 +1,15 @@
+\begin{align*}
+  C : D \rightarrow \mathbb{B_{\bot}} & \textit{Configuration} \\
+  \sem{\cdot} &: f\rightarrow C \rightarrow f
+    \qquad\qquad \text{where } C = D\rightarrow\mathbb{B}_\bot \\
+  \sem[C]{t}             &= t \\
+  \sem[C]{\neg f}        &= \neg \sem[C]{f} \\
+  \sem[C]{f_1\wedge f_2} &= \sem[C]{f_1}\wedge\sem[C]{f_2}\\
+  \sem[C]{f_1\vee f_2}   &= \sem[C]{f_1}\vee\sem[C]{f_2}\\
+  \sem[C]{\chc[D]{f_1,f_2}} &=
+    \begin{cases}
+      \sem[C]{f_1}                       & C(D) = \true \\
+      \sem[C]{f_2}                       & C(D) = \false \\
+      \chc[D]{\sem[C]{f_1},\sem[C]{f_2}} & C(D) = \bot \\
+    \end{cases}
+\end{align*}

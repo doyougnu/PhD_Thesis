@@ -1,0 +1,3073 @@
+%%%%%% Programming Languages %%%%%%%%%%
+
+%%%%% Solver-aided Langs
+@inproceedings{dafny-automatic-program-verifier-functional-correctness-2,
+author = {Leino, Rustan},
+title = {Dafny: An Automatic Program Verifier for Functional Correctness},
+booktitle = {Logic for Programming, Artificial Intelligence, and Reasoning},
+year = {2010},
+month = {April},
+abstract = {Traditionally, the full verification of a program’s functional correctness has been obtained with pen and paper or with interactive proof assistants, whereas only reduced verification tasks, such as extended static checking, have enjoyed the automation offered by satisfiability-modulo-theories (SMT) solvers. More recently, powerful SMT solvers and well-designed program verifiers are starting to break that tradition, thus reducing the effort involved in doing full verification.
+
+This paper gives a tour of the language and verifier Dafny, which has been used to verify the functional correctness of a number of challenging pointer-based programs. The paper describes the features incorporated in Dafny, illustrating their use by small examples and giving a taste of how they are coded for an SMT solver. As a larger case study, the paper shows the full functional specification of the Schorr-Waite algorithm in Dafny.},
+publisher = {Springer Berlin Heidelberg},
+url = {https://www.microsoft.com/en-us/research/publication/dafny-automatic-program-verifier-functional-correctness-2/},
+address = {},
+pages = {348-370},
+journal = {},
+volume = {},
+chapter = {},
+isbn = {},
+}
+
+% a must read on rosette
+@inproceedings{Torlak:2013:GSL:2509578.2509586,
+ author = {Torlak, Emina and Bodik, Rastislav},
+ title = {Growing Solver-aided Languages with Rosette},
+ booktitle = {Proceedings of the 2013 ACM International Symposium on New Ideas, New Paradigms, and Reflections on Programming \& Software},
+ series = {Onward! 2013},
+ year = {2013},
+ isbn = {978-1-4503-2472-4},
+ location = {Indianapolis, Indiana, USA},
+ pages = {135--152},
+ numpages = {18},
+ url = {http://doi.acm.org/10.1145/2509578.2509586},
+ doi = {10.1145/2509578.2509586},
+ acmid = {2509586},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {solver-aided languages},
+}
+
+% whiley is a verified compiler like Hoare wanted!
+@InProceedings{10.1007/978-3-319-02654-1_13,
+author="Pearce, David J.
+and Groves, Lindsay",
+editor="Erwig, Martin
+and Paige, Richard F.
+and Van Wyk, Eric",
+title="Whiley: A Platform for Research in Software Verification",
+booktitle="Software Language Engineering",
+year="2013",
+publisher="Springer International Publishing",
+address="Cham",
+pages="238--248",
+abstract="An ongoing challenge for computer science is the development of a tool which automatically verifies programs meet their specifications, and are free from runtime errors such as divide-by-zero, array out-of-bounds and null dereferences. Several impressive systems have been developed to this end, such as ESC/Java and Spec{\#}, which build on existing programming languages (e.g. Java, C{\#}). However, there remains a need for an open research platform in this area. We have developed the Whiley programming language, and its accompanying verifying compiler, as an open platform for research. Whiley has been designed from the ground up to simplify the verification process. In this paper, we introduce the Whiley language and it accompanying verifying compiler tool.",
+isbn="978-3-319-02654-1"
+}
+
+% chalice is another solver-aided lang by microsoft
+@inproceedings{verifying-concurrent-programs-chalice,
+author = {Leino, Rustan and Zurich), Peter Müller (ETH and Leuven), Jan Smans (KU},
+title = {Verifying Concurrent Programs with Chalice},
+booktitle = {},
+year = {2010},
+month = {January},
+abstract = {Concurrent programs
+  Interleaving of thread executions
+  Unbounded number of: threads, locks,
+  We need some basis for doing the reasoning
+  A way of thinking!
+},
+publisher = {Microsoft Research},
+url = {https://www.microsoft.com/en-us/research/publication/verifying-concurrent-programs-chalice/},
+address = {},
+pages = {},
+journal = {},
+volume = {},
+chapter = {},
+isbn = {},
+}
+
+
+%%%%% Bounded Model checking and Heap engineering
+@InProceedings{10.1007/978-3-642-39799-8_54,
+author="Piskac, Ruzica
+and Wies, Thomas
+and Zufferey, Damien",
+editor="Sharygina, Natasha
+and Veith, Helmut",
+title="Automating Separation Logic Using SMT",
+booktitle="Computer Aided Verification",
+year="2013",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="773--789",
+abstract="Separation logic (SL) has gained widespread popularity because of its ability to succinctly express complex invariants of a program's heap configurations. Several specialized provers have been developed for decidable SL fragments. However, these provers cannot be easily extended or combined with solvers for other theories that are important in program verification, e.g., linear arithmetic. In this paper, we present a reduction of decidable SL fragments to a decidable first-order theory that fits well into the satisfiability modulo theories (SMT) framework. We show how to use this reduction to automate satisfiability, entailment, frame inference, and abduction problems for separation logic using SMT solvers. Our approach provides a simple method of integrating separation logic into existing verification tools that provide SMT backends, and an elegant way of combining SL fragments with other decidable first-order theories. We implemented this approach in a verification tool and applied it to heap-manipulating programs whose verification involves reasoning in theory combinations.",
+isbn="978-3-642-39799-8"
+}
+
+@inproceedings{static-and-precise-detection-of-concurrency-errors-in-systems-code-using-smt-solvers,
+author = {Lahiri, Shuvendu and Qadeer, Shaz and Rakamaric, Zvonimir},
+title = {Static and Precise Detection of Concurrency Errors in Systems Code Using SMT Solvers},
+booktitle = {},
+year = {2009},
+month = {February},
+abstract ={"Context-bounded analysis is an attractive approach to verification of concurrent programs. Bounding the number of contexts executed per thread not only reduces the asymptotic complexity, but also the complexity increases gradually from checking a purely sequential program. Lal and Reps [14] provided a method for reducing the context-bounded verification of a concurrent boolean program to the verification of a sequential boolean program, thereby allowing sequential reasoning to be employed for verifying concurrent programs. In this work, we adapt the encoding to work for systems programs written in C with the heap and accompanying low-level operations such as pointer arithmetic and casts. Our approach is completely automatic: we use a verification condition generator and SMT solvers, instead of a boolean model checker, in order to avoid manual extraction of boolean programs and false alarms introduced by the abstraction. We demonstrate the use of field slicing for improving the scalability and (in some cases) coverage of our checking. We evaluate our tool STORM on a set of real-world Windows device drivers, and has discovered a bug that could not be detected by extensive application of previous tools."
+},
+publisher = {Springer Verlag},
+url = {https://www.microsoft.com/en-us/research/publication/static-and-precise-detection-of-concurrency-errors-in-systems-code-using-smt-solvers/},
+address = {},
+pages = {},
+journal = {},
+volume = {},
+chapter = {},
+isbn = {},
+}
+
+@InProceedings{10.1007/11691617_9,
+author="Armando, Alessandro
+and Mantovani, Jacopo
+and Platania, Lorenzo",
+editor="Valmari, Antti",
+title="Bounded Model Checking of Software Using SMT Solvers Instead of SAT Solvers",
+booktitle="Model Checking Software",
+year="2006",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="146--162",
+abstract="C Bounded Model Checking (CBMC) has proven to be a successful approach to automatic software analysis. The key idea is to (i) build a propositional formula whose models correspond to program traces (of bounded length) that violate some given property and (ii) use state-of-the-art SAT solvers to check the resulting formulae for satisfiability. In this paper we propose a generalisation of the CBMC approach based on an encoding into richer (but still decidable) theories than propositional logic. We show that our approach may lead to considerably more compact formulae than those obtained with CBMC. We have built a prototype implementation of our technique that uses a Satisfiability Modulo Theories (SMT) solver to solve the resulting formulae. Computer experiments indicate that our approach compares favourably with and on some significant problems outperforms CBMC.",
+isbn="978-3-540-33103-2"
+}
+
+@InProceedings{10.1007/978-3-540-24730-2_15,
+author="Clarke, Edmund
+and Kroening, Daniel
+and Lerda, Flavio",
+editor="Jensen, Kurt
+and Podelski, Andreas",
+title="A Tool for Checking ANSI-C Programs",
+booktitle="Tools and Algorithms for the Construction and Analysis of Systems",
+year="2004",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="168--176",
+abstract="We present a tool for the formal verification of ANSI-C programs using Bounded Model Checking (BMC). The emphasis is on usability: the tool supports almost all ANSI-C language features, including pointer constructs, dynamic memory allocation, recursion, and the float and double data types. From the perspective of the user, the verification is highly automated: the only input required is the BMC bound. The tool is integrated into a graphical user interface. This is essential for presenting long counterexample traces: the tool allows stepping through the trace in the same way a debugger allows stepping through a program.",
+isbn="978-3-540-24730-2"
+}
+
+@InProceedings{10.1007/978-3-642-36742-7_48,
+author="Falke, Stephan
+and Merz, Florian
+and Sinz, Carsten",
+editor="Piterman, Nir
+and Smolka, Scott A.",
+title="LLBMC: Improved Bounded Model Checking of C Programs Using LLVM",
+booktitle="Tools and Algorithms for the Construction and Analysis of Systems",
+year="2013",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="623--626",
+abstract="LLBMC is a tool for detecting bugs and runtime errors in C and C++ programs. It is based on bounded model checking using an SMT solver and thus achieves bit-accurate precision. A distinguishing feature of LLBMC in contrast to other bounded model checking tools for C programs is that it operates on a compiler intermediate representation and not directly on the source code.",
+isbn="978-3-642-36742-7"
+}
+
+
+%%%%%% Software Engineering %%%%%%%%%%%
+@article{Cadar:2013:SES:2408776.2408795,
+ author = {Cadar, Cristian and Sen, Koushik},
+ title = {Symbolic Execution for Software Testing: Three Decades Later},
+ journal = {Commun. ACM},
+ issue_date = {February 2013},
+ volume = {56},
+ number = {2},
+ month = feb,
+ year = {2013},
+ issn = {0001-0782},
+ pages = {82--90},
+ numpages = {9},
+ url = {http://doi.acm.org/10.1145/2408776.2408795},
+ doi = {10.1145/2408776.2408795},
+ acmid = {2408795},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+}
+
+%%%%%% Program synthesis
+inproceedings{DeMarco:2014:ARB:2593735.2593740,
+ author = {DeMarco, Favio and Xuan, Jifeng and Le Berre, Daniel and Monperrus, Martin},
+ title = {Automatic Repair of Buggy if Conditions and Missing Preconditions with SMT},
+ booktitle = {Proceedings of the 6th International Workshop on Constraints in Software Testing, Verification, and Analysis},
+ series = {CSTVA 2014},
+ year = {2014},
+ isbn = {978-1-4503-2847-0},
+ location = {Hyderabad, India},
+ pages = {30--39},
+ numpages = {10},
+ url = {http://doi.acm.org/10.1145/2593735.2593740},
+ doi = {10.1145/2593735.2593740},
+ acmid = {2593740},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {Automatic repair, SMT, angelic fix localization, buggy if condition, missing precondition, test suite},
+}
+
+@article{Solar-Lezama:2006:CSF:1168917.1168907,
+ author = {Solar-Lezama, Armando and Tancau, Liviu and Bodik, Rastislav and Seshia, Sanjit and Saraswat, Vijay},
+ title = {Combinatorial Sketching for Finite Programs},
+ journal = {SIGOPS Oper. Syst. Rev.},
+ issue_date = {December 2006},
+ volume = {40},
+ number = {5},
+ month = oct,
+ year = {2006},
+ issn = {0163-5980},
+ pages = {404--415},
+ numpages = {12},
+ url = {http://doi.acm.org/10.1145/1168917.1168907},
+ doi = {10.1145/1168917.1168907},
+ acmid = {1168907},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {SAT, sketching},
+}
+
+% this paper is a must read for semantic subtyping with an smt solver
+@article{bierman_gordon_hriţcu_langworthy_2012,
+  title={Semantic subtyping with an SMT solver},
+  volume={22},
+  DOI={10.1017/S0956796812000032},
+  number={1},
+  journal={Journal of Functional Programming},
+  publisher={Cambridge University Press},
+  author={BIERMAN, GAVIN M. and GORDON, ANDREW D. and HRIŢCU, CĂTĂLIN and LANGWORTHY, DAVID},
+  year={2012},
+  pages={31–105}
+}
+
+% liquid types of course
+@inproceedings{Rondon:2008:LT:1375581.1375602,
+ author = {Rondon, Patrick M. and Kawaguci, Ming and Jhala, Ranjit},
+ title = {Liquid Types},
+ booktitle = {Proceedings of the 29th ACM SIGPLAN Conference on Programming Language Design and Implementation},
+ series = {PLDI '08},
+ year = {2008},
+ isbn = {978-1-59593-860-2},
+ location = {Tucson, AZ, USA},
+ pages = {159--169},
+ numpages = {11},
+ url = {http://doi.acm.org/10.1145/1375581.1375602},
+ doi = {10.1145/1375581.1375602},
+ acmid = {1375602},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {dependent types, hindley-milner, predicate abstraction, type inference},
+}
+
+%%%%%% Complex Verification
+
+% static analysis system called SLAM
+@InProceedings{10.1007/3-540-44585-4_25,
+author="Ball, Thomas
+and Rajamani, Sriram K.",
+editor="Berry, G{\'e}rard
+and Comon, Hubert
+and Finkel, Alain",
+title="The SLAM Toolkit",
+booktitle="Computer Aided Verification",
+year="2001",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="260--264",
+abstract="The SLAM toolkit checks safety properties of software without the need for user-supplied annotations or abstractions. Given a safety property to check on a C program P, the SLAM process [4] iteratively refines a boolean program abstraction of P using three tools:- C2bp, a predicate abstraction tool that abstracts P into a boolean program BP(P,E) with respect to a set of predicates E over P1,2;- BEBOP, a tool for model checking boolean programs [3], and- NEWTON, a tool that discovers additional predicates to refine the boolean program, by analyzing the feasibility of paths in the C program.",
+isbn="978-3-540-44585-2"
+}
+
+% static analysis system called BLAST
+@InProceedings{10.1007/3-540-44829-2_17,
+author="Henzinger, Thomas A.
+and Jhala, Ranjit
+and Majumdar, Rupak
+and Sutre, Gr{\'e}goire",
+editor="Ball, Thomas
+and Rajamani, Sriram K.",
+title="Software Verification with BLAST",
+booktitle="Model Checking Software",
+year="2003",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="235--239",
+abstract="Blast (the Berkeley Lazy Abstraction Software verification Tool) is a verification system for checking safety properties of C programs using automatic property-driven construction and model checking of software abstractions. Blast implements an abstract-model check-refine loop to check for reachability of a specified label in the program. The abstract model is built on the fly using predicate abstraction. This model is then checked for reachability. If there is no (abstract) path to the specified error label, Blast reports that the system is safe and produces a succinct proof. Otherwise, it checks if the path is feasible using symbolic execution of the program. If the path is feasible, Blast outputs the path as an error trace, otherwise, it uses the infeasibility of the path to refine the abstract model. Blast short-circuits the loop from abstraction to verification to refinement, integrating the three steps tightly through ``lazy abstraction'' [5]. This integration can offer significant advantages in performance by avoiding the repetition of work from one iteration of the loop to the next.",
+isbn="978-3-540-44829-7"
+}
+
+
+% another must read
+@inproceedings{Henzinger:2002:LA:503272.503279,
+ author = {Henzinger, Thomas A. and Jhala, Ranjit and Majumdar, Rupak and Sutre, Gr{\'e}goire},
+ title = {Lazy Abstraction},
+ booktitle = {Proceedings of the 29th ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages},
+ series = {POPL '02},
+ year = {2002},
+ isbn = {1-58113-450-9},
+ location = {Portland, Oregon},
+ pages = {58--70},
+ numpages = {13},
+ url = {http://doi.acm.org/10.1145/503272.503279},
+ doi = {10.1145/503272.503279},
+ acmid = {503279},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+}
+
+% this paper creates an intermediate solver-aided language
+@techreport{boogiepl-a-typed-procedural-language-for-checking-object-oriented-programs,
+author = {DeLine, Rob and Leino, Rustan},
+title = {BoogiePL: A Typed Procedural Language for Checking Object-Oriented Programs},
+booktitle = {},
+year = {2005},
+month = {March},
+abstract = {
+
+This note defines BoogiePL, an intermediate language for program analysis and program verification. The language is a simple coarsely typed imperative language with procedures and arrays, plus support for introducing mathematical functions and declaring properties of these functions. BoogiePL can be used to represent programs written in an imperative source language (like an object-oriented .NET language), along with a logical encoding of the semantics of such a source language. From the resulting BoogiePL program, one can then generate verification conditions or perform other program analyses such as the inference of program invariants. In this way, BoogiePL also serves as a programming-notation front end to theorem provers. BoogiePL is accepted as input to Boogie, the Spec# static program verifier.
+
+
+},
+publisher = {},
+address = {},
+pages = {13},
+journal = {},
+volume = {},
+chapter = {},
+isbn = {},
+}
+
+
+%%%%%% Improving precision of invariant generation
+@inproceedings{Harris:2010:PAV:1706299.1706309,
+ author = {Harris, William R. and Sankaranarayanan, Sriram and Ivan\v{c}i\'{c}, Franjo and Gupta, Aarti},
+ title = {Program Analysis via Satisfiability Modulo Path Programs},
+ booktitle = {Proceedings of the 37th Annual ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages},
+ series = {POPL '10},
+ year = {2010},
+ isbn = {978-1-60558-479-9},
+ location = {Madrid, Spain},
+ pages = {71--82},
+ numpages = {12},
+ url = {http://doi.acm.org/10.1145/1706299.1706309},
+ doi = {10.1145/1706299.1706309},
+ acmid = {1706309},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {abstract interpretation, path sensitivity, program analysis, satisfiability solvers, smt solvers, symbolic execution},
+}
+
+@InProceedings{10.1007/978-3-642-23702-7_27,
+author="Monniaux, David
+and Gonnord, Laure",
+editor="Yahav, Eran",
+title="Using Bounded Model Checking to Focus Fixpoint Iterations",
+booktitle="Static Analysis",
+year="2011",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="369--385",
+abstract="Two classical sources of imprecision in static analysis by abstract interpretation are widening and merge operations. Merge operations can be done away by distinguishing paths, as in trace partitioning, at the expense of enumerating an exponential number of paths.",
+isbn="978-3-642-23702-7"
+}
+
+
+%%%%%% Testing and bug finding
+% this paper defines a system that uses a SMT solver to generate unit tests
+@inproceedings{Cadar:2008:KUA:1855741.1855756,
+ author = {Cadar, Cristian and Dunbar, Daniel and Engler, Dawson},
+ title = {KLEE: Unassisted and Automatic Generation of High-coverage Tests for Complex Systems Programs},
+ booktitle = {Proceedings of the 8th USENIX Conference on Operating Systems Design and Implementation},
+ series = {OSDI'08},
+ year = {2008},
+ location = {San Diego, California},
+ pages = {209--224},
+ numpages = {16},
+ url = {http://dl.acm.org/citation.cfm?id=1855741.1855756},
+ acmid = {1855756},
+ publisher = {USENIX Association},
+ address = {Berkeley, CA, USA},
+}
+
+% another paper that uses an SMT solver for random testing
+@article{Godefroid:2005:DDA:1064978.1065036,
+ author = {Godefroid, Patrice and Klarlund, Nils and Sen, Koushik},
+ title = {DART: Directed Automated Random Testing},
+ journal = {SIGPLAN Not.},
+ issue_date = {June 2005},
+ volume = {40},
+ number = {6},
+ month = jun,
+ year = {2005},
+ issn = {0362-1340},
+ pages = {213--223},
+ numpages = {11},
+ url = {http://doi.acm.org/10.1145/1064978.1065036},
+ doi = {10.1145/1064978.1065036},
+ acmid = {1065036},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {automated test generation, interfaces, program verification, random testing, software testing},
+}
+
+%%% Symbolic execution
+% using a a constraint solver to generate new cases
+@inproceedings{pex-white-box-test-generation-for-net,
+author = {Tillmann, Nikolai and de Halleux, Peli},
+title = {Pex - White Box Test Generation for .NET},
+booktitle = {Proc. of Tests and Proofs (TAP'08)},
+year = {2008},
+month = {April},
+abstract = {
+
+Pex automatically produces a small test suite with high code coverage for a .NET program. To this end, Pex performs a systematic program analysis (using dynamic symbolic execution, similar to path-bounded model-checking) to determine test inputs for Parameterized Unit Tests. Pex learns the program behavior by monitoring execution traces. Pex uses a constraint solver to produce new test inputs which exercise different program behavior. The result is an automatically generated small test suite which often achieves high code coverage. In one case study, we applied Pex to a core component of the .NET runtime which had already been extensively tested over several years. Pex found errors, including a serious issue.
+},
+publisher = {Springer Verlag},
+url = {https://www.microsoft.com/en-us/research/publication/pex-white-box-test-generation-for-net/},
+address = {Prato, Italy},
+pages = {134–153},
+journal = {},
+volume = {4966},
+chapter = {},
+isbn = {},
+}
+
+
+%%% Fuzzing
+@article{Godefroid:2012:SWF:2090147.2094081,
+ author = {Godefroid, Patrice and Levin, Michael Y. and Molnar, David},
+ title = {SAGE: Whitebox Fuzzing for Security Testing},
+ journal = {Queue},
+ issue_date = {January 2012},
+ volume = {10},
+ number = {1},
+ month = jan,
+ year = {2012},
+ issn = {1542-7730},
+ pages = {20:20--20:27},
+ articleno = {20},
+ numpages = {8},
+ url = {http://doi.acm.org/10.1145/2090147.2094081},
+ doi = {10.1145/2090147.2094081},
+ acmid = {2094081},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+}
+
+
+%%%%%%%%%%%%% Good papers for finding on-topic papers
+@article{Li:2014:SOS:2578855.2535857,
+ author = {Li, Yi and Albarghouthi, Aws and Kincaid, Zachary and Gurfinkel, Arie and Chechik, Marsha},
+ title = {Symbolic Optimization with SMT Solvers},
+ journal = {SIGPLAN Not.},
+ issue_date = {January 2014},
+ volume = {49},
+ number = {1},
+ month = jan,
+ year = {2014},
+ issn = {0362-1340},
+ pages = {607--618},
+ numpages = {12},
+ url = {http://doi.acm.org/10.1145/2578855.2535857},
+ doi = {10.1145/2578855.2535857},
+ acmid = {2535857},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {invariant generation, optimization, program analysis, satisfiability modulo theories, symbolic abstraction},
+}
+
+%%%%%%%%%%% Model Checking
+@inproceedings{Godefroid:2005:SMC:2178965.2178969,
+ author = {Godefroid, Patrice and Klarlund, Nils},
+ title = {Software Model Checking: Searching for Computations in the Abstract or the Concrete},
+ booktitle = {Proceedings of the 5th International Conference on Integrated Formal Methods},
+ series = {IFM'05},
+ year = {2005},
+ isbn = {3-540-30492-4, 978-3-540-30492-0},
+ location = {Eindhoven, The Netherlands},
+ pages = {20--32},
+ numpages = {13},
+ url = {http://dx.doi.org/10.1007/11589976_3},
+ doi = {10.1007/11589976_3},
+ acmid = {2178969},
+ publisher = {Springer-Verlag},
+ address = {Berlin, Heidelberg},
+}
+
+%%%%%%%%%%% Base Papers
+
+% Original model checking paper
+@article{ModelCheckingBase,
+author = {M. Clarke, Edmund and Emerson, E and Sistla, A},
+year = {1983},
+month = {01},
+pages = {117-126},
+title = {Automatic Verification of Finite State Concurrent Systems Using Temporal Logic Specifications: A Practical Approach.},
+booktitle = {POPL '83: Proceedings of the 10th ACM SIGACT-SIGPLAN Symposium on Principles of Programming Languages}
+}
+
+% The DPLL paper
+@article{Davis:1962:MPT:368273.368557,
+ author = {Davis, Martin and Logemann, George and Loveland, Donald},
+ title = {A Machine Program for Theorem-proving},
+ journal = {Commun. ACM},
+ issue_date = {July 1962},
+ volume = {5},
+ number = {7},
+ month = jul,
+ year = {1962},
+ issn = {0001-0782},
+ pages = {394--397},
+ numpages = {4},
+ url = {http://doi.acm.org/10.1145/368273.368557},
+ doi = {10.1145/368273.368557},
+ acmid = {368557},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+}
+
+% The DLL paper
+@article{Davis:1960:CPQ:321033.321034,
+ author = {Davis, Martin and Putnam, Hilary},
+ title = {A Computing Procedure for Quantification Theory},
+ journal = {J. ACM},
+ issue_date = {July 1960},
+ volume = {7},
+ number = {3},
+ month = jul,
+ year = {1960},
+ issn = {0004-5411},
+ pages = {201--215},
+ numpages = {15},
+ url = {http://doi.acm.org/10.1145/321033.321034},
+ doi = {10.1145/321033.321034},
+ acmid = {321034},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+}
+
+% paper that describes GRASP, the first solver to use conflict driven learning and backtracking
+@inproceedings{Silva:1997:GNS:244522.244560,
+ author = {Silva, Jo\~{a}o P. Marques and Sakallah, Karem A.},
+ title = {GRASP\&Mdash;a New Search Algorithm for Satisfiability},
+ booktitle = {Proceedings of the 1996 IEEE/ACM International Conference on Computer-aided Design},
+ series = {ICCAD '96},
+ year = {1996},
+ isbn = {0-8186-7597-7},
+ location = {San Jose, California, USA},
+ pages = {220--227},
+ numpages = {8},
+ url = {http://dl.acm.org/citation.cfm?id=244522.244560},
+ acmid = {244560},
+ publisher = {IEEE Computer Society},
+ address = {Washington, DC, USA},
+ keywords = {Propositional Satisfiability, Search Algorithms, Backtracking, Non-chronological Backtracking, Automatic Test Pattern Generation, Electronic Design Automation.},
+}
+
+% another paper on grasp
+@article{Marques-Silva:1999:GSA:304491.304506,
+ author = {Marques-Silva, Jo\~{a}o P. and Sakallah, Karem A.},
+ title = {GRASP: A Search Algorithm for Propositional Satisfiability},
+ journal = {IEEE Trans. Comput.},
+ issue_date = {May 1999},
+ volume = {48},
+ number = {5},
+ month = may,
+ year = {1999},
+ issn = {0018-9340},
+ pages = {506--521},
+ numpages = {16},
+ url = {https://doi.org/10.1109/12.769433},
+ doi = {10.1109/12.769433},
+ acmid = {304506},
+ publisher = {IEEE Computer Society},
+ address = {Washington, DC, USA},
+ keywords = {Satisfiability, search algorithms, conflict diagnosis, conflict-directed nonchronological backtracking, conflict-based equivalence, failure-driven assertions, unique implication points.},
+}
+
+% a central technique boolean constraint propogation enabling sat solvers. A core technology for sat today
+@techreport{mcallester1980outlook,
+  title={An Outlook on Truth Maintenance.},
+  author={McAllester, David A},
+  year={1980},
+  institution={MASSACHUSETTS INST OF TECH CAMBRIDGE ARTIFICIAL INTELLIGENCE LAB}
+}
+
+% efficient backtracking from gomes
+@Article{Gomes2000,
+author="Gomes, Carla P.
+and Selman, Bart
+and Crato, Nuno
+and Kautz, Henry",
+title="Heavy-Tailed Phenomena in Satisfiability and Constraint Satisfaction Problems",
+journal="Journal of Automated Reasoning",
+year="2000",
+month="Feb",
+day="01",
+volume="24",
+number="1",
+pages="67--100",
+abstract="We study the runtime distributions of backtrack procedures for propositional satisfiability and constraint satisfaction. Such procedures often exhibit a large variability in performance. Our study reveals some intriguing properties of such distributions: They are often characterized by very long tails or ``heavy tails''. We will show that these distributions are best characterized by a general class of distributions that can have infinite moments (i.e., an infinite mean, variance, etc.). Such nonstandard distributions have recently been observed in areas as diverse as economics, statistical physics, and geophysics. They are closely related to fractal phenomena, whose study was introduced by Mandelbrot. We also show how random restarts can effectively eliminate heavy-tailed behavior. Furthermore, for harder problem instances, we observe long tails on the left-hand side of the distribution, which is indicative of a non-negligible fraction of relatively short, successful runs. A rapid restart strategy eliminates heavy-tailed behavior and takes advantage of short runs, significantly reducing expected solution time. We demonstrate speedups of up to two orders of magnitude on SAT and CSP encodings of hard problems in planning, scheduling, and circuit synthesis.",
+issn="1573-0670",
+doi="10.1023/A:1006314320276",
+url="https://doi.org/10.1023/A:1006314320276"
+}
+
+% Another Paper seminal paper on clause learning
+@inproceedings{Zhang:2001:ECD:603095.603153,
+ author = {Zhang, Lintao and Madigan, Conor F. and Moskewicz, Matthew H. and Malik, Sharad},
+ title = {Efficient Conflict Driven Learning in a Boolean Satisfiability Solver},
+ booktitle = {Proceedings of the 2001 IEEE/ACM International Conference on Computer-aided Design},
+ series = {ICCAD '01},
+ year = {2001},
+ isbn = {0-7803-7249-2},
+ location = {San Jose, California},
+ pages = {279--285},
+ numpages = {7},
+ url = {http://dl.acm.org/citation.cfm?id=603095.603153},
+ acmid = {603153},
+ publisher = {IEEE Press},
+ address = {Piscataway, NJ, USA},
+}
+
+% another seminal paper on branching heuristics
+@InProceedings{10.1007/3-540-48159-1_5,
+author="Marques-Silva, Jo{\~a}o",
+editor="Barahona, Pedro
+and Alferes, Jos{\'e} J.",
+title="The Impact of Branching Heuristics in Propositional Satisfiability Algorithms",
+booktitle="Progress in Artificial Intelligence",
+year="1999",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="62--74",
+abstract="This paper studies the practical impact of the branching heuristics used in Propositional Satisfiability (SAT) algorithms, when applied to solving real-world instances of SAT. In addition, different SAT algorithms are experimentally evaluated. The main conclusion of this study is that even though branching heuristics are crucial for solving SAT, other aspects of the organization of SAT algorithms are also essential. Moreover, we provide empirical evidence that for practical instances of SAT, the search pruning techniques included in the most competitive SAT algorithms may be of more fundamental significance than branching heuristics.",
+isbn="978-3-540-48159-1"
+}
+
+
+
+% Paper that describes SMT for the first time
+@incollection{barrett2018satisfiability,
+  title={Satisfiability modulo theories},
+  author={Barrett, Clark and Tinelli, Cesare},
+  booktitle={Handbook of Model Checking},
+  pages={305--343},
+  year={2018},
+  publisher={Springer}
+}
+
+% Bounded Model Checking base paper
+@InProceedings{10.1007/3-540-49059-0_14,
+author="Biere, Armin
+and Cimatti, Alessandro
+and Clarke, Edmund
+and Zhu, Yunshan",
+editor="Cleaveland, W. Rance",
+title="Symbolic Model Checking without BDDs",
+booktitle="Tools and Algorithms for the Construction and Analysis of Systems",
+year="1999",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="193--207",
+abstract="Symbolic Model Checking [3], [14] has proven to be a powerful technique for the verification of reactive systems. BDDs [2] have traditionally been used as a symbolic representation of the system. In this paper we show how boolean decision procedures, like St{\aa}lmarck's Method [16] or the Davis {\&} Putnam Procedure [7], can replace BDDs. This new technique avoids the space blow up of BDDs, generates counterexamples much faster, and sometimes speeds up the verification. In addition, it produces counterexamples of minimal length. We introduce a bounded model checking procedure for LTL which reduces model checking to propositional satisfiability.We show that bounded LTL model checking can be done without a tableau construction. We have implemented a model checker BMC, based on bounded model checking, and preliminary results are presented.",
+isbn="978-3-540-49059-3"
+}
+% another base paper
+@article{Clarke:2001:BMC:510986.510987,
+ author = {Clarke, Edmund and Biere, Armin and Raimi, Richard and Zhu, Yunshan},
+ title = {Bounded Model Checking Using Satisfiability Solving},
+ journal = {Form. Methods Syst. Des.},
+ issue_date = {July 2001},
+ volume = {19},
+ number = {1},
+ month = jul,
+ year = {2001},
+ issn = {0925-9856},
+ pages = {7--34},
+ numpages = {28},
+ url = {https://doi.org/10.1023/A:1011276507260},
+ doi = {10.1023/A:1011276507260},
+ acmid = {510987},
+ publisher = {Kluwer Academic Publishers},
+ address = {Hingham, MA, USA},
+ keywords = {bounded model checking, cone of influence reduction, model checking, processor verification, satisfiability},
+}
+
+% bounded model checking book
+@article{biere2003bounded,
+  title={Bounded model checking.},
+  author={Biere, Armin and Cimatti, Alessandro and Clarke, Edmund M and Strichman, Ofer and Zhu, Yunshan and others},
+  journal={Advances in computers},
+  volume={58},
+  number={11},
+  pages={117--148},
+  year={2003}
+}
+
+
+% model checking base papers
+@InProceedings{10.1007/BFb0025774,
+author="Clarke, Edmund M.
+and Emerson, E. Allen",
+editor="Kozen, Dexter",
+title="Design and synthesis of synchronization skeletons using branching time temporal logic",
+booktitle="Logics of Programs",
+year="1982",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="52--71",
+abstract="We have shown that it is possible to automatically synthesize the synchronization skeleton of a concurrent program from a Temporal Logic specification. We believe that this approach may in the long run turn out to be quite practical. Since synchronization skeletons are, in general, quite small, the potentially exponential behavior of our algorithm need not be an insurmountable obstacle. Much additional research will be needed, however, to make the approach feasible in practice.",
+isbn="978-3-540-39047-3"
+}
+
+@InProceedings{10.1007/3-540-10003-2_69,
+author="Emerson, E. Allen
+and Clarke, Edmund M.",
+editor="de Bakker, Jaco
+and van Leeuwen, Jan",
+title="Characterizing correctness properties of parallel programs using fixpoints",
+booktitle="Automata, Languages and Programming",
+year="1980",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="169--181",
+abstract="We have shown that correctness properties of parallel programs can be described using computation trees and that from these descriptions fixpoint characterizations can be generated. We have also given conditions on the form of computation tree descriptions to ensure that a correctness property can be characterized using continuous fixpoints. A consequence is that a correctness property such as inevitability under fair scheduling can be characterized as the least fixpoint of a monotonic, noncontinuous transformer, but cannot be characterized using fixpoints of continuous transformers (nor as the greatest fixpoint of a monotonic transformer of any degree of complexity lower than fair inevitability itself). Hence, currently known proof rules are not applicable (see however [FS80]). We are now investigating whether useful proof rules can exist for correctness properties having only a monotonic, noncontinuous least fixpoint characterization. In addition, we are examining alternate notions of fairness which do have continuous fixpoint characterizations.",
+isbn="978-3-540-39346-7"
+}
+
+@article{Clarke:1986:AVF:5397.5399,
+ author = {Clarke, E. M. and Emerson, E. A. and Sistla, A. P.},
+ title = {Automatic Verification of Finite-state Concurrent Systems Using Temporal Logic Specifications},
+ journal = {ACM Trans. Program. Lang. Syst.},
+ issue_date = {April 1986},
+ volume = {8},
+ number = {2},
+ month = apr,
+ year = {1986},
+ issn = {0164-0925},
+ pages = {244--263},
+ numpages = {20},
+ url = {http://doi.acm.org/10.1145/5397.5399},
+ doi = {10.1145/5397.5399},
+ acmid = {5399},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+}
+
+@InProceedings{10.1007/3-540-11494-7_22,
+author="Queille, J. P.
+and Sifakis, J.",
+editor="Dezani-Ciancaglini, Mariangiola
+and Montanari, Ugo",
+title="Specification and verification of concurrent systems in CESAR",
+booktitle="International Symposium on Programming",
+year="1982",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="337--351",
+abstract="The aim of this paper is to illustrate by an example, the alternating bit protocol, the use of CESAR, an interactive system for aiding the design of distributed applications.",
+isbn="978-3-540-39184-5"
+}
+
+% model checking state space explosion
+@Inbook{Clarke2012,
+author="Clarke, Edmund M.
+and Klieber, William
+and Nov{\'a}{\v{c}}ek, Milo{\v{s}}
+and Zuliani, Paolo",
+editor="Meyer, Bertrand
+and Nordio, Martin",
+title="Model Checking and the State Explosion Problem",
+bookTitle="Tools for Practical Software Verification: LASER, International Summer School 2011, Elba Island, Italy, Revised Tutorial Lectures",
+year="2012",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="1--30",
+abstract="Model checking is an automatic verification technique for hardware and software systems that are finite state or have finite state abstractions. It has been used successfully to verify computer hardware, and it is beginning to be used to verify computer software as well. As the number of state variables in the system increases, the size of the system state space grows exponentially. This is called the ``state explosion problem''. Much of the research in model checking over the past 30 years has involved developing techniques for dealing with this problem. In these lecture notes, we will explain how the basic model checking algorithms work and describe some recent approaches to the state explosion problem, with an emphasis on Bounded Model Checking.",
+isbn="978-3-642-35746-6",
+doi="10.1007/978-3-642-35746-6_1",
+url="https://doi.org/10.1007/978-3-642-35746-6_1"
+}
+
+% symbolic execution survey
+@article{Baldoni:2018:SSE:3212709.3182657,
+ author = {Baldoni, Roberto and Coppa, Emilio and D\&\#x02019;elia, Daniele Cono and Demetrescu, Camil and Finocchi, Irene},
+ title = {A Survey of Symbolic Execution Techniques},
+ journal = {ACM Comput. Surv.},
+ issue_date = {July 2018},
+ volume = {51},
+ number = {3},
+ month = may,
+ year = {2018},
+ issn = {0360-0300},
+ pages = {50:1--50:39},
+ articleno = {50},
+ numpages = {39},
+ url = {http://doi.acm.org/10.1145/3182657},
+ doi = {10.1145/3182657},
+ acmid = {3182657},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {Symbolic execution, concolic execution, software testing, static analysis},
+}
+
+% base paper of static analsysi
+@article{King:1976:SEP:360248.360252,
+ author = {King, James C.},
+ title = {Symbolic Execution and Program Testing},
+ journal = {Commun. ACM},
+ issue_date = {July 1976},
+ volume = {19},
+ number = {7},
+ month = jul,
+ year = {1976},
+ issn = {0001-0782},
+ pages = {385--394},
+ numpages = {10},
+ url = {http://doi.acm.org/10.1145/360248.360252},
+ doi = {10.1145/360248.360252},
+ acmid = {360252},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {program debugging, program proving, program testing, program verification, symbolic execution, symbolic interpretation},
+}
+
+% base paper that relates model checking to software for the first time
+@article{Ball:2001:APA:381694.378846,
+ author = {Ball, Thomas and Majumdar, Rupak and Millstein, Todd and Rajamani, Sriram K.},
+ title = {Automatic Predicate Abstraction of C Programs},
+ journal = {SIGPLAN Not.},
+ issue_date = {May 2001},
+ volume = {36},
+ number = {5},
+ month = may,
+ year = {2001},
+ issn = {0362-1340},
+ pages = {203--213},
+ numpages = {11},
+ url = {http://doi.acm.org/10.1145/381694.378846},
+ doi = {10.1145/381694.378846},
+ acmid = {378846},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+}
+
+% Base paper for CEGAR technique to reduce search space in model checking
+@inproceedings{clarke2000counterexample,
+  title={Counterexample-guided abstraction refinement},
+  author={Clarke, Edmund and Grumberg, Orna and Jha, Somesh and Lu, Yuan and Veith, Helmut},
+  booktitle={International Conference on Computer Aided Verification},
+  pages={154--169},
+  year={2000},
+  organization={Springer}
+}
+
+% Base paper on program synthesis from church no less
+@article{church1957applications,
+  title={Applications of Recursive Arithmetic to the Problem of Circuit Synthesis--Summaries of talks},
+  author={Church, A},
+  journal={Institute for Symbolic Logic, Cornell University},
+  year={1957}
+}
+
+% another base paper on program synthesis
+@inproceedings{Pnueli:1989:SRM:75277.75293,
+ author = {Pnueli, A. and Rosner, R.},
+ title = {On the Synthesis of a Reactive Module},
+ booktitle = {Proceedings of the 16th ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages},
+ series = {POPL '89},
+ year = {1989},
+ isbn = {0-89791-294-2},
+ location = {Austin, Texas, USA},
+ pages = {179--190},
+ numpages = {12},
+ url = {http://doi.acm.org/10.1145/75277.75293},
+ doi = {10.1145/75277.75293},
+ acmid = {75293},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+}
+
+% base paper for prog synth from constructive mathematics
+@Article{Kolmogoroff1932,
+author="Kolmogoroff, A.",
+title="Zur Deutung der intuitionistischen Logik",
+journal="Mathematische Zeitschrift",
+year="1932",
+month="Dec",
+day="01",
+volume="35",
+number="1",
+pages="58--65",
+issn="1432-1823",
+doi="10.1007/BF01186549",
+url="https://doi.org/10.1007/BF01186549"
+}
+
+% Program Synthesis Papers
+@inproceedings{deductivesynthesis0,
+ author = {Waldinger, Richard J. and Lee, Richard C. T.},
+ title = {PROW: A Step Toward Automatic Program Writing},
+ booktitle = {Proceedings of the 1st International Joint Conference on Artificial Intelligence},
+ series = {IJCAI'69},
+ year = {1969},
+ location = {Washington, DC},
+ pages = {241--252},
+ numpages = {12},
+ url = {http://dl.acm.org/citation.cfm?id=1624562.1624586},
+ acmid = {1624586},
+ publisher = {Morgan Kaufmann Publishers Inc.},
+ address = {San Francisco, CA, USA},
+}
+
+@inproceedings{deductivesyntehsis1,
+ author = {Green, Cordell},
+ title = {Application of Theorem Proving to Problem Solving},
+ booktitle = {Proceedings of the 1st International Joint Conference on Artificial Intelligence},
+ series = {IJCAI'69},
+ year = {1969},
+ location = {Washington, DC},
+ pages = {219--239},
+ numpages = {21},
+ url = {http://dl.acm.org/citation.cfm?id=1624562.1624585},
+ acmid = {1624585},
+ publisher = {Morgan Kaufmann Publishers Inc.},
+ address = {San Francisco, CA, USA},
+ keywords = {automatic programming, problem solving, program writing, question answering, resolution, robots, state transformations, theorem proving},
+}
+
+@article{deductivesynthesis2,
+ author = {Manna, Zohar and Waldinger, Richard J.},
+ title = {Toward Automatic Program Synthesis},
+ journal = {Commun. ACM},
+ issue_date = {March 1971},
+ volume = {14},
+ number = {3},
+ month = mar,
+ year = {1971},
+ issn = {0001-0782},
+ pages = {151--165},
+ numpages = {15},
+ url = {http://doi.acm.org/10.1145/362566.362568},
+ doi = {10.1145/362566.362568},
+ acmid = {362568},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {answer extraction, artificial intelligence, automatic program synthesis, mathematical induction principle, problem solving, theorem proving},
+}
+
+% base paper for program synthesis creation
+@phdthesis{Smith:1975:PCP:907074,
+ author = {Smith, David Canfield},
+ title = {Pygmalion: A Creative Programming Environment.},
+ year = {1975},
+ note = {AAI7525608},
+ publisher = {Stanford University},
+ address = {Stanford, CA, USA},
+}
+
+% genetic programming base paper
+@Article{Koza1994,
+author="Koza, John R.",
+title="Genetic programming as a means for programming computers by natural selection",
+journal="Statistics and Computing",
+year="1994",
+month="Jun",
+day="01",
+volume="4",
+number="2",
+pages="87--112",
+abstract="Many seemingly different problems in machine learning, artificial intelligence, and symbolic processing can be viewed as requiring the discovery of a computer program that produces some desired output for particular inputs. When viewed in this way, the process of solving these problems becomes equivalent to searching a space of possible computer programs for a highly fit individual computer program. The recently developed genetic programming paradigm described herein provides a way to search the space of possible computer programs for a highly fit individual computer program to solve (or approximately solve) a surprising variety of different problems from different fields. In genetic programming, populations of computer programs are genetically bred using the Darwinian principle of survival of the fittest and using a genetic crossover (sexual recombination) operator appropriate for genetically mating computer programs. Genetic programming is illustrated via an example of machine learning of the Boolean 11-multiplexer function and symbolic regression of the econometric exchange equation from noisy empirical data.",
+issn="1573-1375",
+doi="10.1007/BF00175355",
+url="https://doi.org/10.1007/BF00175355"
+}
+
+% skeleton methods of program synthesis
+@inproceedings{alur2013syntax,
+  title={Syntax-guided synthesis},
+  author={Alur, Rajeev and Bodik, Rastislav and Juniwal, Garvit and Martin, Milo MK and Raghothaman, Mukund and Seshia, Sanjit A and Singh, Rishabh and Solar-Lezama, Armando and Torlak, Emina and Udupa, Abhishek},
+  booktitle={Formal Methods in Computer-Aided Design (FMCAD), 2013},
+  pages={1--8},
+  year={2013},
+  organization={IEEE}
+}
+
+% sketching for prog synth
+@phdthesis{Solar-Lezama:2008:PSS:1714168,
+ author = {Solar-Lezama, Armando},
+ advisor = {Bodik, Rastislav},
+ title = {Program Synthesis by Sketching},
+ year = {2008},
+ isbn = {978-1-109-09745-0},
+ note = {AAI3353225},
+ publisher = {University of California at Berkeley},
+ address = {Berkeley, CA, USA},
+}
+
+@inproceedings{alur2013syntax,
+  title={Syntax-guided synthesis},
+  author={Alur, Rajeev and Bodik, Rastislav and Juniwal, Garvit and Martin, Milo MK and Raghothaman, Mukund and Seshia, Sanjit A and Singh, Rishabh and Solar-Lezama, Armando and Torlak, Emina and Udupa, Abhishek},
+  booktitle={Formal Methods in Computer-Aided Design (FMCAD), 2013},
+  pages={1--8},
+  year={2013},
+  organization={IEEE}
+}
+
+%program synth book
+@article{DBLP:journals/ftpl/GulwaniPS17,
+  author    = {Sumit Gulwani and
+               Oleksandr Polozov and
+               Rishabh Singh},
+  title     = {Program Synthesis},
+  journal   = {Foundations and Trends in Programming Languages},
+  volume    = {4},
+  number    = {1-2},
+  pages     = {1--119},
+  year      = {2017},
+  url       = {https://doi.org/10.1561/2500000010},
+  doi       = {10.1561/2500000010},
+  timestamp = {Tue, 08 Aug 2017 15:44:42 +0200},
+  biburl    = {https://dblp.org/rec/bib/journals/ftpl/GulwaniPS17},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+% oracle guided synth base paper
+@inproceedings{Jha:2010:OCP:1806799.1806833,
+ author = {Jha, Susmit and Gulwani, Sumit and Seshia, Sanjit A. and Tiwari, Ashish},
+ title = {Oracle-guided Component-based Program Synthesis},
+ booktitle = {Proceedings of the 32Nd ACM/IEEE International Conference on Software Engineering - Volume 1},
+ series = {ICSE '10},
+ year = {2010},
+ isbn = {978-1-60558-719-6},
+ location = {Cape Town, South Africa},
+ pages = {215--224},
+ numpages = {10},
+ url = {http://doi.acm.org/10.1145/1806799.1806833},
+ doi = {10.1145/1806799.1806833},
+ acmid = {1806833},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {SAT, SMT, oracle-based learning, program synthesis},
+}
+
+% refinement types base paper
+@article{Freeman:1991:RTM:113446.113468,
+ author = {Freeman, Tim and Pfenning, Frank},
+ title = {Refinement Types for ML},
+ journal = {SIGPLAN Not.},
+ issue_date = {June 1991},
+ volume = {26},
+ number = {6},
+ month = may,
+ year = {1991},
+ issn = {0362-1340},
+ pages = {268--277},
+ numpages = {10},
+ url = {http://doi.acm.org/10.1145/113446.113468},
+ doi = {10.1145/113446.113468},
+ acmid = {113468},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+}
+
+% liquid haskell book
+@misc{liquidHaskellBook,
+  title = {Programming with Refinement Types},
+  author = {Jhala, Ranjit and Seidel, Eric and Vazou, Niki},
+  howpublished = {\url{http://ucsd-progsys.github.io/liquidhaskell-tutorial/}},
+  note = {Accessed: 2018-10-20}
+}
+
+
+% r7rs scheme standard
+@misc{r7rs-scheme,
+  title = {R7RS-small standard for the Scheme programming language},
+  author = {Working Group 1},
+  howpublished = {\url{https://small.r7rs.org/}},
+  note = {Accessed: 2020-11-16}
+}
+
+@inproceedings{10.1145/2500365.2500618,
+author = {Keep, Andrew W. and Dybvig, R. Kent},
+title = {A Nanopass Framework for Commercial Compiler Development},
+year = {2013},
+isbn = {9781450323260},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2500365.2500618},
+doi = {10.1145/2500365.2500618},
+abstract = {Contemporary compilers must typically handle sophisticated
+                  high-level source languages, generate efficient code for
+                  multiple hardware architectures and operating systems, and
+                  support source-level debugging, profiling, and other program
+                  development tools. As a result, compilers tend to be among the
+                  most complex of software systems. Nanopass frameworks are
+                  designed to help manage this complexity. A nanopass compiler
+                  is comprised of many single-task passes with formally defined
+                  intermediate languages. The perceived downside of a nanopass
+                  compiler is that the extra passes will lead to substantially
+                  longer compilation times. To determine whether this is the
+                  case, we have created a plug replacement for the commercial
+                  Chez Scheme compiler, implemented using an updated nanopass
+                  framework, and we have compared the speed of the new compiler
+                  and the code it generates against the original compiler for a
+                  large set of benchmark programs. This paper describes the
+                  updated nanopass framework, the new compiler, and the results
+                  of our experiments. The compiler produces faster code than the
+                  original, averaging 15-27% depending on architecture and
+                  optimization level, due to a more sophisticated but slower
+                  register allocator and improvements to several optimizations.
+                  Compilation times average well within a factor of two of the
+                  original compiler, despite the slower register allocator and
+                  the replacement of five passes of the original 10 with over 50
+                  nanopasses.},
+booktitle = {Proceedings of the 18th ACM SIGPLAN International Conference on Functional Programming},
+pages = {343–350},
+numpages = {8},
+keywords = {compiler, nanopass, scheme},
+location = {Boston, Massachusetts, USA},
+series = {ICFP '13}
+}
+
+% refinement types for haskell, using an SMT solver
+@inproceedings{Jhala:2014:RTH:2541568.2541569,
+ author = {Jhala, Ranjit},
+ title = {Refinement Types for Haskell},
+ booktitle = {Proceedings of the ACM SIGPLAN 2014 Workshop on Programming Languages Meets Program Verification},
+ series = {PLPV '14},
+ year = {2014},
+ isbn = {978-1-4503-2567-7},
+ location = {San Diego, California, USA},
+ pages = {27--27},
+ numpages = {1},
+ url = {http://doi.acm.org/10.1145/2541568.2541569},
+ doi = {10.1145/2541568.2541569},
+ acmid = {2541569},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {abstract interpretation, dependent types, haskell, liquid types, refinement types, smt, type inference},
+}
+
+% same for scala
+@inproceedings{Schmid:2016:SCP:2998392.2998398,
+ author = {Schmid, Georg Stefan and Kuncak, Viktor},
+ title = {SMT-based Checking of Predicate-qualified Types for Scala},
+ booktitle = {Proceedings of the 2016 7th ACM SIGPLAN Symposium on Scala},
+ series = {SCALA 2016},
+ year = {2016},
+ isbn = {978-1-4503-4648-1},
+ location = {Amsterdam, Netherlands},
+ pages = {31--40},
+ numpages = {10},
+ url = {http://doi.acm.org/10.1145/2998392.2998398},
+ doi = {10.1145/2998392.2998398},
+ acmid = {2998398},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {Refinement Types, Scala},
+}
+
+% another for C
+@InProceedings{10.1007/978-3-642-31424-7_59,
+author="Rondon, Patrick
+and Bakst, Alexander
+and Kawaguchi, Ming
+and Jhala, Ranjit",
+editor="Madhusudan, P.
+and Seshia, Sanjit A.",
+title="CSolve: Verifying C with Liquid Types",
+booktitle="Computer Aided Verification",
+year="2012",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="744--750",
+abstract="We present CSolve, an automated verifier for C programs based on Liquid Type inference. We show how CSolve verifies memory safety through an example and describe its architecture and interface.",
+isbn="978-3-642-31424-7"
+}
+
+% Description of liquid haskell proper
+@article{Vazou:2014:LER:2775050.2633366,
+ author = {Vazou, Niki and Seidel, Eric L. and Jhala, Ranjit},
+ title = {LiquidHaskell: Experience with Refinement Types in the Real World},
+ journal = {SIGPLAN Not.},
+ issue_date = {December 2014},
+ volume = {49},
+ number = {12},
+ month = sep,
+ year = {2014},
+ issn = {0362-1340},
+ pages = {39--51},
+ numpages = {13},
+ url = {http://doi.acm.org/10.1145/2775050.2633366},
+ doi = {10.1145/2775050.2633366},
+ acmid = {2633366},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {Haskell, refinement types, smt-based verification, verification},
+}
+
+% dependent types base paper
+@inproceedings{Martin-Lof:1985:CMC:3721.3731,
+ author = {Martin-L\"{o}f, P.},
+ title = {Constructive Mathematics and Computer Programming},
+ booktitle = {Proc. Of a Discussion Meeting of the Royal Society of London on Mathematical Logic and Programming Languages},
+ year = {1985},
+ isbn = {0-13-561465-1},
+ location = {London, United Kingdom},
+ pages = {167--184},
+ numpages = {18},
+ url = {http://dl.acm.org/citation.cfm?id=3721.3731},
+ acmid = {3731},
+ publisher = {Prentice-Hall, Inc.},
+ address = {Upper Saddle River, NJ, USA},
+}
+
+% refinement types for typescript
+@article{vekris2016refinement,
+  title={Refinement types for TypeScript},
+  author={Vekris, Panagiotis and Cosman, Benjamin and Jhala, Ranjit},
+  journal={ACM SIGPLAN Notices},
+  volume={51},
+  number={6},
+  pages={310--325},
+  year={2016},
+  publisher={ACM}
+}
+
+%refinement types for F#
+@article{Bengtson:2011:RTS:1890028.1890031,
+ author = {Bengtson, Jesper and Bhargavan, Karthikeyan and Fournet, C{\'e}dric and Gordon, Andrew D. and Maffeis, Sergio},
+ title = {Refinement Types for Secure Implementations},
+ journal = {ACM Trans. Program. Lang. Syst.},
+ issue_date = {January 2011},
+ volume = {33},
+ number = {2},
+ month = feb,
+ year = {2011},
+ issn = {0164-0925},
+ pages = {8:1--8:45},
+ articleno = {8},
+ numpages = {45},
+ url = {http://doi.acm.org/10.1145/1890028.1890031},
+ doi = {10.1145/1890028.1890031},
+ acmid = {1890031},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+}
+
+% hindley milner type inference base paper
+@inproceedings{damas1982principal,
+  title={Principal type-schemes for functional programs},
+  author={Damas, Luis and Milner, Robin},
+  booktitle={Proceedings of the 9th ACM SIGPLAN-SIGACT symposium on Principles of programming languages},
+  pages={207--212},
+  year={1982},
+  organization={ACM}
+}
+
+% liquid haskell phd thesis
+@phdthesis{vazou2016liquid,
+  title={Liquid Haskell: Haskell as a theorem prover},
+  author={Vazou, Niki},
+  year={2016},
+  school={UC San Diego}
+}
+
+% example of refinement types for not haskell
+@inproceedings{kazerounian2018refinement,
+  title={Refinement Types for Ruby},
+  author={Kazerounian, Milod and Vazou, Niki and Bourgerie, Austin and Foster, Jeffrey S and Torlak, Emina},
+  booktitle={International Conference on Verification, Model Checking, and Abstract Interpretation},
+  pages={269--290},
+  year={2018},
+  organization={Springer}
+}
+
+% refinement types for racket, java
+@inproceedings{Kent:2016:OTM:2908080.2908091,
+ author = {Kent, Andrew M. and Kempe, David and Tobin-Hochstadt, Sam},
+ title = {Occurrence Typing Modulo Theories},
+ booktitle = {Proceedings of the 37th ACM SIGPLAN Conference on Programming Language Design and Implementation},
+ series = {PLDI '16},
+ year = {2016},
+ isbn = {978-1-4503-4261-2},
+ location = {Santa Barbara, CA, USA},
+ pages = {296--309},
+ numpages = {14},
+ url = {http://doi.acm.org/10.1145/2908080.2908091},
+ doi = {10.1145/2908080.2908091},
+ acmid = {2908091},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {Racket, Refinement types, occurrence typing},
+}
+
+% good book for refinement type theory and apps
+@article{gordon2010principles,
+  title={Principles and Applications of Refinement Types.},
+  author={Gordon, Andrew D and Fournet, C{\'e}dric},
+  journal={Logics and Languages for Reliability and Security},
+  volume={25},
+  pages={73--104},
+  year={2010}
+}
+
+% appliction for refinement types
+@TechReport{cryptographically-verified-design-and-implementation-of-a-distributed-key-manager,
+author = {Acar, Tolga and Fournet, Cédric and Shumow, Dan},
+title = {Cryptographically Verified Design and Implementation of a Distributed Key Manager},
+year = {2014},
+month = {April},
+abstract = {
+We present DKM, a distributed key management system with a cryptographically veriﬁed code base. DKM implements a new data protection API. It manages keys and policies on behalf of groups of users that share data. To ensure long-term protection, DKM supports cryptographic agility: algorithms, keys, and policies can evolve for protecting fresh data while preserving access to old data. DKM is written in C# and currently used by several large data center applications. To verify our design and implementation, we also write a lightweight reference implementation of DKM in F#. This code closes the gap between formal cryptographic models and production code: Formally, the F# code is a very precise model of DKM: we automatically verify its security against active adversaries, using a reﬁnement type-checker coupled with an SMT solver and new symbolic libraries for cryptographic agility. Concretely, the F# code closely mirrors our production code, and we automatically test that the corresponding C# and F# fragments can be swapped without affecting the runtime behavior of DKM. To the best of our knowledge, this is the largest cryptographically-veriﬁed implementation to date. We also describe several problems we uncovered and ﬁxed as part of this joint design, implementation, and veriﬁcation process.
+},
+publisher = {Microsoft Technical Report},
+}
+
+@TechReport{refinement-types-for-secure-implementations,
+author = {Bengtson, Jesper and Bhargavan, Karthik and Fournet, Cédric and Gordon, Andy and Maffeis, Sergio},
+title = {Refinement Types for Secure Implementations},
+year = {2008},
+month = {June},
+abstract = {
+We present the design and implementation of a typechecker for verifying security properties of the source code of cryptographic protocols and access control mechanisms. The underlying type theory is a λ-calculus equipped with refinement types for expressing pre- and post-conditions within first-order logic. We derive formal cryptographic primitives and represent active adversaries within the type theory. Well-typed programs enjoy assertion-based security properties, with respect to a realistic threat model including key compromise. The implementation amounts to an enhanced typechecker for the general purpose functional language F#; typechecking generates verification conditions that are passed to an SMT solver. We describe a series of checked examples. This is the first tool to verify authentication properties of cryptographic protocols by typechecking their source code.
+},
+publisher = {IEEE Computer Society},
+url = {https://www.microsoft.com/en-us/research/publication/refinement-types-for-secure-implementations/},
+pages = {17-32},
+isbn = {978-0-7695-3182-3},
+edition = {20th IEEE Computer Security Foundations Symposium (CSF) 2008},
+note = {20th IEEE Computer Security Foundations Symposium (CSF) 2008},
+}
+
+% problems for refinement typing
+@article{cosman2017local,
+  title={Local refinement typing},
+  author={Cosman, Benjamin and Jhala, Ranjit},
+  journal={Proceedings of the ACM on Programming Languages},
+  volume={1},
+  number={ICFP},
+  pages={26},
+  year={2017},
+  publisher={ACM}
+}
+
+% solver aided lang embedded in scala
+@inproceedings{koksal2012constraints,
+  title={Constraints as control},
+  author={K{\"o}ksal, Ali Sinan and Kuncak, Viktor and Suter, Philippe},
+  booktitle={ACM SIGPLAN Notices},
+  volume={47},
+  number={1},
+  pages={151--164},
+  year={2012},
+  organization={ACM}
+}
+
+% another solver aided lang for F*
+@article{fstar-jfp13,
+  author    = {Nikhil Swamy and
+               Juan Chen and
+               C{\'{e}}dric Fournet and
+               Pierre{-}Yves Strub and
+               Karthikeyan Bhargavan and
+               Jean Yang},
+  title     = {Secure distributed programming with value-dependent types},
+  journal   = {J. Funct. Program.},
+  shortjournal = {JFP},
+  volume    = {23},
+  number    = {4},
+  year      = {2013},
+  pages     = {402-451},
+  url       = {http://prosecco.gforge.inria.fr/personal/karthik/pubs/secure_distributed_programming_fstar_jfp15.pdf},
+}
+
+% another that annotes C code, and uses boogie to discharge to a solver
+@article{article,
+author = {Cohen, Ernie and Moskal, Michal and Schulte, Wolfram and Tobies, Stephan},
+year = {2018},
+month = {10},
+pages = {},
+title = {A Practical Verification Methodology for Concurrent Programs}
+}
+
+% spec# a lang built on boogie
+@inproceedings{barnett2004spec,
+  title={The Spec\# programming system: An overview},
+  author={Barnett, Mike and Leino, K Rustan M and Schulte, Wolfram},
+  booktitle={International Workshop on Construction and Analysis of Safe, Secure, and Interoperable Smart Devices},
+  pages={49--69},
+  year={2004},
+  organization={Springer}
+}
+
+% a proto solver enabled lang
+@book{meyer1992eiffel,
+  title={Eiffel the language Prentice Hall object-oriented series},
+  author={Meyer, Bertrand},
+  year={1992},
+  publisher={Prentice hall Upper Saddle River, NJ, USA}
+}
+
+% another proto lang
+@article{Lampson:1977:RPL:954666.971189,
+ author = {Lampson, B. W. and Horning, J. J. and London, R. L. and Mitchell, J. G. and Popek, G. J.},
+ title = {Report on the Programming Language Euclid},
+ journal = {SIGPLAN Not.},
+ issue_date = {February 1977},
+ volume = {12},
+ number = {2},
+ month = feb,
+ year = {1977},
+ issn = {0362-1340},
+ pages = {1--79},
+ numpages = {79},
+ url = {http://doi.acm.org/10.1145/954666.971189},
+ doi = {10.1145/954666.971189},
+ acmid = {971189},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+}
+
+% the last proto lang
+@article{Ambler:1977:GLS:390017.808306,
+ author = {Ambler, Allen L. and Good, Donald I. and Browne, James C. and Burger, Wilhelm F. and Cohen, Richard M. and Hoch, Charles G. and Wells, Robert E.},
+ title = {Gypsy: A Language for Specification and Implementation of Verifiable Programs},
+ journal = {SIGPLAN Not.},
+ issue_date = {March 1977},
+ volume = {12},
+ number = {3},
+ month = mar,
+ year = {1977},
+ issn = {0362-1340},
+ pages = {1--10},
+ numpages = {10},
+ url = {http://doi.acm.org/10.1145/390017.808306},
+ doi = {10.1145/390017.808306},
+ acmid = {808306},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {Communications processing, Concurrency, Formal specification, Program proof, Programming language, Run time validation, Specification language, Systems programming, Verification},
+}
+
+% another solver aided lang that is a subset of scala
+@InProceedings{10.1007/978-3-642-23702-7_23,
+author="Suter, Philippe
+and K{\"o}ksal, Ali Sinan
+and Kuncak, Viktor",
+editor="Yahav, Eran",
+title="Satisfiability Modulo Recursive Programs",
+booktitle="Static Analysis",
+year="2011",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="298--315",
+abstract="We present a semi-decision procedure for checking satisfiability of expressive correctness properties of recursive first-order functional programs. In our approach, both properties and programs are expressed in the same language, a subset of Scala. We implemented our procedure and integrated it with the Z3 SMT solver and the Scala compiler. Our procedure is sound for counterexamples and for proofs of terminating functions. It is terminating and thus complete for many important classes of specifications, including all satisfiable formulas and all formulas where recursive functions satisfy certain syntactic restrictions. Using our system, Leon, we verified detailed correctness properties for functional data structure implementations, as well as syntax tree manipulations. We have found our system to be fast for both finding counterexamples and finding correctness proofs, and to scale to larger programs than alternative techniques.",
+isbn="978-3-642-23702-7"
+}
+
+% paper that uses the term verification condition
+@inproceedings{Jackson:2007:USS:1345169.1345177,
+ author = {Jackson, Paul B. and Ellis, Bill J. and Sharp, Kathleen},
+ title = {Using SMT Solvers to Verify High-integrity Programs},
+ booktitle = {Proceedings of the Second Workshop on Automated Formal Methods},
+ series = {AFM '07},
+ year = {2007},
+ isbn = {978-1-59593-879-4},
+ location = {Atlanta, Georgia},
+ pages = {60--68},
+ numpages = {9},
+ url = {http://doi.acm.org/10.1145/1345169.1345177},
+ doi = {10.1145/1345169.1345177},
+ acmid = {1345177},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {Ada, SAT modulo theories solver, SMT solver, SPARK},
+}
+
+% simplify automated thoerem prover base paper, used for term verification condition
+@article{detlefs2005simplify,
+  title={Simplify: a theorem prover for program checking},
+  author={Detlefs, David and Nelson, Greg and Saxe, James B},
+  journal={Journal of the ACM (JACM)},
+  volume={52},
+  number={3},
+  pages={365--473},
+  year={2005},
+  publisher={ACM}
+}
+
+% ESC/JAVA
+@article{Flanagan:2013:PES:2502508.2502520,
+ author = {Flanagan, Cormac and Leino, K. Rustan M. and Lillibridge, Mark and Nelson, Greg and Saxe, James B. and Stata, Raymie},
+ title = {PLDI 2002: Extended Static Checking for Java},
+ journal = {SIGPLAN Not.},
+ issue_date = {April 2013},
+ volume = {48},
+ number = {4S},
+ month = jul,
+ year = {2013},
+ issn = {0362-1340},
+ pages = {22--33},
+ numpages = {12},
+ url = {http://doi.acm.org/10.1145/2502508.2502520},
+ doi = {10.1145/2502508.2502520},
+ acmid = {2502520},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {compile-time program checking},
+}
+
+% ESC/Modula-3
+@article{detlefs1998extended,
+  title={Extended static checking},
+  author={Detlefs, David L and Leino, K Rustan M and Nelson, Greg and Saxe, James B},
+  year={1998},
+  publisher={Citeseer}
+}
+
+% Generator for VCs for ESC/JAVA
+@inproceedings{Flanagan:2001:HAA:647540.730008,
+ author = {Flanagan, Cormac and Leino, K. Rustan M.},
+ title = {Houdini, an Annotation Assistant for ESC/Java},
+ booktitle = {Proceedings of the International Symposium of Formal Methods Europe on Formal Methods for Increasing Software Productivity},
+ series = {FME '01},
+ year = {2001},
+ isbn = {3-540-41791-5},
+ pages = {500--517},
+ numpages = {18},
+ url = {http://dl.acm.org/citation.cfm?id=647540.730008},
+ acmid = {730008},
+ publisher = {Springer-Verlag},
+ address = {Berlin, Heidelberg},
+}
+
+% parameterized unit test base paper
+@Inproceedings{parameterized-unit-tests,
+author = {Tillmann, Nikolai and Schulte, Wolfram},
+title = {Parameterized Unit Tests},
+booktitle = {Proceedings of the 10th European Software Engineering Conference held jointly with 13th ACM SIGSOFT International Symposium on Foundations of Software Engineering},
+year = {2005},
+month = {January},
+abstract = {Parameterized unit tests extend the current industry practice
+                  of using closed unit tests defined as parameterless methods.
+                  Parameterized unit tests separate two concerns: 1) They
+                  specify the external behavior of the involved methods for all
+                  possible test arguments. 2) Test cases can be re-obtained as
+                  traditional closed unit tests by instantiating the
+                  parameterized unit tests. Symbolic execution and constraint
+                  solving can be used to automatically choose a minimal set of
+                  inputs that exercise a parameterized unit test with respect to
+                  possible code paths of the implementation. In addition,
+                  parameterized unit tests can be used as symbolic summaries
+                  which allows symbolic execution to scale for arbitrary
+                  abstraction levels. We have developed a prototype tool which
+                  computes test cases from parameterized unit tests; it is
+                  integrated into the forthcoming Visual Studio Team System
+                  product. We report on its first use to test parts of the .NET
+                  base class library. },
+publisher = {Association for Computing Machinery, Inc.},
+pages = {253-262},
+volume = {30},
+isbn = {1-59593-014-0},
+edition = {Proceedings of the 10th European Software Engineering Conference held jointly with 13th ACM SIGSOFT International Symposium on Foundations of Software Engineering},
+}
+
+% relates parameterized unit testing with symbolic execution
+@article{tillmann2006unit,
+  title={Unit tests reloaded: Parameterized unit testing with symbolic execution},
+  author={Tillmann, Nikolai and Schulte, Wolfram},
+  journal={IEEE software},
+  volume={23},
+  number={4},
+  pages={38--47},
+  year={2006},
+  publisher={IEEE}
+}
+
+% CEGIR base paper for section on like terms
+@inproceedings{Nguyen:2017:SIP:3155562.3155662,
+ author = {Nguyen, ThanhVu and Dwyer, Matthew B. and Visser, Willem},
+ title = {SymInfer: Inferring Program Invariants Using Symbolic States},
+ booktitle = {Proceedings of the 32Nd IEEE/ACM International Conference on Automated Software Engineering},
+ series = {ASE 2017},
+ year = {2017},
+ isbn = {978-1-5386-2684-9},
+ location = {Urbana-Champaign, IL, USA},
+ pages = {804--814},
+ numpages = {11},
+ url = {http://dl.acm.org/citation.cfm?id=3155562.3155662},
+ acmid = {3155662},
+ publisher = {IEEE Press},
+ address = {Piscataway, NJ, USA},
+}
+
+% example of an automatic verifier that references proof obligations.
+@InProceedings{10.1007/978-3-642-28717-6_23,
+author="Merz, Stephan
+and Vanzetto, Hern{\'a}n",
+editor="Bj{\o}rner, Nikolaj
+and Voronkov, Andrei",
+title="Automatic Verification of TLA{\thinspace}+{\thinspace} Proof Obligations with SMT Solvers",
+booktitle="Logic for Programming, Artificial Intelligence, and Reasoning",
+year="2012",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="289--303",
+abstract="TLA{\thinspace}+{\thinspace} is a formal specification language that is based on ZF set theory and the Temporal Logic of Actions TLA. The TLA{\thinspace}+{\thinspace} proof system tlaps assists users in deductively verifying safety properties of TLA{\thinspace}+{\thinspace} specifications. tlaps is built around a proof manager, which interprets the TLA{\thinspace}+{\thinspace} proof language, generates corresponding proof obligations, and passes them to backend verifiers. In this paper we present a new backend for use with SMT solvers that supports elementary set theory, functions, arithmetic, tuples, and records. Type information required by the solvers is provided by a typing discipline for TLA{\thinspace}+{\thinspace} proof obligations, which helps us disambiguate the translation of expressions of (untyped) TLA{\thinspace}+{\thinspace} , while ensuring its soundness. Preliminary results show that the backend can help to significantly increase the degree of automation of certain interactive proofs.",
+isbn="978-3-642-28717-6"
+}
+
+% SMT lib interface
+@TECHREPORT{BarFT-RR-17,
+  author =	 {Clark Barrett and Pascal Fontaine and Cesare Tinelli},
+  title =	 {{The SMT-LIB Standard: Version 2.6}},
+  institution =	 {Department of Computer Science, The University of Iowa},
+  year =	 2017,
+  note =	 {Available at {\tt www.SMT-LIB.org}}
+}
+
+% valigator uses the terminology proof object
+@inproceedings{Henzinger:2008:VVT:1484209.1484240,
+ author = {Henzinger, Thomas A. and Hottelier, Thibaud and Kov\'{a}cs, Laura},
+ title = {Valigator: A Verification Tool with Bound and Invariant Generation},
+ booktitle = {Proceedings of the 15th International Conference on Logic for Programming, Artificial Intelligence, and Reasoning},
+ series = {LPAR '08},
+ year = {2008},
+ isbn = {978-3-540-89438-4},
+ location = {Doha, Qatar},
+ pages = {333--342},
+ numpages = {10},
+ url = {http://dx.doi.org/10.1007/978-3-540-89439-1_24},
+ doi = {10.1007/978-3-540-89439-1_24},
+ acmid = {1484240},
+ publisher = {Springer-Verlag},
+ address = {Berlin, Heidelberg},
+}
+
+% ESC/modula-3 base paper
+@InProceedings{10.1007/BFb0026441,
+author="Rustan, K.
+and Leino, M.
+and Nelson, Greg",
+editor="Koskimies, Kai",
+title="An extended static checker for modula-3",
+booktitle="Compiler Construction",
+year="1998",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="302--305",
+isbn="978-3-540-69724-4"
+}
+
+% syminfer for program invariant generation
+@inproceedings{Nguyen:2017:SIP:3155562.3155662,
+ author = {Nguyen, ThanhVu and Dwyer, Matthew B. and Visser, Willem},
+ title = {SymInfer: Inferring Program Invariants Using Symbolic States},
+ booktitle = {Proceedings of the 32Nd IEEE/ACM International Conference on Automated Software Engineering},
+ series = {ASE 2017},
+ year = {2017},
+ isbn = {978-1-5386-2684-9},
+ location = {Urbana-Champaign, IL, USA},
+ pages = {804--814},
+ numpages = {11},
+ url = {http://dl.acm.org/citation.cfm?id=3155562.3155662},
+ acmid = {3155662},
+ publisher = {IEEE Press},
+ address = {Piscataway, NJ, USA},
+}
+
+% DIG program invariant generator
+@article{Nguyen:2014:DDI:2668018.2556782,
+ author = {Nguyen, Thanhvu and Kapur, Deepak and Weimer, Westley and Forrest, Stephanie},
+ title = {DIG: A Dynamic Invariant Generator for Polynomial and Array Invariants},
+ journal = {ACM Trans. Softw. Eng. Methodol.},
+ issue_date = {August 2014},
+ volume = {23},
+ number = {4},
+ month = sep,
+ year = {2014},
+ issn = {1049-331X},
+ pages = {30:1--30:30},
+ articleno = {30},
+ numpages = {30},
+ url = {http://doi.acm.org/10.1145/2556782},
+ doi = {10.1145/2556782},
+ acmid = {2556782},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {Program analysis, array invariants, dynamic analysis, geometric invariant inference, invariant generation, nonlinear invariants, theorem proving},
+}
+
+% iDiscover
+@inproceedings{Zhang:2014:FDI:2610384.2610389,
+ author = {Zhang, Lingming and Yang, Guowei and Rungta, Neha and Person, Suzette and Khurshid, Sarfraz},
+ title = {Feedback-driven Dynamic Invariant Discovery},
+ booktitle = {Proceedings of the 2014 International Symposium on Software Testing and Analysis},
+ series = {ISSTA 2014},
+ year = {2014},
+ isbn = {978-1-4503-2645-2},
+ location = {San Jose, CA, USA},
+ pages = {362--372},
+ numpages = {11},
+ url = {http://doi.acm.org/10.1145/2610384.2610389},
+ doi = {10.1145/2610384.2610389},
+ acmid = {2610389},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {Invariant generation, Model checking, Symbolic execution},
+}
+
+% PIE base paper another invariant generator
+@article{padhi2016data,
+  title={Data-driven precondition inference with learned features},
+  author={Padhi, Saswat and Sharma, Rahul and Millstein, Todd},
+  journal={ACM SIGPLAN Notices},
+  volume={51},
+  number={6},
+  pages={42--56},
+  year={2016},
+  publisher={ACM}
+}
+
+% Guess and check, originator of CEGIR
+@inproceedings{sharma2013data,
+  title={A data driven approach for algebraic loop invariants},
+  author={Sharma, Rahul and Gupta, Saurabh and Hariharan, Bharath and Aiken, Alex and Liang, Percy and Nori, Aditya V},
+  booktitle={European Symposium on Programming},
+  pages={574--592},
+  year={2013},
+  organization={Springer}
+}
+
+% NumInver
+@inproceedings{nguyen2017counterexample,
+  title={Counterexample-guided approach to finding numerical invariants},
+  author={Nguyen, ThanhVu and Antonopoulos, Timos and Ruef, Andrew and Hicks, Michael},
+  booktitle={Proceedings of the 2017 11th Joint Meeting on Foundations of Software Engineering},
+  pages={605--615},
+  year={2017},
+  organization={ACM}
+}
+
+% ICE numeric invariant generator, used in terminology
+@InProceedings{10.1007/978-3-319-08867-9_5,
+author="Garg, Pranav
+and L{\"o}ding, Christof
+and Madhusudan, P.
+and Neider, Daniel",
+editor="Biere, Armin
+and Bloem, Roderick",
+title="ICE: A Robust Framework for Learning Invariants",
+booktitle="Computer Aided Verification",
+year="2014",
+publisher="Springer International Publishing",
+address="Cham",
+pages="69--87",
+abstract="We introduce ICE, a robust learning paradigm for synthesizing invariants, that learns using examples, counter-examples, and implications, and show that it admits honest teachers and strongly convergent mechanisms for invariant synthesis. We observe that existing algorithms for black-box abstract interpretation can be interpreted as ICE-learning algorithms. We develop new strongly convergent ICE-learning algorithms for two domains, one for learning Boolean combinations of numerical invariants for scalar variables and one for quantified invariants for arrays and dynamic lists. We implement these ICE-learning algorithms in a verification tool and show they are robust, practical, and efficient.",
+isbn="978-3-319-08867-9"
+}
+
+% Green, a static analysis tool that considers variation
+@inproceedings{Visser:2012:GRR:2393596.2393665,
+ author = {Visser, Willem and Geldenhuys, Jaco and Dwyer, Matthew B.},
+ title = {Green: Reducing, Reusing and Recycling Constraints in Program Analysis},
+ booktitle = {Proceedings of the ACM SIGSOFT 20th International Symposium on the Foundations of Software Engineering},
+ series = {FSE '12},
+ year = {2012},
+ isbn = {978-1-4503-1614-9},
+ location = {Cary, North Carolina},
+ pages = {58:1--58:11},
+ articleno = {58},
+ numpages = {11},
+ url = {http://doi.acm.org/10.1145/2393596.2393665},
+ doi = {10.1145/2393596.2393665},
+ acmid = {2393665},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {NoSQL, constraint solving, path feasibility, symbolic execution},
+}
+
+% generalized model checking base paper
+@InProceedings{10.1007/3-540-44618-4_14,
+author="Bruns, Glenn
+and Godefroid, Patrice",
+editor="Palamidessi, Catuscia",
+title="Generalized Model Checking: Reasoning about Partial State Spaces",
+booktitle="CONCUR 2000 --- Concurrency Theory",
+year="2000",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="168--182",
+abstract="We discuss the problem of model checking temporal properties on partial Kripke structures, which were used in [BG99] to represent incomplete state spaces. We first extend the results of [BG99] by showing that the model-checking problem for any 3-valued temporal logic can be reduced to two model-checking problems for the corresponding 2-valued temporal logic. We then introduce a new semantics for 3-valued temporal logics that can give more definite answers than the previous one. With this semantics, the evaluation of a formula $\phi$ on a partial Kripke structure M returns the third truth value ⊥ (read ``unknown'') only if there exist Kripke structures M1 and M2 that both complete M and such that M1 satisfies $\phi$ while M2 violates $\phi$, hence making the value of $\phi$ on M truly unknown. The partial Kripke structure M can thus be viewed as a partial solution to the satisfiability problem which reduces the solution space to complete Kripke structures that are more complete than M with respect to a completeness preorder. This generalized model-checking problem is thus a generalization of both satisfiability (all Kripke structures are potential solutions) and model checking (a single Kripke structure needs to be checked). We present algorithms and complexity bounds for the generalized model-checking problem for various temporal logics.",
+isbn="978-3-540-44618-7"
+}
+
+@inproceedings{godefroid2002automatic,
+  title={Automatic abstraction using generalized model checking},
+  author={Godefroid, Patrice and Jagadeesan, Radha},
+  booktitle={International Conference on Computer Aided Verification},
+  pages={137--151},
+  year={2002},
+  organization={Springer}
+}
+
+@inproceedings{godefroid2005model,
+  title={Model checking vs. generalized model checking: Semantic minimizations for temporal logics},
+  author={Godefroid, Patrice and Huth, Michael},
+  booktitle={Logic in Computer Science, 2005. LICS 2005. Proceedings. 20th Annual IEEE Symposium on},
+  pages={158--167},
+  year={2005},
+  organization={IEEE}
+}
+
+% kleenes 3 valued logic
+@article{kleene1968introduction,
+  title={Introduction to metamathematics},
+  author={Kleene, Stephen Cole},
+  year={1968}
+}
+
+% anther GMC paper
+@InProceedings{10.1007/978-3-540-93900-9_11,
+author="Godefroid, Patrice
+and Piterman, Nir",
+editor="Jones, Neil D.
+and M{\"u}ller-Olm, Markus",
+title="LTL Generalized Model Checking Revisited",
+booktitle="Verification, Model Checking, and Abstract Interpretation",
+year="2009",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="89--104",
+abstract="Given a 3-valued abstraction of a program (possibly generated using static program analysis and predicate abstraction) and a temporal logic formula, generalized model checking (GMC) checks whether there exists a concretization of that abstraction that satisfies the formula. In this paper, we revisit generalized model checking for linear time (LTL) properties. First, we show that LTL GMC is 2EXPTIME-complete in the size of the formula and polynomial in the model, where the degree of the polynomial depends on the formula, instead of EXPTIME-complete and quadratic as previously believed. The standard definition of GMC depends on a definition of concretization which is tailored for branching-time model checking. We then study a simpler linear completeness preorder for relating program abstractions. We show that LTL GMC with this weaker preorder is only EXPSPACE-complete in the size of the formula, and can be solved in linear time and logarithmic space in the size of the model. Finally, we identify classes of formulas for which the model complexity of standard GMC is reduced.",
+isbn="978-3-540-93900-9"
+}
+
+% base paper the formalizes properties for BMC
+@Article{Alpern1987,
+author="Alpern, Bowen
+and Schneider, Fred B.",
+title="Recognizing safety and liveness",
+journal="Distributed Computing",
+year="1987",
+month="Sep",
+day="01",
+volume="2",
+number="3",
+pages="117--126",
+abstract="A formal characterization for safety properties and liveness properties is given in terms of the structure of the Buchi automaton that specifies the property. The characterizations permit a property to be decomposed into a safety property and a liveness property whose conjunction is the original. The characterizations also give insight into techniques required to prove a large class of safety and liveness properties.",
+issn="1432-0452",
+doi="10.1007/BF01782772",
+url="https://doi.org/10.1007/BF01782772"
+}
+
+% Mayhem
+@misc{Cha,
+  abstract = {In this paper we present Mayhem, a new system for automatically finding exploitable bugs in binary (i.e., executable) programs. Every bug reported by Mayhem is accompanied by a working shell-spawning exploit. The working exploits ensure soundness and that each bug report is security-critical and actionable. Mayhem works on raw binary code without debugging information. To make exploit generation possible at the binary-level, Mayhem addresses two major technical challenges: actively managing execution paths without exhausting memory, and reasoning about symbolic memory indices, where a load or a store address depends on user input. To this end, we propose two novel techniques: 1) hybrid symbolic execution for combining online and offline (concolic) execution to maximize the benefits of both techniques, and 2) index-based memory modeling, a technique that allows Mayhem to efficiently reason about symbolic memory at the binary level. We used Mayhem to find and demonstrate 29 exploitable vulnerabilities in both Linux and Windows programs, 2 of which were previously undocumented.},
+  affiliation = {},
+  author = {Cha, Sang Kil and Avgerinos, Thanassis and Rebert, Alexandre and Brumley, David},
+  doi = {10.1109/SP.2012.31},
+  keywords = {exploit generation; hybrid execution; symbolic memory; index-based memory modeling},
+  language = {Undetermined},
+  title = {Unleashing Mayhem on Binary Code},
+}
+
+% S2E more symbolic execution
+@article{Chipounov:2011:SPI:2248487.1950396,
+ author = {Chipounov, Vitaly and Kuznetsov, Volodymyr and Candea, George},
+ title = {S2E: A Platform for In-vivo Multi-path Analysis of Software Systems},
+ journal = {SIGPLAN Not.},
+ issue_date = {April 2012},
+ volume = {47},
+ number = {4},
+ month = mar,
+ year = {2011},
+ issn = {0362-1340},
+ pages = {265--278},
+ numpages = {14},
+ url = {http://doi.acm.org/10.1145/2248487.1950396},
+ doi = {10.1145/2248487.1950396},
+ acmid = {1950396},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {analysis, binary, consistency models, dbt, framework, in-vivo, performance, symbolic execution, testing, virtualization},
+}
+
+% CUTE concolic testing and analysis
+@inproceedings{Sen:2005:CCU:1081706.1081750,
+ author = {Sen, Koushik and Marinov, Darko and Agha, Gul},
+ title = {CUTE: A Concolic Unit Testing Engine for C},
+ booktitle = {Proceedings of the 10th European Software Engineering Conference Held Jointly with 13th ACM SIGSOFT International Symposium on Foundations of Software Engineering},
+ series = {ESEC/FSE-13},
+ year = {2005},
+ isbn = {1-59593-014-0},
+ location = {Lisbon, Portugal},
+ pages = {263--272},
+ numpages = {10},
+ url = {http://doi.acm.org/10.1145/1081706.1081750},
+ doi = {10.1145/1081706.1081750},
+ acmid = {1081750},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {concolic testing, data structure testing, explicit path model-checking, random testing, testing C programs, unit testing},
+}
+
+% CLOUD9 static analysis tool
+@inproceedings{Bucur:2011:PSE:1966445.1966463,
+ author = {Bucur, Stefan and Ureche, Vlad and Zamfir, Cristian and Candea, George},
+ title = {Parallel Symbolic Execution for Automated Real-world Software Testing},
+ booktitle = {Proceedings of the Sixth Conference on Computer Systems},
+ series = {EuroSys '11},
+ year = {2011},
+ isbn = {978-1-4503-0634-8},
+ location = {Salzburg, Austria},
+ pages = {183--198},
+ numpages = {16},
+ url = {http://doi.acm.org/10.1145/1966445.1966463},
+ doi = {10.1145/1966445.1966463},
+ acmid = {1966463},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {automated testing, debugging, distributed testing, parallel testing, reliability, scalable testing, symbolic execution, testing in cloud, testing tools, verification},
+}
+
+% java path finder
+@inproceedings{Pasareanu:2010:SPS:1858996.1859035,
+ author = {P\u{a}s\u{a}reanu, Corina S. and Rungta, Neha},
+ title = {Symbolic PathFinder: Symbolic Execution of Java Bytecode},
+ booktitle = {Proceedings of the IEEE/ACM International Conference on Automated Software Engineering},
+ series = {ASE '10},
+ year = {2010},
+ isbn = {978-1-4503-0116-9},
+ location = {Antwerp, Belgium},
+ pages = {179--180},
+ numpages = {2},
+ url = {http://doi.acm.org/10.1145/1858996.1859035},
+ doi = {10.1145/1858996.1859035},
+ acmid = {1859035},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {automated test case generation, program analysis},
+}
+
+% automated debugging paper for overview in applications
+@inproceedings{Parnin:2011:ADT:2001420.2001445,
+ author = {Parnin, Chris and Orso, Alessandro},
+ title = {Are Automated Debugging Techniques Actually Helping Programmers?},
+ booktitle = {Proceedings of the 2011 International Symposium on Software Testing and Analysis},
+ series = {ISSTA '11},
+ year = {2011},
+ isbn = {978-1-4503-0562-4},
+ location = {Toronto, Ontario, Canada},
+ pages = {199--209},
+ numpages = {11},
+ url = {http://doi.acm.org/10.1145/2001420.2001445},
+ doi = {10.1145/2001420.2001445},
+ acmid = {2001445},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {statistical debugging, user studies},
+}
+
+% Exploit detector via KLEE
+@article{avgerinos2011aeg,
+  title={AEG: Automatic exploit generation},
+  author={Avgerinos, Thanassis and Cha, Sang Kil and Hao, Brent Lim Tze and Brumley, David},
+  year={2011},
+  publisher={Citeseer}
+}
+
+% finding vulnerabilities in heap
+@inproceedings{Feist:2016:FNH:3015135.3015137,
+ author = {Feist, Josselin and Mounier, Laurent and Bardin, S{\'e}bastien and David, Robin and Potet, Marie-Laure},
+ title = {Finding the Needle in the Heap: Combining Static Analysis and Dynamic Symbolic Execution to Trigger Use-after-free},
+ booktitle = {Proceedings of the 6th Workshop on Software Security, Protection, and Reverse Engineering},
+ series = {SSPREW '16},
+ year = {2016},
+ isbn = {978-1-4503-4841-6},
+ location = {Los Angeles, California, USA},
+ pages = {2:1--2:12},
+ articleno = {2},
+ numpages = {12},
+ url = {http://doi.acm.org/10.1145/3015135.3015137},
+ doi = {10.1145/3015135.3015137},
+ acmid = {3015137},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {automated exploit generation, binary code analysis, dynamic symbolic execution, use-after-free, vulnerability detection},
+}
+
+% use after free vulnerabilites base paper
+@article{feist2014statically,
+  title={Statically detecting use after free on binary code},
+  author={Feist, Josselin and Mounier, Laurent and Potet, Marie-Laure},
+  journal={Journal of Computer Virology and Hacking Techniques},
+  volume={10},
+  number={3},
+  pages={211--217},
+  year={2014},
+  publisher={Springer}
+}
+
+% HADES tool for automated data transformation
+@inproceedings{Yaghmazadeh:2016:STH:2908080.2908088,
+ author = {Yaghmazadeh, Navid and Klinger, Christian and Dillig, Isil and Chaudhuri, Swarat},
+ title = {Synthesizing Transformations on Hierarchically Structured Data},
+ booktitle = {Proceedings of the 37th ACM SIGPLAN Conference on Programming Language Design and Implementation},
+ series = {PLDI '16},
+ year = {2016},
+ isbn = {978-1-4503-4261-2},
+ location = {Santa Barbara, CA, USA},
+ pages = {508--521},
+ numpages = {14},
+ url = {http://doi.acm.org/10.1145/2908080.2908088},
+ doi = {10.1145/2908080.2908088},
+ acmid = {2908088},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {Program synthesis, data transformations, programming by example},
+}
+
+% code repair tool for apps
+@InProceedings{10.1007/978-3-319-41540-6_21,
+author="D'Antoni, Loris
+and Samanta, Roopsha
+and Singh, Rishabh",
+editor="Chaudhuri, Swarat
+and Farzan, Azadeh",
+title="Qlose: Program Repair with Quantitative Objectives",
+booktitle="Computer Aided Verification",
+year="2016",
+publisher="Springer International Publishing",
+address="Cham",
+pages="383--401",
+abstract="The goal of automatic program repair is to identify a set of syntactic changes that can turn a program that is incorrect with respect to a given specification into a correct one. Existing program repair techniques typically aim to find any program that meets the given specification. Such ``best-effort'' strategies can end up generating a program that is quite different from the original one. Novel techniques have been proposed to compute syntactically minimal program fixes, but the smallest syntactic fix to a program can still significantly alter the original program's behaviour. We propose a new approach to program repair based on program distances, which can quantify changes not only to the program syntax but also to the program semantics. We call this the quantitative program repair problem where the ``optimal'' repair is derived using multiple distances. We implement a solution to the quantitative repair problem in a prototype tool called Qlose (Quantitatively close), using the program synthesizer Sketch. We evaluate the effectiveness of different distances in obtaining desirable repairs by evaluating Qlose on programs taken from educational tools such as CodeHunt and edX.",
+isbn="978-3-319-41540-6"
+}
+
+%semFix program repair, for apps
+@inproceedings{Nguyen:2013:SPR:2486788.2486890,
+ author = {Nguyen, Hoang Duong Thien and Qi, Dawei and Roychoudhury, Abhik and Chandra, Satish},
+ title = {SemFix: Program Repair via Semantic Analysis},
+ booktitle = {Proceedings of the 2013 International Conference on Software Engineering},
+ series = {ICSE '13},
+ year = {2013},
+ isbn = {978-1-4673-3076-3},
+ location = {San Francisco, CA, USA},
+ pages = {772--781},
+ numpages = {10},
+ url = {http://dl.acm.org/citation.cfm?id=2486788.2486890},
+ acmid = {2486890},
+ publisher = {IEEE Press},
+ address = {Piscataway, NJ, USA},
+}
+
+% superoptimization base paper
+@inproceedings{Massalin:1987:SLS:36206.36194,
+ author = {Massalin, Henry},
+ title = {Superoptimizer: A Look at the Smallest Program},
+ booktitle = {Proceedings of the Second International Conference on Architectual Support for Programming Languages and Operating Systems},
+ series = {ASPLOS II},
+ year = {1987},
+ isbn = {0-8186-0805-6},
+ location = {Palo Alto, California, USA},
+ pages = {122--126},
+ numpages = {5},
+ url = {https://doi.org/10.1145/36206.36194},
+ doi = {10.1145/36206.36194},
+ acmid = {36194},
+ publisher = {IEEE Computer Society Press},
+ address = {Los Alamitos, CA, USA},
+}
+
+% superoptimization with a sat solver paper 0
+@Inproceedings{synthesis-loop-free-programs,
+author = {Gulwani, Sumit and Jha, Susmit and Tiwari, Ashish and Venkatesan, Ramarathnam},
+title = {Synthesis of Loop-Free Programs},
+year = {2011},
+month = {June},
+abstract = {We consider the problem of synthesizing loop-free programs that
+                  implement a desired functionality using components from a
+                  given library. Specifications of the desired functionality and
+                  the library components are provided as logical relations
+                  between their respective input and output variables. The
+                  library components can be used at most once, and hence the
+                  library is required to contain a reasonable overapproximation
+                  of the multiset of the components required. We solve the above
+                  component-based synthesis problem using a constraint-based
+                  approach that involves first generating a synthesis
+                  constraint, and then solving the constraint. The synthesis
+                  constraint is a first-order 98 logic formula whose size is
+                  quadratic in the number of components. We present a novel
+                  algorithm for solving such constraints. Our algorithm is based
+                  on counterexample guided iterative synthesis paradigm and uses
+                  off-the-shelf SMT solvers. We present experimental results
+                  that show that our tool Brahma can efficiently synthesize
+                  highly nontrivial 10-20 line loop-free bitvector programs.
+                  These programs represent a state space of approximately 2010
+                  programs, and are beyond the reach},
+url = {https://www.microsoft.com/en-us/research/publication/synthesis-loop-free-programs/},
+edition = {PLDI’11, June 4–8, 2011, San Jose, California, USA},
+}
+
+% superoptimization with solver paper 1
+@inproceedings{Barthe:2013:RVS:2442516.2442529,
+ author = {Barthe, Gilles and Crespo, Juan Manuel and Gulwani, Sumit and Kunz, Cesar and Marron, Mark},
+ title = {From Relational Verification to SIMD Loop Synthesis},
+ booktitle = {Proceedings of the 18th ACM SIGPLAN Symposium on Principles and Practice of Parallel Programming},
+ year = {2013},
+ isbn = {978-1-4503-1922-5},
+ location = {Shenzhen, China},
+ pages = {123--134},
+ numpages = {12},
+ url = {http://doi.acm.org/10.1145/2442516.2442529},
+ doi = {10.1145/2442516.2442529},
+ acmid = {2442529},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {program vectorization, relational verification, synthesis},
+}
+
+% base paper on random restarts in sat
+@article{gomes1998boosting,
+  title={Boosting combinatorial search through randomization},
+  author={Gomes, Carla P and Selman, Bart and Kautz, Henry and others},
+  year={1998}
+}
+
+% haskell base paper
+@article{Hudak:1992:RPL:130697.130699,
+ author = {Hudak, Paul and Peyton Jones, Simon and Wadler, Philip and Boutel, Brian and Fairbairn, Jon and Fasel, Joseph and Guzm\'{a}n, Mar\'{\i}a M. and Hammond, Kevin and Hughes, John and Johnsson, Thomas and Kieburtz, Dick and Nikhil, Rishiyur and Partain, Will and Peterson, John},
+ title = {Report on the Programming Language Haskell: A Non-strict, Purely Functional Language Version 1.2},
+ journal = {SIGPLAN Not.},
+ issue_date = {May 1992},
+ volume = {27},
+ number = {5},
+ month = may,
+ year = {1992},
+ issn = {0362-1340},
+ pages = {1--164},
+ numpages = {164},
+ url = {http://doi.acm.org/10.1145/130697.130699},
+ doi = {10.1145/130697.130699},
+ acmid = {130699},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+}
+
+% refinement types for haskell base paper
+@article{Vazou:2014:RTH:2692915.2628161,
+ author = {Vazou, Niki and Seidel, Eric L. and Jhala, Ranjit and Vytiniotis, Dimitrios and Peyton-Jones, Simon},
+ title = {Refinement Types for Haskell},
+ journal = {SIGPLAN Not.},
+ issue_date = {September 2014},
+ volume = {49},
+ number = {9},
+ month = aug,
+ year = {2014},
+ issn = {0362-1340},
+ pages = {269--282},
+ numpages = {14},
+ url = {http://doi.acm.org/10.1145/2692915.2628161},
+ doi = {10.1145/2692915.2628161},
+ acmid = {2628161},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+}
+
+%%%%%%%%%%%%%%% software products %%%%%%%%%%%%%%%%
+@online{busybox,
+  title = {{BusyBox}},
+  howpublished = {\url{https://busybox.net/}},
+  note = {Accessed at October 27, 2020}
+}
+
+%%%%%%%%%%%%% sat phase transition
+@INPROCEEDINGS{Gent94thesat,
+    author = {Ian P. Gent and Toby Walsh},
+    title = {The SAT Phase Transition},
+    booktitle = {In Proc. ECAI-94},
+    year = {1994},
+    pages = {105--109}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text Books %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@book{10.5555/1550723,
+author = {Biere, A. and Biere, A. and Heule, M. and van Maaren, H. and Walsh, T.},
+title = {Handbook of Satisfiability: Volume 185 Frontiers in Artificial Intelligence and Applications},
+year = {2009},
+isbn = {1586039296},
+publisher = {IOS Press},
+address = {NLD},
+abstract = { 'Satisfiability (SAT) related topics have attracted researchers
+                  from various disciplines: logic, applied areas such as
+                  planning, scheduling, operations research and combinatorial
+                  optimization, but also theoretical issues on the theme of
+                  complexity and much more, they all are connected through SAT.
+                  My personal interest in SAT stems from actual solving: The
+                  increase in power of modern SAT solvers over the past 15 years
+                  has been phenomenal. It has become the key enabling technology
+                  in automated verification of both computer hardware and
+                  software. Bounded Model Checking (BMC) of computer hardware is
+                  now probably the most widely used model checking technique.
+                  The counterexamples that it finds are just satisfying
+                  instances of a Boolean formula obtained by unwinding to some
+                  fixed depth a sequential circuit and its specification in
+                  linear temporal logic. Extending model checking to software
+                  verification is a much more difficult problem on the frontier
+                  of current research. One promising approach for languages like
+                  C with finite word-length integers is to use the same idea as
+                  in BMC but with a decision procedure for the theory of
+                  bit-vectors instead of SAT. All decision procedures for
+                  bit-vectors that I am familiar with ultimately make use of a
+                  fast SAT solver to handle complex formulas. Decision
+                  procedures for more complicated theories, like linear real and
+                  integer arithmetic, are also used in program verification.
+                  Most of them use powerful SAT solvers in an essential way.
+                  Clearly, efficient SAT solving is a key technology for 21st
+                  century computer science. I expect this collection of papers
+                  on all theoretical and practical aspects of SAT solving will
+                  be extremely useful to both students and researchers and will
+                  lead to many further advances in the field.' Edmund Clarke
+                  (FORE Systems University Professor of Computer Science and
+                  Professor of Electrical and Computer Engineering at Carnegie
+                  Mellon University)}
+}
+
+@book{Rescher1969-RESML,
+  year = {1969},
+  author = {Nicholas Rescher},
+  title = {Many-Valued Logic},
+  publisher = {New York: Mcgraw-Hill}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Theorems %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@inproceedings{10.1145/800157.805047,
+author = {Cook, Stephen A.},
+title = {The Complexity of Theorem-Proving Procedures},
+year = {1971},
+isbn = {9781450374644},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/800157.805047},
+doi = {10.1145/800157.805047},
+abstract = {It is shown that any recognition problem solved by a polynomial
+                  time-bounded nondeterministic Turing machine can be “reduced”
+                  to the problem of determining whether a given propositional
+                  formula is a tautology. Here “reduced” means, roughly
+                  speaking, that the first problem can be solved
+                  deterministically in polynomial time provided an oracle is
+                  available for solving the second. From this notion of
+                  reducible, polynomial degrees of difficulty are defined, and
+                  it is shown that the problem of determining tautologyhood has
+                  the same polynomial degree as the problem of determining
+                  whether the first of two given graphs is isomorphic to a
+                  subgraph of the second. Other examples are discussed. A method
+                  of measuring the complexity of proof procedures for the
+                  predicate calculus is introduced and discussed.},
+booktitle = {Proceedings of the Third Annual ACM Symposium on Theory of Computing},
+pages = {151–158},
+numpages = {8},
+location = {Shaker Heights, Ohio, USA},
+series = {STOC '71}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% Incremental Sat uses %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@article{een2003temporal,
+  title={Temporal induction by incremental SAT solving},
+  author={E{\'e}n, Niklas and S{\"o}rensson, Niklas},
+  journal={Electronic Notes in Theoretical Computer Science},
+  volume={89},
+  number={4},
+  pages={543--560},
+  year={2003},
+  publisher={Elsevier}
+}
+
+@inproceedings{silva1997robust,
+  title={Robust search algorithms for test pattern generation},
+  author={Silva, JOM and Sakallah, Karem A},
+  booktitle={Proceedings of IEEE 27th International Symposium on Fault Tolerant Computing},
+  pages={152--161},
+  year={1997},
+  organization={IEEE}
+}
+
+@InProceedings{10.1007/3-540-44798-9_4,
+author="Shtrichman, Ofer",
+editor="Margaria, Tiziana
+and Melham, Tom",
+title="Pruning Techniques for the SAT-Based Bounded Model Checking Problem",
+booktitle="Correct Hardware Design and Verification Methods",
+year="2001",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="58--70",
+abstract="Bounded Model Checking (BMC) is the problem of checking if a model
+                  satisfies a temporal property in paths with bounded length k.
+                  Propositional SAT-based BMC is conducted in a gradual manner,
+                  by solving a series of SAT instances corresponding to
+                  formulations of the problem with increasing k. We show how the
+                  gradual nature can be exploited for shortening the overall
+                  verification time. The concept is to reuse constraints on the
+                  search space which are deduced while checking a k instance,
+                  for speeding up the SAT checking of the consecutive k+1
+                  instance. This technique can be seen as a generalization
+                  of`pervasive clauses', a technique introduced by Silva and
+                  Sakallah in the context of Automatic Test Pattern Generation
+                  (ATPG). We define the general conditions for reusability of
+                  constraints, and define a simple procedure for evaluating
+                  them. This technique can theoretically be used in any solution
+                  that is based on solving a series of closely related SAT
+                  instances (instances with non-empty intersection between their
+                  set of clauses). We then continue by showing how a similar
+                  procedure can be used for restricting the search space of
+                  individual SAT instances corresponding to BMC invariant
+                  formulas. Experiments demonstrated that both techniques have
+                  consistent and significant positive effect.",
+isbn="978-3-540-44798-6"
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% Bio informatics
+@inproceedings{10.1007/978-3-642-31612-8_12,
+author = {Ganesh, Vijay and O'Donnell, Charles W. and Soos, Mate and Devadas, Srinivas and Rinard, Martin C. and Solar-Lezama, Armando},
+title = {Lynx: A Programmatic SAT Solver for the RNA-Folding Problem},
+year = {2012},
+isbn = {9783642316111},
+publisher = {Springer-Verlag},
+address = {Berlin, Heidelberg},
+url = {https://doi.org/10.1007/978-3-642-31612-8_12},
+doi = {10.1007/978-3-642-31612-8_12},
+abstract = {This paper introduces Lynx, an incremental programmatic SAT solver
+                  that allows non-expert users to introduce domain-specific code
+                  into modern conflict-driven clause-learning (CDCL) SAT
+                  solvers, thus enabling users to guide the behavior of the
+                  solver.The key idea of Lynx is a callback interface that
+                  enables non-expert users to specialize the SAT solver to a
+                  class of Boolean instances. The user writes specialized code
+                  for a class of Boolean formulas, which is periodically called
+                  by Lynx's search routine in its inner loop through the
+                  callback interface. The user-provided code is allowed to
+                  examine partial solutions generated by the solver during its
+                  search, and to respond by adding CNF clauses back to the
+                  solver dynamically and incrementally. Thus, the user-provided
+                  code can specialize and influence the solver's search in a
+                  highly targeted fashion. While the power of incremental SAT
+                  solvers has been amply demonstrated in the SAT literature and
+                  in the context of DPLL(T), it has not been previously made
+                  available as a programmatic API that is easy to use for
+                  non-expert users. Lynx's callback interface is a simple yet
+                  very effective strategy that addresses this need.We
+                  demonstrate the benefits of Lynx through a case-study from
+                  computational biology, namely, the RNA secondary structure
+                  prediction problem. The constraints that make up this problem
+                  fall into two categories: structural constraints, which
+                  describe properties of the biological structure of the
+                  solution, and energetic constraints, which encode quantitative
+                  requirements that the solution must satisfy. We show that by
+                  introducing structural constraints on-demand through user
+                  provided code we can achieve, in comparison with standard SAT
+                  approaches, upto 30x reduction in memory usage and upto 100x
+                  reduction in time.},
+booktitle = {Proceedings of the 15th International Conference on Theory and Applications of Satisfiability Testing},
+pages = {143–156},
+numpages = {14},
+location = {Trento, Italy},
+series = {SAT'12}
+}
+
+@inproceedings{10.1007/11814948_16,
+author = {Lynce, In\^{e}s and Marques-Silva, Jo\~{a}o},
+title = {SAT in Bioinformatics: Making the Case with Haplotype Inference},
+year = {2006},
+isbn = {3540372067},
+publisher = {Springer-Verlag},
+address = {Berlin, Heidelberg},
+url = {https://doi.org/10.1007/11814948_16},
+doi = {10.1007/11814948_16},
+abstract = {Mutation in DNA is the principal cause for differences among human
+                  beings, and Single Nucleotide Polymorphisms (SNPs) are the
+                  most common mutations. Hence, a fundamental task is to
+                  complete a map of haplotypes (which identify SNPs) in the
+                  human population. Associated with this effort, a key
+                  computational problem is the inference of haplotype data from
+                  genotype data, since in practice genotype data rather than
+                  haplotype data is usually obtained. Recent work has shown that
+                  a SAT-based approach is by far the most efficient solution to
+                  the problem of haplotype inference by pure parsimony (HIPP),
+                  being several orders of magnitude faster than existing integer
+                  linear programming and branch and bound solutions. This paper
+                  proposes a number of key optimizations to the the original
+                  SAT-based model. The new version of the model can be orders of
+                  magnitude faster than the original SAT-based HIPP model,
+                  particularly on biological test data.},
+booktitle = {Proceedings of the 9th International Conference on Theory and Applications of Satisfiability Testing},
+pages = {136–141},
+numpages = {6},
+location = {Seattle, WA},
+series = {SAT'06}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SAT Applications %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@article{10.1145/1698759.1698762,
+author = {Cabodi, Gianpiero and Lavagno, Luciano and Murciano, Marco and Kondratyev, Alex and Watanabe, Yosinori},
+title = {Speeding-up Heuristic Allocation, Scheduling and Binding with SAT-Based Abstraction/Refinement Techniques},
+year = {2010},
+issue_date = {February 2010},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {15},
+number = {2},
+issn = {1084-4309},
+url = {https://doi.org/10.1145/1698759.1698762},
+doi = {10.1145/1698759.1698762},
+abstract = {Hardware synthesis is the process by which system-level, Register
+                  Transfer (RT)-level, or behavioral descriptions can be turned
+                  into real implementations, in terms of logic gates. Scheduling
+                  is one of the most time-consuming steps in the overall design
+                  flow, and may become much more complex when performing
+                  hardware synthesis from high-level specifications. Exploiting
+                  a single scheduling strategy on very large designs is often
+                  reductive and potentially inadequate. Furthermore, finding the
+                  “best” single candidate among all possible scheduling
+                  algorithms is practically infeasible. In this article we
+                  introduce a hybrid scheduling approach that is a preliminary
+                  step towards a comprehensive solution not yet provided by
+                  industrial or by academic solutions. Our method relies on an
+                  abstract symbolic representation of data flow nodes
+                  (operations) bound to control flow paths: it produces a more
+                  realistic lower bound during the prescheduling resource
+                  estimation step and speeds up slower but accurate heuristic
+                  scheduling techniques, thus achieving a globally improved
+                  result.},
+journal = {ACM Trans. Des. Autom. Electron. Syst.},
+month = mar,
+articleno = {12},
+numpages = {34},
+keywords = {resource estimation, High level synthesis, satisfiability, allocation, binding, scheduling}
+}
+
+@MISC{Een_asingle-instance,
+    author = {Niklas Een and Alan Mishchenko and Nina Amla},
+    title = {A Single-Instance Incremental SAT Formulation of Proof- and
+                  Counterexample-Based Abstraction},
+    year = {}
+}
+
+@inproceedings{10.5555/1998496.1998520,
+author = {Franz\'{e}n, Anders and Cimatti, Alessandro and Nadel, Alexander and Sebastiani, Roberto and Shalev, Jonathan},
+title = {Applying SMT in Symbolic Execution of Microcode},
+year = {2010},
+publisher = {FMCAD Inc},
+address = {Austin, Texas},
+abstract = {Microcode is a critical component in modern microprocessors, and
+                  substantial effort has been devoted in the past to verify its
+                  correctness. A prominent approach, based on symbolic
+                  execution, traditionally relies on the use of boolean SAT
+                  solvers as a backend engine. In this paper, we investigate the
+                  application of Satisfiability Modulo Theories (SMT) to the
+                  problem of microcode verification. We integrate MathSAT, an
+                  SMT solver for the theory of Bit Vectors, within the flow of
+                  microcode verification, and experimentally evaluate the
+                  effectiveness of some optimizations. The results demonstrate
+                  the potential of SMT technologies over pure boolean SAT.},
+booktitle = {Proceedings of the 2010 Conference on Formal Methods in Computer-Aided Design},
+pages = {121–128},
+numpages = {8},
+location = {Lugano, Switzerland},
+series = {FMCAD '10}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% CDCL papers %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%% See the GRASP solver
+@inproceedings{10.5555/1867406.1867438,
+author = {Bayardo, Roberto J. and Schrag, Robert C.},
+title = {Using CSP Look-Back Techniques to Solve Real-World SAT Instances},
+year = {1997},
+isbn = {0262510952},
+publisher = {AAAI Press},
+abstract = {We report on the performance of an enhanced version of the
+                  "Davis-Putnam" (DP) proof procedure for propositional
+                  satisfiability (SAT) on large instances derived from
+                  real-world problems in planning, scheduling, and circuit
+                  diagnosis and synthesis. Our results show that incorporating
+                  CSP look-back techniques -- especially the relatively new
+                  technique of relevance-bounded learning -- renders easy many
+                  problems which otherwise are beyond DP's reach. Frequently
+                  they make DP, a systematic algorithm, perform as well or
+                  better than stochastic SAT algorithms such as GSAT or WSAT. We
+                  recommend that such techniques be included as options in
+                  implementations of DP, Just as they are in systematic
+                  algorithms for the more general constraint satisfaction
+                  problem.},
+booktitle = {Proceedings of the Fourteenth National Conference on Artificial Intelligence and Ninth Conference on Innovative Applications of Artificial Intelligence},
+pages = {203–208},
+numpages = {6},
+location = {Providence, Rhode Island},
+series = {AAAI'97/IAAI'97}
+
+}
+
+@inproceedings{10.1145/351240.351266,
+author = {Claessen, Koen and Hughes, John},
+title = {QuickCheck: A Lightweight Tool for Random Testing of Haskell Programs},
+year = {2000},
+isbn = {1581132026},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/351240.351266},
+doi = {10.1145/351240.351266},
+abstract = {Quick Check is a tool which aids the Haskell programmer in
+                  formulating and testing properties of programs. Properties are
+                  described as Haskell functions, and can be automatically
+                  tested on random input, but it is also possible to define
+                  custom test data generators. We present a number of case
+                  studies, in which the tool was successfully used, and also
+                  point out some pitfalls to avoid. Random testing is especially
+                  suitable for functional programs because properties can be
+                  stated at a fine grain. When a function is built from
+                  separately tested components, then random testing suffices to
+                  obtain good coverage of the definition under test.},
+booktitle = {Proceedings of the Fifth ACM SIGPLAN International Conference on Functional Programming},
+pages = {268–279},
+numpages = {12},
+series = {ICFP '00}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% Proof assistants %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@book{10.1145/2841316,
+author = {Stump, Aaron},
+title = {Verified Functional Programming in Agda},
+year = {2016},
+isbn = {9781970001273},
+publisher = {Association for Computing Machinery and Morgan; Claypool},
+abstract = {Agda is an advanced programming language based on Type Theory.
+                  Agda's type system is expressive enough to support full
+                  functional verification of programs, in two styles. In
+                  external verification, we write pure functional programs and
+                  then write proofs of properties about them. The proofs are
+                  separate external artifacts, typically using structural
+                  induction. In internal verification, we specify properties of
+                  programs through rich types for the programs themselves. This
+                  often necessitates including proofs inside code, to show the
+                  type checker that the specified properties hold. The power to
+                  prove properties of programs in these two styles is a profound
+                  addition to the practice of programming, giving programmers
+                  the power to guarantee the absence of bugs, and thus improve
+                  the quality of software more than previously possible.Verified
+                  Functional Programming in Agda is the first book to provide a
+                  systematic exposition of external and internal verification in
+                  Agda, suitable for undergraduate students of Computer Science.
+                  No familiarity with functional programming or computer-checked
+                  proofs is presupposed. The book begins with an introduction to
+                  functional programming through familiar examples like
+                  booleans, natural numbers, and lists, and techniques for
+                  external verification. Internal verification is considered
+                  through the examples of vectors, binary search trees, and
+                  Braun trees. More advanced material on type-level computation,
+                  explicit reasoning about termination, and normalization by
+                  evaluation is also included. The book also includes a
+                  medium-sized case study on Huffman encoding and decoding.}
+}
+
+
+@InCollection{sep-logic-modal,
+  author       =	{Garson, James},
+  title        =	{Modal Logic},
+  booktitle    =	{The Stanford Encyclopedia of Philosophy},
+  editor       =	{Edward N. Zalta},
+  howpublished =	{\url{https://plato.stanford.edu/archives/fall2018/entries/logic-modal/}},
+  year         =	{2018},
+  edition      =	{Fall 2018},
+  publisher    =	{Metaphysics Research Lab, Stanford University}
+}
+
+
+@inproceedings{LKA:AOSD11,
+  author={J{\"o}rg Liebig and Christian K{\"a}stner and Sven Apel},
+  pages={191--202},
+  year={2011},
+  booktitle={{Int.\ Conf.\ on Aspect-Oriented Software Development}},
+  title={Analyzing the Discipline of Preprocessor Annotations in 30 Million Lines of C Code},
+}
+
+@ARTICLE{4051119,
+  author={D. A. {Huffman}},
+  journal={Proceedings of the IRE},
+  title={A Method for the Construction of Minimum-Redundancy Codes},
+  year={1952},
+  volume={40},
+  number={9},
+  pages={1098-1101},
+  doi={10.1109/JRPROC.1952.273898}}
+
+@article{10.1145/367177.367199,
+author = {McCarthy, John},
+title = {Recursive Functions of Symbolic Expressions and Their Computation by Machine, Part I},
+year = {1960},
+issue_date = {April 1960},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {3},
+number = {4},
+issn = {0001-0782},
+url = {https://doi.org/10.1145/367177.367199},
+doi = {10.1145/367177.367199},
+journal = {Commun. ACM},
+month = apr,
+pages = {184–195},
+numpages = {12}
+}
+
+@book{10.5555/509043,
+author = {Pierce, Benjamin C.},
+title = {Types and Programming Languages},
+year = {2002},
+isbn = {0262162091},
+publisher = {The MIT Press},
+edition = {1st},
+abstract = {A type system is a syntactic method for automatically checking the
+                  absence of certain erroneous behaviors by classifying program
+                  phrases according to the kinds of values they compute. The
+                  study of type systems -- and of programming languages from a
+                  type-theoretic perspective -- has important applications in
+                  software engineering, language design, high-performance
+                  compilers, and security.This text provides a comprehensive
+                  introduction both to type systems in computer science and to
+                  the basic theory of programming languages. The approach is
+                  pragmatic and operational; each new concept is motivated by
+                  programming examples and the more theoretical sections are
+                  driven by the needs of implementations. Each chapter is
+                  accompanied by numerous exercises and solutions, as well as a
+                  running implementation, available via the Web. Dependencies
+                  between chapters are explicitly identified, allowing readers
+                  to choose a variety of paths through the material.The core
+                  topics include the untyped lambda-calculus, simple type
+                  systems, type reconstruction, universal and existential
+                  polymorphism, subtyping, bounded quantification, recursive
+                  types, kinds, and type operators. Extended case studies
+                  develop a variety of approaches to modeling the features of
+                  object-oriented languages.}
+}
+
+@book{10.5555/95411,
+author = {Steele, Guy L.},
+title = {Common LISP: The Language (2nd Ed.)},
+year = {1990},
+isbn = {1555580416},
+publisher = {Digital Press},
+address = {USA}
+}
+
+%% serialization method
+@article{10.1145/69622.357182,
+author = {Herlihy, Maurice P. and Liskov, Barbara},
+title = {A Value Transmission Method for Abstract Data Types},
+year = {1982},
+issue_date = {Oct. 1982},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {4},
+number = {4},
+issn = {0164-0925},
+url = {https://doi.org/10.1145/69622.357182},
+doi = {10.1145/69622.357182},
+journal = {ACM Trans. Program. Lang. Syst.},
+month = oct,
+pages = {527–551},
+numpages = {25}
+}
+
+@article{huet_1997, title={The Zipper}, volume={7},
+                  DOI={10.1017/S0956796897002864}, number={5}, journal={Journal
+                  of Functional Programming}, publisher={Cambridge University
+                  Press}, author={Huet, Gérard}, year={1997}, pages={549–554}}
+
+
+@Inbook{Marlow2012,
+author="Marlow, Simon",
+title="Parallel and Concurrent Programming in Haskell",
+bookTitle="Central European Functional Programming School: 4th Summer School, CEFP 2011, Budapest, Hungary, June 14-24, 2011, Revised Selected Papers",
+year="2012",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="339--401",
+abstract="Haskell provides a rich set of abstractions for parallel and
+                  concurrent programming. This tutorial covers the basic
+                  concepts involved in writing parallel and concurrent programs
+                  in Haskell, and takes a deliberately practical approach: most
+                  of the examples are real Haskell programs that you can
+                  compile, run, measure, modify and experiment with. We cover
+                  parallel programming with the @Eval@ monad, Evaluation
+                  Strategies, and the @Par@ monad. On the concurrent side, we
+                  cover threads, @MVar@s, asynchronous exceptions, Software
+                  Transactional Memory, the Foreign Function Interface, and
+                  briefly look at the construction of high-speed network servers
+                  in Haskell.",
+isbn="978-3-642-32096-5",
+doi="10.1007/978-3-642-32096-5_7",
+url="https://doi.org/10.1007/978-3-642-32096-5_7"
+}
+
+@online{linux,
+  title = {{Linux Operating System}},
+  author = {Linus Torvalds},
+  howpublished = {\url{www.kernel.org}},
+  note = {Accessed at December 02, 2019}
+}
+
+
+@online{interSatComp,
+  title = {{International SAT Competition}},
+  author = {Co-located with the Interaction Conference on Theory and
+                  Applications of Satisfiability Testing},
+  howpublished = {\url{www.kernel.org}},
+  note = {Accessed at December 02, 2019}
+}
+
+
+@online{openSMT,
+  title = {{openSMT}},
+  author = {University of Lugano: Formal Verification and Security Lab},
+  howpublished={\url{http://verify.inf.usi.ch/opensmt}},
+  note={Accessed at Nov 27th, 2020},
+}
+
+@online{redis,
+  title = {{Redis}},
+  author = {Redis Labs},
+  howpublished={\url{https://redis.io/}},
+  note={Accessed at May 4th, 2020},
+}
+
+
+@inproceedings{10.1145/2465106.2465121,
+author = {Austin, Thomas H. and Yang, Jean and Flanagan, Cormac and Solar-Lezama, Armando},
+title = {Faceted Execution of Policy-Agnostic Programs},
+year = {2013},
+isbn = {9781450321440},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2465106.2465121},
+doi = {10.1145/2465106.2465121},
+booktitle = {Proceedings of the Eighth ACM SIGPLAN Workshop on Programming Languages and Analysis for Security},
+pages = {15–26},
+numpages = {12},
+keywords = {privacy, language design, security, run-time system},
+location = {Seattle, Washington, USA},
+series = {PLAS ’13}
+}
+
+@inproceedings{10.1145/3243734.3243806,
+author = {Schmitz, Thomas and Algehed, Maximilian and Flanagan, Cormac and Russo, Alejandro},
+title = {Faceted Secure Multi Execution},
+year = {2018},
+isbn = {9781450356930},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3243734.3243806},
+doi = {10.1145/3243734.3243806},
+booktitle = {Proceedings of the 2018 ACM SIGSAC Conference on Computer and Communications Security},
+pages = {1617–1634},
+numpages = {18},
+keywords = {multi-executions, decentralized labels, information-flow control, Haskell},
+location = {Toronto, Canada},
+series = {CCS ’18}
+}
+
+@inproceedings{Micinski2018AbstractingFE,
+  author={K. {Micinski} and D. {Darais} and T. {Gilray}},
+  booktitle={2020 IEEE 33rd Computer Security Foundations Symposium (CSF)},
+  title={Abstracting Faceted Execution},
+  year={2020},
+  volume={},
+  number={},
+  pages={184-198},
+  doi={10.1109/CSF49147.2020.00021}
+  }
+
+
+@inproceedings{austin2012multiple,
+  title={Multiple facets for dynamic information flow},
+  author={Austin, Thomas H and Flanagan, Cormac},
+  booktitle={Proceedings of the 39th annual ACM SIGPLAN-SIGACT symposium on Principles of programming languages},
+  pages={165--178},
+  year={2012}
+}
+
+@inproceedings{Schmitz2018FacetedSM,
+  title={Faceted Secure Multi Execution},
+  author={Thomas Schmitz and Maximilian Algehed and Cormac Flanagan and Alejandro Russo},
+  booktitle={CCS '18},
+  year={2018}
+}
+
+
+@techreport{demoura2009generalized,
+author = {de Moura, Leonardo and Bjørner, Nikolaj},
+title = {Generalized, Efficient Array Decision Procedures},
+year = {2009},
+month = {September},
+abstract = {The theory of arrays is ubiquitous in the context of automatic software and hardware verification and symbolic analysis. The basic array theory was introduced by McCarthy and allows to symbolically representing array updates.
+
+To this date the theory of arrays itself remains fundamental to how modern program verification, test-case generation, and model-based program tools model program heaps and higher level data-types, such as sets and finite maps.
+
+We present combinatory array logic, CAL, using a small, but powerful core of combinators, and reduce it to the theory of uninterpreted functions. CAL allows expressing properties that go well beyond the basic array theory. CAL does not allow expressing the identity function I. CAL+I on the other hand allows encoding arbitrary lambda terms. We provide a new efficient decision procedure for the base theory as well as CAL. The efficient procedure serves a critical role in the performance of the state-of-the-art SMT solver Z3 on array formulas from applications.},
+publisher = {IEEE},
+url = {https://www.microsoft.com/en-us/research/publication/generalized-efficient-array-decision-procedures/},
+number = {MSR-TR-2009-121},
+note = {A conference version of this report appears in the proceedings of FMCAD 2009.},
+}
+
+@INPROCEEDINGS{Mccarthy62towardsa,
+    author = {J. Mccarthy},
+    title = {Towards a Mathematical Science of Computation},
+    booktitle = {In IFIP Congress},
+    year = {1962},
+    pages = {21--28},
+    publisher = {North-Holland}
+}
+
+@article{10.1145/362007.362035,
+author = {Earley, Jay},
+title = {An Efficient Context-Free Parsing Algorithm},
+year = {1970},
+issue_date = {Feb 1970},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {13},
+number = {2},
+issn = {0001-0782},
+url = {https://doi.org/10.1145/362007.362035},
+doi = {10.1145/362007.362035},
+abstract = {A parsing algorithm which seems to be the most efficient general
+                  context-free algorithm known is described. It is similar to
+                  both Knuth's LR(k) algorithm and the familiar top-down
+                  algorithm. It has a time bound proportional to n3 (where n is
+                  the length of the string being parsed) in general; it has an
+                  n2 bound for unambiguous grammars; and it runs in linear time
+                  on a large class of grammars, which seems to include most
+                  practical context-free programming language grammars. In an
+                  empirical comparison it appears to be superior to the top-down
+                  and bottom-up algorithms studied by Griffiths and Petrick.},
+journal = {Commun. ACM},
+month = feb,
+pages = {94–102},
+numpages = {9},
+keywords = {context-free grammar, parsing, syntax analysis, compilers, computational complexity}
+}
+
+@book{10.5555/1391237,
+author = {Kroening, Daniel and Strichman, Ofer},
+title = {Decision Procedures: An Algorithmic Point of View},
+year = {2008},
+isbn = {3540741046},
+publisher = {Springer Publishing Company, Incorporated},
+edition = {1},
+abstract = {A decision procedure is an algorithm that, given a decision problem,
+                  terminates with a correct yes/no answer. Here, the authors
+                  focus on theories that are expressive enough to model real
+                  problems, but are still decidable. Specifically, the book
+                  concentrates on decision procedures for first-order theories
+                  that are commonly used in automated verification and
+                  reasoning, theorem-proving, compiler optimization and
+                  operations research. The techniques described in the book draw
+                  from fields such as graph theory and logic, and are routinely
+                  used in industry. The authors introduce the basic terminology
+                  of satisfiability modulo theories and then, in separate
+                  chapters, study decision procedures for each of the following
+                  theories: propositional logic; equalities and uninterpreted
+                  functions; linear arithmetic; bit vectors; arrays; pointer
+                  logic; and quantified formulas. They also study the problem of
+                  deciding combined theories and dedicate a chapter to modern
+                  techniques based on an interplay between a SAT solver and a
+                  decision procedure for the investigated theory. This textbook
+                  has been used to teach undergraduate and graduate courses at
+                  ETH Zurich, at the Technion, Haifa, and at the University of
+                  Oxford. Each chapter includes a detailed bibliography and
+                  exercises. Lecturers' slides and a C++ library for rapid
+                  prototyping of decision procedures are available from the
+                  authors' website.}
+}
+
+@inproceedings{10.1109/RTSS.2010.25,
+author = {Steiner, Wilfried},
+title = {An Evaluation of SMT-Based Schedule Synthesis for Time-Triggered Multi-Hop Networks},
+year = {2010},
+isbn = {9780769542980},
+publisher = {IEEE Computer Society},
+address = {USA},
+url = {https://doi.org/10.1109/RTSS.2010.25},
+doi = {10.1109/RTSS.2010.25},
+abstract = {Networks for real-time systems have stringent end-to-end latency and
+                  jitter requirements. One cost-efficient way to meet these
+                  requirements is the time-triggered communication paradigm
+                  which plans the transmission points in time of the frames
+                  off-line. This plan prevents contentions of frames on the
+                  network and is called a time-triggered schedule (tt-schedule).
+                  In general the tt-scheduling is a bin-packing problem, known
+                  to be NP-complete, where the complexity is mostly driven by
+                  the freedom in topology of the network, its associated
+                  hardware restrictions, and application-imposed constraints.
+                  Multi-hop networks, in particular, require the synthesis of
+                  path-dependent tt-schedules to maintain full determinism of
+                  time-triggered communication from sender to receiver. Our
+                  experiments using the YICES SMT solver show that the
+                  scheduling problem can be solved by YICES out-of-the-box for a
+                  few hundred random frame instances on the network. A
+                  customized tt-scheduler using YICES as a back-end solver
+                  allows to increase this number of frame instances up to tens
+                  of thousands. In terms of scheduling quality, the synthesis
+                  produces up to ninety percent maximum utilization on a
+                  communication link with schedule synthesis times of about half
+                  an hour for the biggest examples we have studied. As a nice
+                  side-effect the YICES out-of-the-box approach is immediately
+                  applicable for the verification of existing (even large-scale)
+                  tt-schedules and for debugging more sophisticated
+                  tt-schedulers.},
+booktitle = {Proceedings of the 2010 31st IEEE Real-Time Systems Symposium},
+pages = {375–384},
+numpages = {10},
+keywords = {static scheduling, time-triggered communication, real-time communication, multi-hop networks, YICES, SMT solver},
+series = {RTSS '10}
+}
+
+@inproceedings{10.1145/2038642.2038689,
+author = {Majumdar, Rupak and Saha, Indranil and Zamani, Majid},
+title = {Performance-Aware Scheduler Synthesis for Control Systems},
+year = {2011},
+isbn = {9781450307147},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2038642.2038689},
+doi = {10.1145/2038642.2038689},
+abstract = {We consider the problem of designing a cyber-physical system where
+                  several control loops share the same architectural resources.
+                  Typically, the design of such systems proceeds in two steps.
+                  In the platform independent step, for each control loop in the
+                  system, the control designer calculates a control law and a
+                  sampling time that together ensure that the control loop has
+                  certain desired performance. Then, in the platform dependent
+                  step, these control tasks are scheduled on the platform, and a
+                  schedulability analysis determines if (and how) the control
+                  laws can be implemented and scheduled without missing the
+                  sampling deadlines.In this paper, we explore an alternative
+                  controller-scheduler co-design approach that aims to achieve
+                  optimal performance for all the individual control loops
+                  maintaining fairness. We first analyze the control systems to
+                  find out the rates at which control signals should be dropped
+                  to maintain schedulability and the optimal performance. We
+                  then use the rates to compute a schedule statically. We show a
+                  control theoretic approach to compute the effect of the rate
+                  of drops on the performance of the control systems and provide
+                  an SMT-based scheduling algorithm that takes as input control
+                  tasks, their periods, worst-case execution times, and their
+                  rate of drops, and outputs a static schedule that optimizes
+                  the performance of the control systems. We demonstrate our
+                  results through a case study on a family of inverted pendulums
+                  sharing the same processor for their control computations.},
+booktitle = {Proceedings of the Ninth ACM International Conference on Embedded Software},
+pages = {299–308},
+numpages = {10},
+keywords = {performance, synthesis, control systems, scheduling},
+location = {Taipei, Taiwan},
+series = {EMSOFT '11}
+}
+
+@inproceedings{10.1007/11499107_5,
+author = {E\'{e}n, Niklas and Biere, Armin},
+title = {Effective Preprocessing in SAT through Variable and Clause Elimination},
+year = {2005},
+isbn = {3540262768},
+publisher = {Springer-Verlag},
+address = {Berlin, Heidelberg},
+url = {https://doi.org/10.1007/11499107_5},
+doi = {10.1007/11499107_5},
+abstract = {Preprocessing SAT instances can reduce their size considerably. We
+                  combine variable elimination with subsumption and
+                  self-subsuming resolution, and show that these techniques not
+                  only shrink the formula further than previous preprocessing
+                  efforts based on variable elimination, but also decrease
+                  runtime of SAT solvers substantially for typical industrial
+                  SAT problems. We discuss critical implementation details that
+                  make the reduction procedure fast enough to be practical.},
+booktitle = {Proceedings of the 8th International Conference on Theory and Applications of Satisfiability Testing},
+pages = {61–75},
+numpages = {15},
+location = {St Andrews, UK},
+series = {SAT'05}
+}
+
+
+@InProceedings{10.1007/978-3-319-23219-5_23,
+author="Nightingale, Peter
+and Spracklen, Patrick
+and Miguel, Ian",
+editor="Pesant, Gilles",
+title="Automatically Improving SAT Encoding of Constraint Problems Through Common Subexpression Elimination in Savile Row",
+booktitle="Principles and Practice of Constraint Programming",
+year="2015",
+publisher="Springer International Publishing",
+address="Cham",
+pages="330--340",
+abstract="The formulation of a Propositional Satisfiability (SAT) problem
+                  instance is vital to efficient solving. This has motivated
+                  research on preprocessing, and inprocessing techniques where
+                  reformulation of a SAT instance is interleaved with solving.
+                  Preprocessing and inprocessing are highly effective in
+                  extending the reach of SAT solvers, however they necessarily
+                  operate on the lowest level representation of the problem, the
+                  raw SAT clauses, where higher-level patterns are difficult
+                  and/or costly to identify. Our approach is different: rather
+                  than reformulate the SAT representation directly, we apply
+                  automated reformulations to a higher level representation (a
+                  constraint model) of the original problem. Common
+                  Subexpression Elimination (CSE) is a family of techniques to
+                  improve automatically the formulation of constraint
+                  satisfaction problems, which are often highly beneficial when
+                  using a conventional constraint solver. In this work we
+                  demonstrate that CSE has similar benefits when the
+                  reformulated constraint model is encoded to SAT and solved
+                  using a state-of-the-art SAT solver. In some cases we observe
+                  speed improvements of over 100 times.",
+isbn="978-3-319-23219-5"
+}
+
+
+@inproceedings{10.5555/1928380.1928406,
+author = {Heule, Marijn and J\"{a}rvisalo, Matti and Biere, Armin},
+title = {Clause Elimination Procedures for CNF Formulas},
+year = {2010},
+isbn = {364216241X},
+publisher = {Springer-Verlag},
+address = {Berlin, Heidelberg},
+abstract = {We develop and analyze clause elimination procedures, a specific family of simplification techniques for conjunctive normal form (CNF) formulas. Extending known procedures such as tautology, subsumption, and blocked clause elimination, we introduce novel elimination procedures based on hidden and asymmetric variants of these techniques. We analyze the resulting nine (including five new) clause elimination procedures from various perspectives: size reduction, BCP-preservance, confluence, and logical equivalence. For the variants not preserving logical equivalence, we show how to reconstruct solutions to original CNFs from satisfying assignments to simplified CNFs. We also identify a clause elimination procedure that does a transitive reduction of the binary implication graph underlying any CNF formula purely on the CNF level.},
+booktitle = {Proceedings of the 17th International Conference on Logic for Programming, Artificial Intelligence, and Reasoning},
+pages = {357–371},
+numpages = {15},
+location = {Yogyakarta, Indonesia},
+series = {LPAR'10}
+}
+
+
+@InProceedings{10.1007/978-3-540-79719-7_18,
+author="Liffiton, Mark
+and Sakallah, Karem",
+editor="Kleine B{\"u}ning, Hans
+and Zhao, Xishun",
+title="Searching for Autarkies to Trim Unsatisfiable Clause Sets",
+booktitle="Theory and Applications of Satisfiability Testing -- SAT 2008",
+year="2008",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="182--195",
+abstract="An autarky is a partial assignment to the variables of a Boolean CNF formula that satisfies every clause containing an assigned variable. For an unsatisfiable formula, an autarky provides information about those clauses that are essentially independent from the infeasibility; clauses satisfied by an autarky are not contained in any minimal unsatisfiable subset (MUS) or minimal correction subset (MCS) of clauses. This suggests a preprocessing step of detecting autarkies and trimming such independent clauses from an instance prior to running an algorithm for finding MUSes or MCSes. With little existing work on algorithms for finding autarkies or experimental evaluations thereof, there is room for further research in this area. Here, we present a novel algorithm that searches for autarkies directly using a standard satisfiability solver. We investigate the autarkies of several industrial benchmark suites, and experimental results show that our algorithm compares favorably to an existing approach for discovering autarkies. Finally, we explore the potential of trimming autarkies in MCS- or MUS-extraction flows.",
+isbn="978-3-540-79719-7"
+}
+
+
+@book{10.5555/6448,
+author = {Aho, Alfred V. and Sethi, Ravi and Ullman, Jeffrey D.},
+title = {Compilers: Principles, Techniques, and Tools},
+year = {1986},
+isbn = {0201100886},
+publisher = {Addison-Wesley Longman Publishing Co., Inc.},
+address = {USA}
+}

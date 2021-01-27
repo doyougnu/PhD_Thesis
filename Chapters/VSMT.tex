@@ -1,0 +1,547 @@
+~\label{sec:vsmt} The final contribution to the thesis is generalizing the
+prototype variational solver to solve \ac{smt} problems. Like all objects that
+require craft, the architecture and design benefit greatly from lessons learned
+in the first prototype, I cover these advances below and conclude the section
+with a discussion of remaining work.
+
+\subsection{Motivation}
+This section discusses the motivation for a variational \ac{smt} solver.
+Specifically, for a variational \ac{smt} solver that \emph{does not} use the
+theory interface of \ac{smt} solvers to reason about variation. Satisfiable
+modulo theory solvers, by virtue of abstracting satisfiability solving over
+background theories, are useful in multitudes of domains including:
+verification~\cite{boogiepl-a-typed-procedural-language-for-checking-object-oriented-programs},
+test generation and bug
+finding\cite{Cadar:2008:KUA:1855741.1855756,Godefroid:2012:SWF:2090147.2094081},
+planning or scheduling
+applications\cite{10.1109/RTSS.2010.25,10.1145/2038642.2038689}, interactive
+proof
+assistants~\cite{10.1007/978-3-540-78800-3_24,10.1007/978-3-319-08867-9_49}, and
+many more~\cite{10.5555/1391237}.
+
+The motivation in creating a variational \ac{smt} solver is identical to the
+motivation for a variational \ac{sat} solvers for a subset of theories \ie{},
+the incremental interface is automated, the user need not hand-program the
+solver, performance benefits are now possible by virtue of a static explicit
+encoding. Furthermore, \ac{smt} solvers provide a good platform for research on
+variation. Understanding and implementing variational effects and effect
+handlers is an active and unsolved area of research on variation and variational
+programming. Essentially, the problem is soundly tracking side-effects such as
+file I/O or state mutation in the context of variation.
+
+Variational \ac{smt} solvers side step this issue by building upon a ground
+theory of \emph{uninterpreted functions}. Uninterpreted functions are functions
+that have no apriori meaning, such as a function which defines a constant value,
+as opposed to a function like + which apriori means to add two integers. Thus
+functions in the \ac{smt} domain, including those in background theorys are
+total and side-effect free, making \ac{smt} solvers an attractive target for
+variational research.
+
+Besides the motivation deriving from variational research and inherited from the
+variational \ac{sat} solver, a variational \ac{smt} solver is desirable because
+it simplifies the use of a \ac{smt} solvers in real-world applications.
+%
+For example, consider the following snippet of a C-like language that uses
+contract-based verification to ensure correctness:
+%
+\begin{lstlisting}[columns=flexible,keepspaces=true]
+@precondition: $x_{in} > y_{in}$
+void swap(int x, int y) {
+  x := x + y;
+  y := x - y;
+  x := x - y;
+}
+\end{lstlisting}
+%
+With a plain \ac{smt} solver one can prove that this code does indeed swap the
+variables by constructing an \ac{smt} problem that includes the following
+constraint $x_{out} = y_{in} \wedge y_{out} = x_{in}$, in addition to encoding
+the precondition, any constraints derived from the function body, and
+constraints derived from any post condition. However, in practice, code bases
+are variational artifacts, either through explicit variation annotations such as
+C preprocessor \texttt{\#ifdef}s or through implicit practices such as branching
+and forking in version control systems. For example, in addition to the snippet
+above, one might have another variant that requires verification, perhaps to
+prevent a bug or as a safety check after a refactor:
+%
+\begin{lstlisting}[columns=flexible,keepspaces=true]
+@precondition: $x_{in} > y_{in}$
+@precondition: $x_{in} > -1$     // new
+int swap(int x, int y) {
+  x := x + y;
+  y := x - y;
+  x := x - y;
+  return 1;                // new
+}
+\end{lstlisting}
+%
+In this variant, we see two minor additions; an additional precondition, $x_{in}
+> -1$, and a return value, note that most of the code has not changed. With a
+variational \ac{smt} solver one could use choices to express this difference and
+verify \emph{both} variants instead of each variant at a time. Thus, a
+variational \ac{smt} solver, by virtue of being variation-aware, would allow
+verification tools to directly express variation using choices and verify the
+entire code base or software system, rather than each of its' variants one at a
+time.
+
+Verifying the entire code base is possible using plain \ac{smt} solvers but the
+situation is analogous to the difference between a programming language which
+has the concept of looping, compared to a language that is not
+\emph{loop-aware}. One might still express loops in the latter language, \eg{},
+with \texttt{Goto} or \texttt{Gosub} primitives, but doing so is more
+error-prone, and more difficult than using a construct such as \texttt{While}
+that encapsulates and expresses the concept of looping.
+
+One approach to construct a variational \ac{smt} solver is to add a background
+\emph{theory of variation} to a plain \ac{smt} solver. This approach has many
+desirable properties; the \vc{} that determines the variants of interest could
+be expressed in the solver, the solver would enforce the synchronization of
+choices, new theories could be supported, and the difference between a
+variational \ac{sat} solver and variational \ac{smt} solver would only be the
+inclusion of other theories in a problem.
+
+Unfortunately, there are several issues which make this approach undesirable.
+First, it is overly solver specific. Some solvers such as openSMT~\cite{openSMT}
+are architected specifically so the end-user can include custom theories, other
+solver such a yices\cite{10.1007/978-3-319-08867-9_49},
+cvc4\cite{10.1007/978-3-642-22110-1_14} and
+z3~\cite{10.1007/978-3-540-78800-3_24} have varying degrees of support. Yices
+and z3 provide no support\footnote{z3 had plugin support for custom theories but
+  this feature was removed because model construction became problematic. The z3
+  developers now suggest treating z3 as a black box and building around it, just
+  as this thesis proposes. See:
+  https://stackoverflow.com/questions/46508907/smt-solver-with-custom-theories},
+while cvc4 includes an API for custom theories but with incomplete documention.
+Second, adding a theory of variation to the solver limits the asynchronous
+implementation to the asynchronous attributes of the \ac{smt} solver. Lastly,
+the interaction between plain and the hypothetical variational theory is not
+clear. The interaction between combination of theories in \ac{smt} solvers is an
+active area of research~\cite{10.5555/1550723}. By including a theory of
+variation, which is a \emph{meta-theory}, \ie{}, a theory which operates on
+other theories to construct variation-aware theories, these problems are
+exacerbated. Thus, while it is possible to construct a theory of variation, we
+leave this to future research. Instead, we choose to create the variational
+prototype as a proof of concept variational \ac{smt} solver that uses a plain
+\ac{smt} solver as a black-box.
+
+
+\subsection{\ac{vpl} Extensions}
+Extending the variational solver for \ac{smt} background theories requires
+non-trivial extensions to variational propositional logic, and consequently the
+intermediate language the solver operates upon. In \ac{smt} solving, Boolean
+values correspond to constraints over individual variables which range over
+different domains, such as arrays, arithmetic, bitvectors or strings. To support
+\ac{smt} theories the variational \ac{smt} solver must be able to abstract these
+theories and reason about them in a variational context. We show a simple
+extension of \ac{vpl} to include integer arithmetic, and conclude the section by
+extending the variational \ac{smt} solver with an array theory.
+
+To begin, we require formalizations of \ac{smt} background theories, for our
+purposes, we'll represent any \ac{smt} theory as a 2-tuple, consisting of a
+formal grammar \G{}, and a semantic function with type $\sem{\cdot} : \G{}
+\rightarrow \mathbb{B}$\footnote{This formulation follows conventions from the
+  programming language community. We choose this formulation to build upon the
+  notation and background in \autoref{sec:vpl}. The \ac{sat}/\ac{smt} community
+  would represent this a set called a \emph{signature} that consists of words in
+  the theory called \emph{atoms}, functions which operate on the words, such as
+  $+$ and $<$ and functions which maps sentences to Booleans called
+  \emph{predicates}}. For the remainder of the proposal we represent all
+grammars in Backus-Naur form. For example, consider a simple background theory
+of integer addition, subtraction and two inequalities:
+%
+\begin{syntax}
+  i & \in{} & \mathbb{Z}
+  & \textit{Integer literals} \\[1.5ex]
+
+  a & \Coloneqq{} & i    & \textit{Terminal} \\
+  & | & a + a     & \textit{Addition} \\
+  & | & a -{} a     & \textit{Subtraction} \\
+  & | & a < a     & \textit{Less Than} \\
+  & | & a > a   & \textit{Greater Than} \\
+  % & | & \chc[D]{a,a} & \textit{Choice} \\
+\end{syntax}
+%
+Note that with this formulation, the semantic function is partial, the theory
+should only allow syntax trees that have inequalities at the root such that a
+Boolean is the only type of value that can result. With the semantic function
+and grammar, the integer theory can be integrated into \ac{vpl}. For example,
+one can imagine the following sound formula: $\aV{} \wedge \neg \sem{((1 + 5) <
+  1729)} \vee \cV{}$
+
+With the definition of an \ac{smt} background theory we define a
+\emph{variation-aware} background theory as a 2-tuple that consists of a
+variation-aware grammar, $\G{}^{\chcL\chcR}$, and a variation-aware semantic
+function $\sem{\cdot} : C \rightarrow \G{} \rightarrow \mathbb{B}$. The
+alterations to the semantic function are minimal, requiring a configuration as
+the extra input to track choices. The semantics follow from the semantic
+function described in \autoref{fig:cc:cfg} only distributing over integer
+connectives instead of logical connectives such as $\wedge$ and $\vee$.
+Converting a grammar to a variation-aware grammar depends on the grammar at
+hand. In this case, the theory is a context free grammar and thus the only
+difference is adding choices as a recursive case:
+%
+\begin{syntax}
+  i & \in{} & \mathbb{Z}
+  & \textit{Integer literals} \\[1.5ex]
+
+  \lift{a} & \Coloneqq{} & i    & \textit{Terminal} \\
+  & | & \chc[D]{\lift{a},\lift{a}} & \textit{\textbf{Choice}} \\
+  & | & \lift{a} + \lift{a}     & \textit{Addition} \\
+  & | & \lift{a} - \lift{a}     & \textit{Subtraction} \\
+  & | & \lift{a} < \lift{a}     & \textit{Less Than} \\
+  & | & \lift{a} > \lift{a}   & \textit{Greater Than} \\
+\end{syntax}
+%
+Note that we could define the variation-aware theory only with a variation-aware
+domain $\lift{\iV{}}$ which would add choices to the set of integers. Doing so
+would allow the variation-aware grammar to express expressions such as
+$\chc[A]{1, 2} + 4$, \emph{but not} $\chc[A]{10 + \chc[A]{2,3}, 3} + 2$ because
+choices would only be allowed to range over integers and not expression. We'll
+use this behavior in the following array example.
+
+More complicated theories, such as
+arrays~\cite{demoura2009generalized,Mccarthy62towardsa} require more careful
+handling. The array theory parameterizes an array with a type to determine the
+type of the array's elements, and includes only two functions: $\kf{select :
+  Array\ \nats\ X \rightarrow \nats \rightarrow X}$, which given an array and a
+natural number index, creates a constraint that an element $x \in X$, is at
+index $n \in \nats{}$, in the input array. \newline Similarly, $\kf{store :
+  Array\ \nats\ X \rightarrow \nats \rightarrow X \rightarrow Array\ \nats\ X}$
+constructs a constraint that at index $n \in \nats{}$, the input array contains
+value $\kf{x \in X}$. In SMTLIB2, these constraints obey the following law
+$\forall a\ \in \kf{Array\ \nats\ X},\ \forall i\ \in \nats,\ e \in X,\ \kf{(=\
+  (select\ (store\ a\ i~e)\ i)\ e)}$. A simple formulation then for an array
+theory is:
+%
+\begin{syntax}
+  a & \in & Array\ \nats{}\ X & \textit{all possible arrays} \\
+  i & \in & \nats & \textit{Natural Numbers} \\
+  x & \in & X & \textit{set of elements} \\[1.5ex]
+
+  arr & \Coloneqq & select\ a\ i    & \textit{Selection} \\
+  % & | & \chc[D]{\lift{a},\lift{a}} & \textit{Choice} \\
+  & | & store\ a\ i\ x & \textit{Storage} \\
+  % & | & \lift{a} + \lift{a}     & \textit{Addition} \\
+\end{syntax}
+%
+The semantic function for this grammar is stateful, such that it can track the
+array and its constraints. The prototype \ac{smt} solver offloads this work to
+the underlying incremental solver and instead places holes in the array
+constraints.
+
+We present a variation-aware grammar, \lift{arr}, which maintains the same
+interface, \ie{}, \emph{store} and \emph{select}, but operates on variation-aware
+domains such as \lift{\nats}, \lift{X}:
+%
+\begin{syntax}
+  a & \in{} & \lift{(Array\ \nats{}\ X)} & \textit{choice of all possible arrays} \\
+  i & \in{} & \lift{\nats} & \textit{choice of Natural Numbers} \\
+  x & \in{} & \lift{X} & \textit{choice of elements} \\[1.5ex]
+
+  \lift{arr} & \Coloneqq{} & select\ a\ i    & \textit{Selection} \\
+  % & | & \chc[D]{\lift{a},\lift{a}} & \textit{Choice} \\
+    & | & store\ a\ i\ x & \textit{Storage} \\
+    % & | & \lift{a} + \lift{a}     & \textit{Addition} \\
+\end{syntax}
+%
+This is a design decision, one could easily add an array theory which allows for
+a choice of \emph{select} or \emph{store}, similar to \lift{a}, in addition to
+including variation-aware domains. Furthermore, we could restrict the language
+by choosing to only use a variation-aware element domain \lift{X}, which would
+yield an array of choices, or only a variation-aware domain of arrays,
+\lift{(Array\ \nats{}\ X)}, yielding a choice of arrays. Both are possible with
+this formulation, for example, consider the following variational \ac{smt}
+program:
+%
+\begin{lstlisting}[columns=flexible,keepspaces=true]
+(declare-const e1 Int)
+(declare-const e2 Int)
+(declare-const a1 (Array Int Int))                ;; an array of integers
+(declare-const a2 (Array Int Int))                ;; second array of integers
+(assert (= (store a2      3 A$\chcL$1202,2718$\chcR$) a2))     ;; an array of choices
+(assert (= (store A$\chcL$a1,a2$\chcR$ 3 1729       ) a1))     ;; a choice of arrays
+(assert (= (select A$\chcL$a1,a2$\chcR$ 3) e1))
+(assert (= (select a2      3) e2))
+(check-sat)
+(get-model)
+\end{lstlisting}
+%
+We see that there are two integer arrays, $\kf{a1}$ and $\kf{a2}$, and three
+choices: one choice which chooses an array in \emph{store}, another which
+chooses an element to store in \emph{store} in $\kf{a2}$, and a third choice to
+determine which array $\kf{e1}$ retrieves its value from. All choices are
+parameterized by the dimension $\kf{A}$ yielding two variants, and results are
+returned in the $\kf{e1}$ and $\kf{e2}$ variables. The variational core for this
+program would simply replace the choices with holes:
+%
+\begin{lstlisting}[columns=flexible,keepspaces=true]
+ $\vdots$
+(assert (= (store $\Diamond_{A}$ 3 1729) a1))  ;; a choice of arrays
+(assert (= (store a2 3 $\Diamond_{A}$)   a2))  ;; an array of choices
+(assert (= (select $\Diamond_{A}$ 3) e1))
+ $\vdots$
+\end{lstlisting}
+%
+To solve such a program, the variational \ac{smt} solver will compile to SMTLIB2
+wrapping variation-aware statements and statements affected by variation-aware
+statements, such as \texttt{(get-model)}, with a \texttt{push} and \texttt{pop}
+instruction:
+\begin{lstlisting}[columns=flexible,keepspaces=true]
+(declare-const e1 Int)
+(declare-const e2 Int)
+(declare-const a1 (Array Int Int))      ;; an array of integers
+(declare-const a2 (Array Int Int))      ;; second array of integers
+(push)                                  ;; a configuration on A has occurred
+(assert (= (store a2 3 1202) a2))
+(assert (= (store a1 3 1729) a1))
+(assert (= (select a1 3) e1))           ;; e1 set to 1729
+(assert (= (select a2 3) e2))           ;; e2 set to 1202
+(check-sat)
+(get-model)
+(pop)
+(push)                                  ;; Right alternative of A
+(assert (= (store a2 3 2718) a2))
+(assert (= (store a2 3 1729) a1))       ;; a1 unifies with a2
+(assert (= (select a1 3) e1))           ;; e1 set to 1729
+(assert (= (select a2 3) e2))           ;; e2 set to 2718
+(check-sat)
+(get-model)
+(pop)
+\end{lstlisting}
+
+\subsection{Variational \ac{smt} Models}
+To support \ac{smt} theories, variational models must be abstract enough to
+handle values other than Booleans. Functionally, variational \ac{smt} models
+must satisfy several constraints: the variational \ac{smt} model must be more
+memory efficient than storing all models returned by the solver naively. The
+varational \ac{smt} model must allow users to find satisfying values for a
+variant. The model must allow users to find all variants at which a variable has
+a particular value or range of values. Furthermore, several useful properties of
+varational models, as presented in \autoref{ssec:vmodels}, should be maintained:
+The model is non-variational; hence the user does not need to understand the
+choice calculus in order to understand their results. The model produces results
+that can be fed into a plain \ac{sat} solver. The model can be built
+incrementally and without regard to the ordering of results because it forms a
+commutative monoid under $\{\fls{}, \vee\}$. The model maps variables to a context free
+grammar and can thus be parsed quickly\footnote{The use of ``quickly'' here
+  means linear or quadratic time using context-free grammar parser such as an
+  Earley parser~\cite{10.1145/362007.362035}}.
+
+To maintain these properties and satisfy the functional requirements, our
+strategy for variational \ac{smt} models is to create a mapping of variables to
+\ac{smt} expressions. By virtue of this strategy, variables are disallowed from
+changing types across the set of variants and hence disallowed from changing
+types as the result of a choice in the variational model. For any variable in
+the model, we assume the type returned by the base solver is correct, and store
+the satisfying value in a linked list constructed \emph{if-statements}.
+Specifically, we use the function $\kf{ite} : \mathbb{B} \rightarrow T
+\rightarrow T$ as the \texttt{cons} operation to build the list. $\kf{ite}$ is
+defined in the ground theory of Booleans as defined in the SMTLIB2 standard. All
+variables are initialized as \texttt{undefined} until a value is found in a
+variant. To ensure the correct value of a variable corresponds to the
+appropriate variant, we translate the configuration that determines the variant
+to a variation context, and place the appropriate value in the \emph{then}
+branch, with the else branch linking to the previous expression.
+
+Consider the following variational \ac{smt} problem extended with an integer
+arithmetic theory: $f = (\chc[A]{\iV{}, 13} - \cV{} < \bV + 10) \rightarrow
+\chc[B]{\aV{}, \cV{} > \iV{}}$. \fV{} contains two unique choices, $\kf{A}$,
+$\kf{B}$, and thus represents four variants. In this case, the expression is
+under-constrained and so each variant will be found satisfiable.
+%
+\begin{figure}[h]
+  \centering
+  \input{Figures/Vsmt_plain_models}
+  \caption{Possible plain models for variants of $\kf{f}$.}%
+  \label{fig:vsmt:models:plain}
+\end{figure}
+\begin{figure}[h]
+  \centering
+  \input{Figures/Vsmt_variational_model}
+  \caption{Variational model corresponding to the plain models in
+    \autoref{fig:vsmt:models:plain}.}%
+  \label{fig:vsmt:models:var}
+\end{figure}
+
+\autoref{fig:vsmt:models:plain} show possible plain models for $\kf{f}$ with the
+corresponding variational \ac{smt} model display in
+\autoref{fig:vsmt:models:var}. We've added line breaks to emphasize the branches
+the $\kf{then}$ and $\kf{else}$ branches of the $\kf{ite}$ SMTLIB2 primitive.
+
+This formulation maintains the user requirements of the model. We maintain a
+special variable $\_Sat$ to track the variants that were found satisfiable. In
+this case all variants are satisfiable and thus we have four clauses over
+dimensions in disjunctive normal form. If a user has a configuration then they
+only need to perform substitution to determine the value of a variable under
+that configuration. For example, if the user were interested in the value of
+\iV{} in the $\{(\AV{}, \tru{}), (\BV{}, \tru{})\}$ variant they would
+substitute the configuration into \vc{\iV{}} and recover 0 from the first
+$\kf{ite}$ case. To find the variants at which a variable has a value a user can
+employ a \ac{smt} solver, add \vc{\iV{}} as a constraint, and query for a model.
+
+This also maintains the desirable properties of variational \ac{sat} models
+while allowing any type known to the \ac{smt} solver. The variational \ac{smt}
+model does not require knowledge of choice calculus or variation, it is still
+monoidal, although not a commutative monoid, and can be built in any order as
+long as there are no duplicate variants; a scenario that is impossible by the
+property of synchronization on choices.
+
+However, variational \ac{sat} models clearly compressed results by preventing
+duplicate values with constant variables. In contrast, the variational \ac{smt}
+model allows for duplicate values as long as those values are parameterized by
+disjoint variants. For example, both \iV{} and \cV{} contain duplicate values,
+but only one: \iV{} is easy to check in $O(1)$ time as the duplicates are
+sequential in \vc{\iV{}} and can thus be checked during model construction. Such
+a case would be easily avoided by tracking the set of all values a variable has
+been assigned in all variants. However, we chose to keep variational models as
+simple as possible and therefore only present the minimum required machinery.
+
+\subsection{Requirements and Design Principles}
+As before the items that are completed are marked with a \checkmark{}. The final
+thesis will address each item:
+\begin{enumerate}
+\item The user must be able to incrementally add to a variational core. This
+  item recovers some of the incrementality lost from the synthesis of a \ac{vpl}
+  formula. I hypothesize two possible solutions: Given a variational core, a
+  user can add new clauses to the core under the condition that no bound
+  variable is removed in the new variational core. We require this constraint
+  because if a user attempted to remove a variable in the variational core then
+  the solver would need to unpack the symbolic references which could lead to
+  unsound results. A second method for incrementality comes from work on
+  CLU\cite{10.1145/69622.357182}, under this method one would derive a
+  variational core and then serialize or marshal it to disk, effectively caching
+  the core, and the solver state, for future use or transmission to another
+  solver instance.
+\item \checkmark{} Provide a \emph{general} method to solve a variational core.
+  A variational \ac{smt} solver can be extended with many background theories.
+  Depending which theories the user requires, many possible formulas with
+  varying types (or \emph{sorts} in the \ac{sat} literature) and operators can
+  be present in a query formula and thus in the variational core. Hence, the
+  variational \ac{smt} solver must have a general method to reason about these
+  types and operations. The improvement is to use a Huet zipper~\cite{huet_1997}
+  to capture operators as a context, such as negation, as an Algebraic Data
+  Type. With a zipper, one can traverse the variational core and delay the
+  semantic of the operator thus processing the rest of the tree to a symbolic
+  variable. Then, evaluating with any operator is reduced to only the
+  denotational semantics of the operator, preserving compositionality and
+  completeness.
+\item \checkmark{} The variational \ac{smt} solver should be able to solve a
+  query formula concurrently or in a single-threaded mode. This item change
+  requires changing the semantics of choices. A benefit of the static and
+  explicit approach of representing variation using the choice calculus is that
+  we can alter the denotational semantics of a choice very easily. In the
+  prototype \ac{sat} solver, the semantics of a choice was wrapping both
+  alternatives with a \texttt{push} and \texttt{pop} call, for the variational
+  \ac{smt} solver, the semantics of a choice are extended to also capture the
+  solver state and transmit a continuation over an asynchronous
+  channel~\cite{Marlow2012} to a worker thread. In order to ensure sound
+  results, we exploit the monoidal design of variational models to ensure that
+  the variational model is insensitive to the order results are produced from
+  the base solver.
+\end{enumerate}
+
+\subsection{Research Plan}
+While I have made significant progress in pursuit of the aforementioned design
+goals. Several deliverables are still to be completed:
+
+\paragraph{Optimizations based on nanopass compiler research} In the worst case,
+a variational core will be evaluated $2^{|\kf{D}|}$ times where $|\kf{D}|$ is
+the number of unique dimensions in the query formula. Therefore, any
+optimizations that can simplify the variational core once are likely to have an
+observable impact on performance. We employ a nanopass compiler architecture to
+increase the flexibility of the approach, since varying background theories are
+likely to produce different optimizations. This work has not begun but is
+architected for in the prototype variational \ac{smt} solver. The proposed
+thesis will answer the following research questions:
+\begin{enumerate}
+\item Which optimizations produce a corresponding effect on runtime performance
+  for both real world case studies and random \ac{smt} problems?
+\item For any given optimization, what is the magnitude
+  of the effect?
+\item Is the effect on performance sensitive to the order optimizations are
+  applied?
+\end{enumerate}
+
+\paragraph{Evaluation of solver performance}
+Previous work on the variational \ac{sat} solver~\cite{10.1145/3382025.3414965}
+used two real-world case studies~\cite{MNS+:SPLC17} from the \ac{spl} community
+for an empirical semantic. Thus, while these case studies are representative of
+practical use cases more evaluation could be done. The proposed thesis will
+perform a more robust evaluation and will consist of a mix of real-world and
+randomly generated data.
+
+Specifically I will reuse the aforementioned case studies, both of which include
+\ac{smt} versions, and will use a forked version of a variational type checker,
+TypeChef~\cite{KKHL:FOSD10}, to log \ac{sat} problems produced by lexing,
+parsing and type checking the Linux kernel~\cite{linux} and
+Busybox~\cite{busybox} open source projects. The forked version of TypeChef is
+complete but does not scale for the Linux kernel at time of this writing, and
+thus requires a refactor to use a more sophisticated logging infrastructure such
+as a database.
+
+With this data, a convincing evaluation of the variational \ac{smt} solver
+architecture and design is possible. However, the majority of data will only
+exercise the solver for Boolean propositional formulas. To test the architecture
+in the \ac{smt} use case, the study will use the \ac{smt} versions of the
+previous case studies and will generate mixed\cite{Gent94thesat} random \ac{smt}
+problems according to established methods in the random-\ac{sat} community.
+
+This data serves several other purposes. It will be used to evaluate performance
+of the encoding strategies from \autoref{encoding-strat-deliverable} on the
+prototype \ac{smt} solver. It will serve as the test data to assess the impact
+of sharing on solver performance. The non-random portion will be made publicly
+available as a dataset of real-world variational \ac{sat} and \ac{smt} problems,
+and as a dataset of related \ac{sat} problems, thus increasing the impact of
+this thesis.
+
+\paragraph{Proof of variation preservation}
+A proof of variation preservation is a key contribution of the thesis. This work
+is partially complete with a proof of progress for accumulation and evaluation,
+and a lemma that plain formulas always result in a \unit{} value in Agda. The
+strategy is to show progress and preservation over the inference rules deriving
+and solving a variational core. Implicit in this is to show variational
+preservation for constructing a \ac{vpl} formula. There properties left to prove
+are as follows:
+\begin{enumerate}
+% \item \emph{A minimal variational core has a normal form}. I conjecture that a
+%   minimal (in the sense of least terms) variational cores consists only of
+%   choices, joined by disjunctions and at most a symbolic term. By the operations
+%   defined in \autoref{sec:vsat}, a disjunction is the only connective in the
+%   intermediate language that cannot be removed. Similarly choices are the only
+%   values which are not accumulated or evaluated. Thus, one can imagine a general
+%   case where a minimal variational core---minimal with respect to the encoding of
+%   choices---can be found by converting the core into disjunctive normal form and
+%   accumulating any remaining symbolic terms into
+
+%   composed of conjunctions, disjunctions,
+%   symbolics and choices, but a more minimal core might be possible where all
+%   conjunctions are removed, the core is reordered and any remaining symbolic
+%   terms are further accumulated.
+\item \emph{Encoding preservation: An encoding algorithm preserves the
+    uniqueness of variants}. In other words whichever encoding algorithm is used
+  to synthesize the set of problems to \ac{vpl}, that encoding algorithm does
+  not lose variants.
+\item \emph{Variational core progress: Given a \ac{vpl} formula a variational
+    core is always derivable}
+\item \emph{Variational core preservation: For a set of \pl{} problems, the
+    corresponding variational core can recover that set of problems and if a
+    problem in the initial set was satisfiable, then the corresponding variant
+    is also satisfiable}. For any variational core, the set of \ac{sat} or
+  \ac{smt} problems can be recovered by enumerating all variants with a total
+  configuration and substituting symbolic terms with their concrete
+  representations. The resulting formula should then be semantically equivalent
+  to the original \ac{sat} or \ac{smt} problem. This item is a direct
+  reproduction of the quick-check properties that verify the prototype \ac{sat}
+  and \ac{smt} solver's as sound.
+\item \emph{Variational model Preservation: A variational model produces a
+    satisfying assignment for every satisfiable variant}. For any variant, a
+  variational model always results in a satisfying assignments to the
+  corresponding \ac{sat} or \ac{smt} problem. Similar to the previous item this
+  is the second half of
+\end{enumerate}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../main"
+%%% End:

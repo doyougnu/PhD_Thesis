@@ -1,0 +1,86 @@
+\tikzstyle{block} = [draw,fill=blue!20,node distance = 3.2cm, minimum size=2em]
+
+% diameter of semicircle used to indicate that two lines are not connected
+\tikzstyle{branch}=[fill,shape=circle,minimum size=3pt,inner sep=0pt]
+
+\begin{tikzpicture}[>=latex']
+
+    % Draw blocks, inputs and outputs
+
+    % \foreach \y in {1,2,3,4,5} {
+        % blocks
+        \node[block] at (2,-1) (prod) {$SAT$};
+        \node[block, name=stging, below=3.3cm of prod] {$SAT$};
+        \node[block, name=devel, below=1.3cm of stging] {$SAT$};
+
+        % input nodes
+        % \node[left of = devel, xshift=-15pt] (input1) {$development$};
+        % \node[left of = stging] (input2) {$\turnBlue{staging}$};
+        \node[left of =prod,xshift=-10pt] (input3) {\pV{}};
+
+        % inputs
+        \draw[->] (input3) -- (prod);
+        \draw[->] (prod) -- node[xshift = 60pt, align=left] {%
+          $ \begin{aligned}
+            \texttt{pop}  &\quad \eV{}\\
+            \texttt{pop}  &\quad \cV{}\\
+            \texttt{pop}  &\quad \bV{}\\
+            \texttt{push} &\quad (\bV{} \vee \neg \iV{})  \\
+            \texttt{push} &\quad \cV{} \\
+            \texttt{push} &\quad (\gV{} \rightarrow \cV{}) \\
+          \end{aligned}
+          $
+        } (stging);
+\draw[->] (stging) -- node[xshift = 85pt, align=left] {%
+  $\begin{aligned}
+    & \texttt{resetAssertionStack}\\
+    &\texttt{push} \quad \zV{} \leftrightarrow (a \wedge b \wedge c \wedge e)
+    % \text{pop} &\quad \kf{pti} \rightarrow c_{i.1}\\
+    % \text{pop} &\quad (\kf{spectre\_v2} \vee \kf{l1tf}) \leftrightarrow \\&\quad (c_{0} \wedge (\kf{nospec\_store\_bypass\text{-}disable} \rightarrow f_{j})\\
+    % \text{pop} &\quad (c_{0.0} \wedge c_{1} \wedge \ldots c_{n})\\
+  \end{aligned}
+  $
+} (devel);
+
+        % outputs
+        \draw[->] (prod.east) -- +(0.5,0);
+        \draw[->] (stging.east) -- +(0.5,0);
+        \draw[->] (devel.east) -- +(0.5,0);
+
+
+        % \node at (3.5,-3) (result1) {$result$};
+        % \node[right of = stging, xshift=15pt] (input2) {$result$};
+        % \node[right of = devel, xshift=15pt] (input2) {$result$};
+        % \node at (3.5,-1) (input3) {$result$};
+
+        \node[right of = stging, xshift=18pt] (input2) {$result_{\qV{}}$};
+        \node[right of = devel, xshift=18pt] (input2) {$result_{\rV{}}$};
+        \node at (3.8,-1) (input3) {$result_{\pV{}}$};
+    % }
+    % \node[block] at (2,-6) (block6) {$f_6$};
+    % \draw[->] (block6.east) -- +(0.5,0);
+
+    % % Calculate branch point coordinate
+    % \path (input1) -- coordinate (branch) (block1);
+
+    % % Define a style for shifting a coordinate upwards
+    % % Note the curly brackets around the coordinate.
+    % \tikzstyle{s}=[shift={(0mm,\radius)}]
+    % % It would be natural to use the yshift or xshift option, but that does
+    % % not seem to work when shifting coordinates.
+
+    % \draw[->] (branch) node[branch] {}{ % draw branch junction
+    %         \foreach \c in {2,3,4,5} {
+    %             % Draw semicircle junction to indicate that the lines are
+    %             % not connected. The intersection between the lines are
+    %             % calculated using the convenient -| syntax. Since we want
+    %             % the semicircle to have its center where the lines intersect,
+    %             % we have to shift the intersection coordinate using the 's'
+    %             % style to account for this.
+    %             [shift only] -- ([s]input\c -| branch) arc(90:-90:\radius)
+    %             % Note the use of the [shift only] option. It is not necessary,
+    %             % but I have used it to ensure that the semicircles have the
+    %             % same size regardless of scaling.
+    %         }
+    %     } |- (block6);
+\end{tikzpicture}

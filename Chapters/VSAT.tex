@@ -1,0 +1,459 @@
+~\label{sec:vsat} A core contributions of the proposed thesis is the design and
+architecture of a variational satisfiability solver. In this section, I review
+the architecture of a prototype solver called \vsat{} and conclude the section
+by summarizing work left to do on \autoref{phase-change-deliverable}, \ie{},
+assessing the hardness of variational satisfiability problems.
+
+\subsection{Design}
+Research on \ac{sat} and incremental \ac{sat} is fast moving with novel \ac{sat}
+solvers regularly competing in the International \ac{sat}
+Competition~\cite{interSatComp}, to leverage these results we design variational
+satisfiability solving to target the incremental interface specified in the
+SMT-LIB2~\cite{BarFT-RR-17} standard. Targeting the standard provides several
+benefits: an implementation of a variational solver is free to choose any
+SMT-LIB2~\cite{BarFT-RR-17} compliant solver ranging from experimental solvers
+such as cvc4~\cite{10.1007/978-3-642-22110-1_14}, to industrial strength solvers
+such as z3~\cite{10.1007/978-3-540-78800-3_24}. Since the implementation is
+\ac{sat} solver agnostic, a variational solver can be run as a
+\emph{meta-solver}, \ie{}, a \ac{sat} solver that interleaves, or simultaneously
+uses several \ac{sat} solvers to solve a \ac{sat} problem, especially in
+asynchronous workloads. Lastly, any result from the \ac{sat} or \ac{smt}
+community that enters the standard is supported, this includes new \ac{smt}
+theories.
+
+In addition to coupling to SMTLIB2, the variational \ac{sat} solver should not
+place further burden on the end-user. Thus users of a variational solver should
+not be required to understand the choice calculus in order to interpret their
+results, a variational solver's output should not contain choices. This design
+principle in combination with \autoref{encoding-strat-deliverable} completes the
+approach and would allow an end-users to receive the benefits of this work
+without additional upfront cost.
+
+\subsection{Architecture}
+
+This section provides an informal description of variational satisfiability
+solving and variational models, I provide the formalization in the next section.
+A variational satisfiability solver is a compiler from the domain of variational
+formulas to SMT-LIB2 programs. Throughout this section, I use SMTLIB2 snippets
+to describe variational solving concepts in terms of an incremental solver.
+While I target SMTLIB2, conforming to the standard is not an essential
+requirement. Any solver that exposes an incremental API as defined by
+minisat~\cite{10.1007/978-3-319-09284-3_16} can be used to implement variational
+satisfiability solving following the same architecture and semantics.
+
+\begin{figure}
+  \begin{subfigure}[t]{0.5\linewidth}
+    \input{Figures/Vsat_Impl_Solve_Overview}
+    \vspace{3.5ex}
+    \caption{System overview of a variational solver.}%
+    \label{impl:overview}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.5\linewidth}
+    \input{Figures/Vsat_Impl_VCore_Overview}
+    \caption{Overview of the reduction engine.}
+    \label{impl:vcore}
+  \end{subfigure}
+  \caption{}
+\end{figure}
+
+A \ac{vpl} formula is solved using a recursive approach, decoupling the handling
+of plain terms from the handling of variational terms. The idea is to define a
+process to evaluate plain terms and skip choices, then define another process
+that can only configures choices thus introducing new plain terms to the formula
+that can be recursively processed. The base case is a variant, at which point a
+model can be queried and the assertion stack can be popped to backtrack to solve
+another variant.
+
+I present an overview of a variational solver as a state diagram in
+\autoref{impl:overview} that operates on the input's abstract syntax tree.
+Labels on incoming edges denote inputs to a state and labels on outgoing edges
+denote return values; we show only inputs for recursive edges; labels separated
+by a comma share the edge. We omit labels that can be derived from the logical
+properties of connectives, such as commutativity of $\vee$ and $\wedge$.
+Similarly, we omit base case edge labels for choices and describe these cases in
+the text. The solver has four subsystems: The \emph{reduction engine} processes
+plain terms and generates a formula ready for reification called a
+\emph{variational core}. The \emph{reification engine} configures choices in a
+variational core. The \textit{base solver} is the incremental solver used to
+produce plain models. Finally, the \emph{variational model constructor}
+synthesizes a single variational model from the set of plain models returned by
+the base solver.
+
+The solver inputs a \vpl{} formula, called a \emph{query formula}, and an
+optional input, called a \emph{variation context} (\vc{}). A \vc{} is a
+propositional formula of dimensions that restricts the solver to a subset of
+variants.
+%
+The variational solver translates the query formula to a formula in an
+intermediate language (IL) that the reduction and reification engines operate
+over; its syntax is given below.
+%
+\[
+  v \hquad\Coloneqq\hquad \unit{}
+  \hquad|\hquad t
+  \hquad|\hquad s
+  \hquad|\hquad \neg v
+  \hquad|\hquad v \wedge v
+  \hquad|\hquad v \vee v
+  \hquad|\hquad \chc[D]{e,e}
+\]
+%
+The IL includes two kinds of terminals not present in the input query formulas:
+plain sub-terms that can be reduced symbolically will be replaced by a
+\emph{symbolic reference} $s$, and sub-terms that have been sent to the base
+solver will be represented by the unit value \unit{}.
+%
+Note that choices contain unprocessed expressions ($e$) as alternatives.
+
+
+\paragraph{Derivation of a Variational Core}%
+\label{ssec:impl:accum}
+
+A variational core is an IL formula that captures the variational structure of
+a query formula. Plain terms will either be placed on the assertion stack or
+will be symbolically reduced, leaving only logical connectives, symbolic
+references, and choices.
+%
+Consider the query formula $f = ((a \wedge b) \wedge \chc[A]{e_{1}, e_{2}}) \wedge
+((p \wedge \neg q) \vee \chc[B]{e_{3}, e_{4}})$. Translated to an IL formula,
+$f$ has four references ($a$, $b$, $p$, $q$) and two choices. The reduction
+engine shown in \autoref{impl:vcore} will produce a variational core that will
+assert $(a \wedge b)$ in the base solver, thus pushing it onto the assertion
+stack and create a symbolic reference for $(p \wedge \neg q)$. This is done in
+two states: \emph{evaluation}, which issues commands to the base solver to
+process plain terms, and \emph{accumulation} which is called by evaluation to
+create symbolic references.
+
+Generating the core begins with evaluation. Evaluation will match on the root
+node: $\wedge$, of $f$ and recur following the $v_1 \wedge v_2$ edge, where
+%
+$v_1=(a\wedge b)\wedge\chc[A]{e_1,e_2}$ and
+$v_2=(p\wedge \neg q) \vee \chc[B]{e_3, e_4}$.
+%
+The recursion processes the left child first. Thus, evaluation will again
+match on $\wedge$ of $v_{1}$ creating another recursive call with $v_{1}' =
+(a\wedge b)$ and $v_{2}' = \chc[A]{e_1,e_2}$. Finally, the base case is reached
+with a last recursive call where $v_{1}'' = a$, and $v_{2}'' = b$. At the base
+case both $a$ and $b$ are references, thus evaluation will send $a$ to the
+base solver, following the $\kf{r, s, t}$ edge, which returns $\unit{}$ for
+the left child. The right child follows the same process yielding $\unit{}
+\wedge \unit{}$; since the assertion stack implicitly conjuncts all assertions,
+$\unit{} \wedge \unit{}$ will be further reduced to $\unit{}$ and returned as
+the result of $v_{1}'$,
+indicating that both children have been pushed to the base solver. This
+leaves $v_{1}' = \unit{}$ and $v_{2}' = \chc[A]{e_1,e_2}$. $v_{2}'$ is a base
+case for choices and cannot be reduced in evaluation, and so $\unit{} \wedge
+\chc[A]{e_1,e_2}$, will be reduced to just $\chc[A]{e_1,e_2}$ as the result for
+$v_{1}$.
+
+In evaluation, conjunctions can be split because of the behavior of the
+assertion stack and the and-elimination property of $\wedge$. Disjunctions and
+negations cannot be split in this way because both cannot be performed if a child
+node has been lost to the solver, e.g., $\neg \unit{}$. Thus, in accumulation, we
+construct symbolic terms to represent entire sub-trees, ensuring information is
+not lost, but still allowing for the sub-tree to be evaluated if it is sound to
+do so.
+
+The right child, $v_2=(p\wedge \neg q) \vee \chc[B]{e_3, e_4}$ requires
+accumulation. Evaluation will match on the root $\vee$, and send $(p\wedge \neg
+q) \vee \chc[B]{e_3, e_4}$ to accumulation via the $v_{1} \vee v_{2}$ edge.
+Accumulation has two recursive edges, one to create symbolic references (with
+labels $r, s, \hdots$), and one to recur to values. Accumulation matches the
+root $\vee$ and recurs on the self-loop with edge $v_{1} \vee v_{2}$, $v_{1} =
+(p\wedge \neg q)$, and $v_{2} = \chc[B]{e_3, e_4}$. Processing the left child
+first, accumulation will recur again with $v_{1}' = p$ and $v_{2}' = \neg q$.
+$v_{1}' = p$ is a base case for references, thus a unique symbolic reference
+$s_{p}$ is generated for $p$, following the self-loop with label $r$ and
+returned as the result for $v_{1}'$. $v_{2}'$ will follow the self-loop with
+label $\neg v$ to recur through $\neg$ to $q$, where a symbolic term $s_{q}$
+will be generated and returned. This yields $\neg s_{q}$, which follows the
+$\neg s$ edge to be processed into a new symbolic term, yielding the result for
+$v_{2}'$ as $s_{\neg q}$. With both results $v_{1} = s_{p}\wedge s_{\neg q}$,
+accumulation will match on $\wedge$ \emph{and} both $s_{p}$ and $s_{\neg q}$ to
+accumulate the entire sub-tree to a single symbolic term, $s_{s_{p} \wedge
+  s_{\neg q}}$, which will be returned as the result for $v_{1}$. $v_{2}$ is a
+base case, hence accumulation will return $s_{s_{p} \wedge s_{\neg q}} \vee
+\chc[B]{e_3, e_4}$ to evaluation. Evaluation will conclude with
+$\chc[A]{e_1,e_2}$ as the result for the left child of $\wedge$ and $s_{s_{p}
+  \wedge s_{\neg q}} \vee \chc[B]{e_3, e_4}$ for the right child, yielding
+$\chc[A]{e_1,e_2} \wedge (s_{s_{p} \wedge s_{\neg q}} \vee \chc[B]{e_3, e_4})$ as
+the variational core of $\kf{f}$.
+
+A variational core is derived to save redundant work. If solved naively, plain
+sub-formulas of $f$, such as $a \wedge b$ and $p \wedge \neg q$, would be
+processed once for each variant even though they are unchanged. To save
+computation evaluation moves sub-formulas into the solver state to be reused
+among different variants, and accumulation caches sub-formulas that cannot be
+immediately evaluated to be evaluated later.
+
+Symbolic references are variables in the reduction engine's memory that
+represent a sub-tree of the query formula. From the perspective of the base
+solver a symbolic reference represents a set of programmatic statements. For
+example, $s_{pq}$ represents three declarations in the base solver:
+%
+\begin{lstlisting}[columns=flexible,keepspaces=true]
+(declare-const p Bool)           ;; $s_{pq}$ represents
+(declare-const q Bool)           ;; several declarations
+(declare-fun $s_{ab}$ () Bool (or p (not c)))
+\end{lstlisting}
+
+The program language shown here is lisp~\cite{10.1145/367177.367199} as defined
+in the SMTLIB2 standard. Function application begins with an open parenthesis,
+where the first symbol in the parenthesis is the name of the function, every
+symbol after the first is an argument to that function. In the above snippet, we
+see three function calls, two which declare constants in the program for \pV{}
+and \qV{}, both with type $\kf{Bool}$, and one which declares a new function
+which takes no input and returns a $\kf{Bool}$.
+
+Similar to symbolic references, a variational core is a sequence of statements
+in the base solver with holes $\Diamond$. For example, the representation of
+$\kf{VCore_{f}}$:
+%
+\begin{lstlisting}[columns=flexible,keepspaces=true]
+(assert (and a b))                ;; $a \wedge b$ on the assertion stack
+(declare-const $\Diamond_{A}$)                ;; choice A
+ $\vdots$                                ;; many declares may occur
+(assert $\Diamond_{A}$)                       ;; many assertions may occur
+ $\vdots$                                ;; $s_{pq}$
+(declare-fun $s_{pq}$ () Bool (and p q))
+(declare-const $\Diamond_{B}$)                ;; choice B
+ $\vdots$
+(assert (or $s_{ab}$ $\Diamond_{B}$))               ;; assert waiting on $\sem[C]{\chc[B]{e_{3},e_{4}}}$
+\end{lstlisting}
+%
+Each hole is filled by configuring a choice and may require multiple statements
+to process the alternative as the alternative could introduce several new
+variables or functions.
+
+\paragraph{Solving the Variational Core}
+
+The reduction engine performs the work at each recursive step. Whereas the
+reification engine defines transitions between the recursive steps by
+manipulating the configuration. In \vpl{}, a configuration was formalized as a
+function, for variational solvers we use a set of tuples $\{\kf{(D \times
+  \mathbb{B})}\}$. \autoref{impl:overview} shows two self-loops for the
+reification engine corresponding to the reification of choices. The edges from
+the reification engine to the reduction engine are transitions taken after a
+choice is removed, where new plain terms have been introduced and thus a new
+core is derived. If the user supplied a variation context, then it is used to
+construct an initial configuration. Finally, a model is called from the base
+solver when the reduction engine returns \unit{}, indicating that a variant has
+been found.
+
+We display a subset of edges of the reification engine using the $\wedge$
+connective. In general, these edges will be duplicated for each binary logical
+connective, e.g., $\vee$. The left edge, is taken when a choice is observed in
+the variational core: $v \wedge \sem[C]{\chc[D]{e_{1}, e_{2}}}$ and $D \in C$.
+This edge reduces choices with dimension $D$ to an alternative, which are then
+translated to IL\@. The right edge is dashed to indicate assertion stack
+manipulation, and is taken when $D \notin C$. For this edge, the configuration
+is mutated for both alternatives: $C \cup \{(D, \tru{})\}$, and $C \cup \{(D,
+\fls{})\}$, and the recursive call is wrapped with a \texttt{push}, and
+\texttt{pop} command. To the base solver, this branching is a linear sequence of
+assertion stack manipulations that performs backtracking behavior, for example
+the representation of $\kf{f}$ is:
+%
+\begin{lstlisting}[columns=flexible,keepspaces=true]
+ $\vdots$          ;; declares and assertions from VCore
+(push 1)    ;; a configuration on B has occurred
+ $\vdots$          ;; new declarations for left alternative
+(declare-fun $s$ () Bool (or $s_{pq}$ $[\Diamond_{B} \rightarrow s_{B_{T}}]\Diamond_{B}$))  ;; fill
+(assert $s$)
+ $\vdots$          ;; recursive processing
+(pop 1)     ;; return for the right alternative
+(push 1)    ;; repeat for right alternative
+\end{lstlisting}
+%
+Where the hole $\Diamond_{B}$\footnote{the notation $[x \rightarrow v]p$ should
+  be read ``replace all free occurrences of $\kf{x}$ in $\kf{p}$ with
+  $\kf{v}$'', it derives from work on explicit substitution from the programming
+  languages community~\cite{10.5555/509043}}, will be filled with a newly
+defined variable $s_{B_{T}}$ that represents the left alternative's formula.
+
+\paragraph{Variational Models}%
+\label{ssec:vmodels}
+%
+Classic \ac{sat} models map variables to Boolean values; variational models map
+variables to variational contexts that record the variants where the variable
+was assigned \tru{}. The variational context for a variable $r$ is denoted as
+\vc{r}, and a variational model reserves a special variable called \SatVar{} to
+track the configurations that were found satisfiable.
+%
+\begin{figure}[h]
+  \centering
+  \input{Figures/Vsat_Impl_plain_models}
+  \caption{Possible plain models for variants of $\kf{f}$.}%
+  \label{fig:models:plain}
+\end{figure}
+\begin{figure}[h]
+  \centering
+  \input{Figures/Vsat_Impl_variational_model}
+  \caption{Variational model corresponding to the plain models in
+    \autoref{fig:models:plain}.}%
+  \label{fig:models:var}
+\end{figure}
+%
+As an example, consider an altered version of the query formula from the
+previous section $f = ((\aV{} \wedge \neg \bV{}) \wedge \chc[A]{\aV{}
+  \rightarrow \neg \pV{}, \cV{}}) \wedge ((\pV{} \wedge \neg \qV{}) \vee
+\chc[B]{\qV{}, \pV{}})$. We can easily see that one variant, with configuration
+$\{(\AV{},\tru{}), (\BV{},\fls{})\}$ is unsatisfiable. If the remaining variants
+are satisfiable, then three models would result, as illustrated in
+\autoref{fig:models:plain}; the corresponding variational model is shown in
+\autoref{fig:models:var}.
+
+We see that \Satfmf{} consists of three disjuncted terms, one for each
+satisfiable variant. Variational models are flexible; a satisfiable assignment
+of the query formula can be found by calling \sat{} on \Satfmf{}. Assuming the
+model $C_{FT} = \{(\AV{}, \fls{}), (\BV{}, \tru{})\}$ is returned, one can find
+a variable's value through substitution with the configuration; for example,
+substituting the returned model on \vc{c} yields:
+%
+\begin{align*}
+  \cV{} \rightarrow\ & (\neg \AV{} \wedge \neg \BV{}) \vee (\neg \AV{} \wedge \BV{}) & \text{\vc{} for \cV{}} \\
+  \cV{} \rightarrow\ & (\neg \fls{} \wedge \neg \tru{}) \vee (\neg \fls{} \wedge \tru{}) & \text{Substitute \fls{} for \AV{}, \tru{} for \BV{}} \\
+  \cV{} \rightarrow\ & \tru{} & \text{Result}
+\end{align*}%
+%
+Furthermore, to find variants where a variable \cV{} is satisfiable reduces to
+$\kf{SAT(\vc{\cV{}})}$
+
+Variational models are constructed incrementally by merging each new plain model
+returned by the solver into the variational model. A merge requires the current
+configuration, the plain model, and current \vc{} of a variable. Variables are
+initialized to \fls{}. For each variable $i$ in the model, if $i$'s assignment
+is \tru{} in the plain model, then the configuration is translated to a
+variation context and disjuncted with \vc{i}. For example, to merge the
+$C_{FT}$'s plain model to the variational model in \autoref{fig:models:var},
+$C_{FT}$'s configuration is converted to $\neg \AV{} \wedge \BV{}$. This clause
+is disjuncted for variables assigned \tru{} in the plain model: \vc{\aV{}},
+\vc{\cV{}}, and \vc{\pV{}}, even if they are new (e.g., \cV{}). Variables
+assigned \fls{} are skipped, thus \vc{\qV{}} remains \fls{}. For example, in the
+next model $C_{TT}$, \cV{} is \fls{} thus \vc{\cV{}} remains unaltered, while
+\vc{\qV{}} flips to \tru{} hence \vc{\qV{}} records $\AV{} \wedge \BV{}$.
+Variables such as \bV{}, whose \vc{}'s stay \fls{} are called \textit{constant}.
+
+
+Variational models are constructed in \ac{dnf}, and form a monoid under with
+$\vee$ as the semigroup operation, and \fls{} as the unit value. I take note of
+this for mathematically inclined readers because it has important ramifications
+for the asynchronous version of variational satisfiability solvers.
+
+\subsection{Formalization of Variational Satisfiability Solving}
+This subsection presents a selection of inference rules that specify behavior
+described in the previous subsection. Many inference rules are similar to others
+due to commutativity of boolean operators and thus I only present an interesting
+subset. These inference rules will be significantly altered in the proposed
+thesis to fully generalize to \ac{smt} problems.
+
+\begin{figure}
+  \input{Figures/Vsat_Impl_accumulation_rules}
+  \caption{Selected accumulation semantics on IL formulas.}%
+  \label{impl:accum}
+\end{figure}
+
+Accumulation is defined in \autoref{impl:accum} as a relation of the form
+$(\Delta,v)\mapsto(\Delta,v)$, where $\Delta$ is a symbolic store, and $v$ is
+the syntactic category representing the set of all possible IL formulas; the
+tuples on the left and right are interpreted as input and output, respectively.
+Accumulation interacts with the symbolic execution engine via primitive
+operations represented in \texttt{typewriter} font.
+%
+The \rn{Acc-Gen} rule generates new symbolic references using \texttt{spawn},
+which are looked up by \rn{Acc-Ref}. The \rn{Acc-And} and \rn{Acc-Or} rules
+reduce symbolic sub-formulas to a new symbolic reference.
+%
+This selection of rules do the work of reducing formulas to symbolic references.
+The remaining rules simply push negation down expressions and propagate
+accumulation over the $\wedge$ and $\vee$-connectives.
+
+%
+\begin{figure}
+  \input{Figures/Vsat_Impl_evaluation_rules}
+  \caption{Selected evaluation semantics over \vpl{} formulas.}%
+  \label{impl:eval}
+\end{figure}
+
+Evaluation is defined in \autoref{impl:eval} as a relation of the form
+$(\Theta,v)\rightarrowtail(\Theta,v)$, where $\Theta=(\Gamma,\Delta)$ and
+$\Gamma$ represents the base solver state.
+%
+As before, we show only a significant subset of the rules here. The rules
+\rn{Ev-Term} and \rn{Ev-Sym} push new clauses to the base solver using the
+primitive \texttt{assert} operation. The \rn{Ev-UL} and \rn{Ev-UR} implement
+left and right unit, reducing conjunctions where one side has been processed by
+the base solver.
+%
+Of special note is the difference between the \rn{Ev-Or} and \rn{Ev-And} rules.
+While \rn{Ev-And} is a straightforward congruence rule, \rn{Ev-Or} instead
+processes its arguments using accumulation ($\mapsto$). Disjunctions are a
+source of back-tracking in variational solving, and thus the solver cannot
+evaluate the left-hand side without evaluating the right, both of which may
+contain choices, hence evaluation must switch to accumulation, as we informally
+described in the previous subsection.
+
+\begin{figure}
+  \input{Figures/Vsat_Impl_solve_choices}
+  \caption{Selected variational solving semantics on cores.}%
+  \label{impl:choice-eval}
+\end{figure}
+
+Solving the core is defined in \autoref{impl:choice-eval}, as a relation
+%
+$(C, \Gamma, \Delta, m,v) \Downarrow_{i} (C, \Gamma, \Delta, m, v)$, where $C$,
+is a set which represents the configuration of the \vpl{} formula, and $m$
+represents the variational model, which is initialized as empty.
+%
+The count of \texttt{push}'s on the assertion stack are represented with the
+counter $i$. The solving process reifies choices by manipulating the
+configuration and uses accumulation and evaluation to process terms. The \vc{}
+input to the solver pre-populates the configuration, thereby restricting the
+solver to a subset of variants. When no \vc{} is input, the configuration is
+initialized as empty. \rn{Cr-CAnd} processes novel choices by manipulating the
+configuration and performing a \texttt{push} in the base solver; resulting
+variational models are merged via an element-wise $\vee$, shown as $\cup$.
+Choices are removed through \rn{Cr-And-T} and \rn{Cr-Or-T} by selection on the
+alternative. Once the choice is removed, the nested clauses are translated to
+the intermediate language through the \texttt{toIL} primitive and processed by
+accumulation and evaluation. A model is called from the base solver with
+\rn{Gen}, once the core, and thus query formula is reduced to \unit{}. Note
+again, \rn{Cr-Or} switches to accumulation to ensure sound results, we have
+omitted congruence rules such as \rn{Cr-And}. Similarly, we omit rules which are
+commutative versions of those shown here, namely: rules which process the left
+branch of connectives, rules which select the $\kf{false}$ alternatives,
+and the \rn{Or} version of \rn{Cr-CAnd}.
+
+\subsection{Research Plan}
+
+\paragraph{Estimating the difficulty of finding satisfiability} This item will
+produce a method to determine the \emph{hardness} of solving a \ac{vpl} formula
+for satisfiability. A well known result in the random-\ac{sat} community is the
+phenomenon of a \emph{phase transition}~\cite{Gent94thesat} in randomly
+generated \ac{sat} problems. The phase transition of \ac{sat} problems is an
+inflection point in the probability of finding a satisfying assignment as the
+ratio of clauses to variables is varied. Conceptually, one may think of the
+phase transition as a method to estimate the difficultly in solving a \ac{sat}
+problem. If there are many variables relative to clauses, then the \ac{sat}
+problem is likely easy to solve as it is under-constrained, in contrast, if
+there are too few variables relative to clauses then it is over-constrained and
+thus easy to compute as unsatisfiable.
+
+Difficult problems are balanced with respect to the clause variable ratio and
+thus are at the phase transition point of a high probability of finding
+satisfiability to finding unsatisfiability. Estimating the difficulty of a
+\ac{sat} problem is thus theoretically useful to isolate sets of problems to
+study and progress the state of the art, but also practically useful, because an
+end-user may estimate the difficulty of a problem and choose to \emph{not} solve
+it.
+
+This item will replicate the analysis from the random-\ac{sat} community to
+determine if the phase transition exists for variational satisfiability
+problems. It is clear that the phase transition exists for variants, but having
+a method to assess the phase transition point \emph{in terms of} \ac{vpl}
+formulas would provide the aforementioned benefits for variational
+satisfiability solvers.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../main"
+%%% End:

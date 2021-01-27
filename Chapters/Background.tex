@@ -1,0 +1,52 @@
+~\label{sec:background}
+
+This section provides necessary background on incremental \ac{sat} solving. All
+descriptions follow the SMT-LIB2~\cite{BarFT-SMTLIB} standard and describe
+incremental solvers as a black box eliding internal details of any specific
+solver which adheres to the standard.
+
+%
+\input{Figures/Background_bf_vs_incr}
+%
+
+Suppose, we have three related propositional formulas that we want to solve.
+%
+\begin{align*}
+  p =\ a \wedge b \wedge c \wedge e && q=\ a \wedge (b \vee \neg \iV{}) \wedge c \wedge (\gV{} \rightarrow c) && r =~z \leftrightarrow (a \wedge b \wedge c \wedge e)
+\end{align*}
+%
+\pV{} is simply a conjunction of variables. In \qV{}, relative to \pV{}, we can
+see that two variables are added, \iV{}, \gV{}, one variable is removed \eV{},
+and and there are two new clauses: $(b \vee \neg \iV{})$ and $(\gV{} \rightarrow
+c)$, both of which possibly affect the values of \bV{} and \cV{}. In \rV{}, the
+variables and constraints introduced in \pV{} are further constrained to a new
+variable, \zV{}.
+
+Suppose one wants to find a satisfying assignment for each formula. Using a
+classic \ac{sat} solver results in the procedure illustrated in
+\autoref{fig:bkg:bf}; where \sat{} solving is a batch process and no information
+is reused. Alternatively, a procedure using an incremental \sat{} solver is
+illustrated in \autoref{fig:bkg:inc}; in this scenario, all of the formulas are
+solved by single solver instance where terms are programmatically added and
+removed from the solver throughout the process. The ability to add and remove
+terms from the solvers is enabled by a data structure within the incremental
+\sat{} solver called an \textit{assertion stack}. The assertion stack is a stack
+of declarations, definitions, or formulas that determine the \textit{context} of
+the solver. A solver context is the union of all global variable definitions and
+everything on the assertion stack. A program may add an assertion to the stack
+via the \texttt{push} operation and remove from the top via a \texttt{pop}
+operation~\cite{10.1007/978-3-319-09284-3_16}. A call to
+\texttt{resetAssertionStack} pops everything on the stack.
+
+In an efficient process one would initially add as many \emph{shared} terms as
+possible; \pV{} in this example. Then check for satisfiability, request a model,
+and manipulate the assertion stack to reach the next problem of interest; \qV{}
+in this case. Notice that to reach the next problem, \qV{}, from \pV{}, several
+operations are required: \eV{} and \cV{} must be removed, \bV{} must be updated,
+and the new clauses must be introduced. To reach \rV{} from \qV{} all assertions
+would need to be popped to add \zV{}, then re-pushed.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../main"
+%%% End:

@@ -1,0 +1,15 @@
+\begin{syntax}
+  % D & \Coloneqq & \text{(any dimension name)} & \textit{Dimension} \\ \\
+  % t & \Coloneqq & r & \textit{Variable reference} \\
+  % & | & \mathit{T} & \textit{True} \\
+  % & | & \mathit{F} & \textit{False} \\ \\
+
+  t & \Coloneqq & r \quad|\quad \tru \quad|\quad \fls
+    & \textit{Variables and Boolean literals} \\[1.5ex]
+
+  f & \Coloneqq & t    & \textit{Terminal} \\
+    & | & \neg f       & \textit{Negate} \\
+    & | & f \vee f     & \textit{Or} \\
+    & | & f \wedge f   & \textit{And} \\
+    & | & \chc[D]{f,f} & \textit{Choice} \\
+\end{syntax}

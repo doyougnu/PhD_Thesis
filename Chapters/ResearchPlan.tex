@@ -1,0 +1,99 @@
+~\label{sec:research-plan}
+\autoref{sec:prop-contr} lists the deliverables for this thesis. Each item has
+been discussed in more depth in previous sections. This section summarizes these
+items and provides an itemized list of each deliverable, broken down into
+discrete tasks, and their corresponding time estimations. The time estimates are
+guidelines with the real schedule being dictated by our publication schedule.
+
+\subsection{Encoding strategies of \ac{vpl} formulae}
+The naive and naive-with-optimizations encoding algorithms are complete. The
+remaining work is a literature review for other representations of boolean
+formulae which may be useful, and to implement a Huffman based encoding
+algorithm and assess its performance:
+
+\begin{enumerate}
+\item Construct a list of alternative representations of boolean formulae which
+  may lend itself to encoding strategies
+\item\label{huffman-todo} Implement the Huffman coding algorithm over boolean
+  formulae, recursively merge formulas into a \ac{vpl} formula based on a
+  similarity metric.
+\end{enumerate}
+
+\textbf{Estimated time to complete: 1-2 weeks}
+
+\subsection{A method to determine the hardness of \ac{vpl} formulae}
+The time consuming parts of this item: creating a random generator suitable for
+the analysis and creating a benchmark platform to test are complete. The only
+items remaining are to perform the analysis.
+
+\begin{enumerate}
+\item\label{phase-todo} Review literature from random-ac{sat} community on observing phase
+  transition for both random $k$-\ac{sat} and mixed-\ac{sat} problems.
+\item Replicate the transition detection analysis from \autoref{phase-todo}.
+\end{enumerate}
+
+\textbf{Estimated time to complete: 1 week}
+
+
+\subsection{Variational \ac{smt} Solving}
+A prototype asynchronous variational \ac{smt} solver is complete and operational
+but several auxiliary tasks are still required. I expect this item to require
+the majority of time besides writing the the proposed thesis.
+
+\begin{enumerate}
+\item\label{ui-todo} Implement an enhanced user interface which treats the
+  solver like a server rather than a batch process.
+\item\label{vpl-todo} Write the formal grammar for \ac{smt}-flavored \ac{vpl}.
+  The current formalization exists in Haskell code and thus must be translated
+  into a publishable format.
+\item\label{vmodel-todo} Write the formalization for \ac{smt}-flavored variational models. An
+  identical item to \autoref{vpl-todo} only with variational models.
+\item \label{solve-todo} Write the denotational semantics for \ac{smt}-flavored
+  variational solving algorithm. An identical item to \autoref{vpl-todo} only
+  for the solving algorithm.
+\item \label{proof-todo} Construct a proof for variation preserving semantics
+  using the formalizations in items 2-4.
+\item\label{nano-review-todo} Review literature on nanopass compilers to
+  construct a set of possible optimizations.
+\item\label{opts-todo} Implement optimizations from \autoref{nano-review-todo}
+\item \label{conf-todo} Implement configurations of the variational solver to
+  provide an interface suitable for benchmarking.
+\end{enumerate}
+
+Estimated time to complete 1-4: 1-2 weeks
+
+Estimated time to complete \autoref{proof-todo}: 4 weeks (concurrent with other work)
+
+Estimated time to complete items 6-7: 2 weeks
+
+\textbf{Total estimated time to complete: 6-8 weeks}
+
+\subsection{Assembling Case Study Data}
+Most of the work left to assemble the case study data involves refactoring and
+running the forked TypeChef system on the Linux kernel; the Busybox case study
+dataset is finished. Parsers for the \ac{spl} case studies and the Busybox/Linux
+results are already complete and have been tested.
+
+\begin{enumerate}
+\item\label{tc-todo} Implement a database caching system in TypeChef to record \ac{sat}
+  problems at scale
+\item\label{run-linux-todo} Run the Linux case study to generate \ac{sat}
+  problems.
+\item\label{eval-linux-todo} Evaluate the Linux and Busybox case studies using
+  encoding strategies from \autoref{huffman-todo}.
+\end{enumerate}
+
+Estimated time to complete \autoref{tc-todo}: 2-3 weeks (with help from
+collaborator Paul Maximillian Bittner)
+
+Estimated time to complete \autoref{run-linux-todo}: 1 week
+
+Estimated time to complete \autoref{eval-linux-todo}: 1-2 weeks
+
+\textbf{Total estimated time: 4-6 weeks}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../main"
+%%% End:

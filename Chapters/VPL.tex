@@ -1,0 +1,209 @@
+~\label{sec:vpl} In this section, I present the syntax and semantics of
+variational propositional logic. While this section fulfills the majority of
+\autoref{vpl-deliverable} I restate it here to serve as background for
+\autoref{sec:vsat}, \autoref{sec:vsmt} and the choice calculus. I conclude the
+section by summarizing work left to do.
+% \revised{and provide background to the choice calculus as the logic is
+% formalized.}
+%
+The logic is a conservative extension of classic two-valued logic
+(\pl{})\footnote{Notation for propositional logic comes from work on many-valued
+  logic, see~\cite{Rescher1969-RESML}.} with a \emph{choice} construct from the
+choice calculus~\cite{EW11tosem,Walk13thesis}, a formal language for describing
+variation.
+
+% We define the syntax and semantics of \vpl{} in Section~\ref{sec:logic:vpl} and
+% demonstrate its use by encoding the example from Section~\ref{sec:bkgrnd} into
+% \vpl{} in Section~\ref{sec:logic:enc}.
+
+\begin{figure}[h!]
+  \begin{subfigure}[t]{\textwidth}
+    \centering
+    \input{Figures/Vsat_Logic_syntax}
+    \caption{Syntax of \vpl{}.}%
+    \label{fig:cc:stx}
+  \end{subfigure}
+  \begin{subfigure}[t]{\textwidth}
+    \input{Figures/Vsat_Logic_semantics}
+    \centering
+    \caption{Configuration semantics of \vpl{}.}%
+    \label{fig:cc:cfg}
+  \end{subfigure}
+  \begin{subfigure}[t]{\textwidth}
+    \input{Figures/Vsat_Logic_laws}
+    \centering
+    \caption{\vpl{} equivalence laws}%
+    \label{fig:cc:eqv}
+    \vspace{0.4cm}
+  \end{subfigure}
+\caption{Formal definition of \vpl{}.}%
+\label{fig:cc}
+\end{figure}
+%
+% The idea behind the choice calculus extended logic (\vpl{}) is to construct a
+% logic that \TODO{is this a word?}deterministically expresses what is shared, and
+% what is distinct, in a set of formulas in classic two valued logic (\pl{}).
+% Semantically, one can think of \vpl{} as describing, in a deterministic, and
+% constrained way, what could be and what must be, where a term in \pl{} must be
+% but a term in \vpl{} \textit{could be} optional. Where as you might have encode
+% a sentence such as: All men are mortal; Socrates is a man; therefore Socrates is
+% mortal in \pl{}, a corresponding sentence in \vpl{} could be: it could be that
+% either Socrates or Anaximander is a man; all men are mortal; thus it could be that
+% Socrates or Anaximander is a man. Notice the ending of our \vpl{} statement:
+% \textit{is a man}, this is purposeful and highlights that in \vpl{} a point of
+% variation simultaneously represents two options.
+%
+
+\subsection{Syntax}
+%
+The syntax of variational propositional logic is given in \autoref{fig:cc:stx}.
+It extends the propositional formula notation of \pl{} with a single new
+connective called a \emph{choice} from the choice calculus.
+%
+A choice $\chc[D]{f_1,f_2}$ represents either $f_1$ or $f_2$ depending on the
+Boolean value of its \emph{dimension} $D$. We call $f_1$ and $f_2$ the
+\emph{alternatives} of the choice.
+%
+Although dimensions are Boolean variables, the set of dimensions is disjoint
+from the set of variables from \pl{}, which may be referenced in the leaves of
+a formula. We use lowercase letters to range over variables and uppercase
+letters for dimensions.
+%
+The syntax of \vpl{} does not include derived logical connectives, such as
+$\rightarrow$ and $\leftrightarrow$. However, such forms can be defined from
+other primitives and are assumed throughout the rest of the proposal.
+
+\subsection{Semantics}
+%
+Conceptually, a variational formula represents several propositional logic
+formulas at once, which can be obtained by resolving all of the choices. For
+researchers unfamiliar with work on variation, it is useful to think of \ac{vpl}
+as analogous to \cpp{ifdef}-annotated \pl{}, where choices correspond to a
+disciplined~\cite{LKA:AOSD11} application of \cpp{ifdef} annotations.
+%
+From a logical perspective, following the many-valued logic of
+Kleene~\cite{Rescher1969-RESML}, the intuition behind \ac{vpl} is that a choice is
+a placeholder for two equally possible alternatives that is deterministically
+resolved by reference to an external environment.
+%
+In this sense, \ac{vpl} deviates from other many-valued logics, such as modal
+logic~\cite{sep-logic-modal}, because a choice \emph{waits} until there is
+enough information to choose an alternative (i.e., until the formula is
+\emph{configured}).
+
+The \emph{configuration semantics} of \ac{vpl} is given in \autoref{fig:cc:cfg}
+and describes how choices are eliminated from a formula. The semantics are
+parameterized by a \emph{configuration}\ $C$, which is a partial function from
+dimensions to Boolean values.
+%
+The first four cases of the semantics simply propagate configuration down the
+formula, terminating at the leaves. The case for choices is the interesting one:
+if the dimension of the choice is defined in the configuration, then the choice
+is replaced by its left or right alternative corresponding to the associated
+value of the dimension in the configuration. If the dimension is undefined in
+the configuration, then the choice is left intact and configuration propagates
+into the choice's alternatives.
+
+
+If a configuration $C$ eliminates all choices in a formula $f$, we call $C$
+\emph{total} with respect to $f$. If $C$ does \emph{not} eliminate all choices
+in $f$ (i.e., a dimension used in $f$ is undefined in $C$), we call $C$
+\emph{partial} with respect to $f$.
+%
+We call a choice-free formula \emph{plain}, and call the set of all plain
+formulas that can be obtained from $f$ (by configuring it with every possible
+total configuration) the \emph{variants} of $f$.
+%
+% Every plain variant of a \vpl{} formula is a \pl{} formula, demonstrating the
+% intuition that a \vpl{} formula conceptually represents many plain \pl{}
+% formula.
+
+
+To illustrate the semantics of \vpl{}, consider the formula
+$p\wedge\chc[A]{q,r}$, which has two variants: $p\wedge q$ when $C(A)=\true$
+and $p\wedge r$ when $C(A)=\false$.
+%
+From the semantics, it follows that choices in the same dimension are
+\emph{synchronized} while choices in different dimensions are
+\emph{independent}. For example, $\chc[A]{p,q}\wedge\chc[B]{r,s}$ has four
+variants, while $\chc[A]{p,q}\wedge\chc[A]{r,s}$ has only two ($p\wedge r$ and
+$q\wedge s$).
+%
+It also follows from the semantics that nested choices in the same dimension
+contain redundant alternatives; that is, inner choices are \emph{dominated} by
+outer choices in the same dimension. For example, $\chc[A]{p,\chc[A]{r,s}}$ is
+equivalent to $\chc[A]{p,s}$ since the alternative $r$ cannot be reached by any
+configuration.
+% \begin{theorem}[\vpl{} reducible to \pl{}]
+%   \label{thm:vplToPl}
+%   For any configuration $C$ and any formula $e$, if $C$ is
+%   valid and total with respect to $e$, then $\sem[C]{e} \in \pl{}$
+% \end{theorem}
+%
+% \begin{proof}
+%   This follows directly from the semantics of configuration in
+%   Figure~\ref{fig:cc:cfg}, and Definition~\ref{tot:conf}. The proof is done
+%   by structural induction and case analysis; because we have a total
+%   configuration, and the configuration semantic function is a total function,
+%   every choice and its' configured alternatives, will be recursively reified for
+%   $e$. Then by the definition of \vpl{} a formula which lacks choices is by
+%   definition in \pl{}.
+% \end{proof}
+%
+% \begin{lemma}[Variants are plain]
+%   By Theorem~\ref{thm:vplToPl} and the fact that variants are found via total
+%   configurations
+% \end{lemma}
+%
+As the previous example illustrates, the representation of a \ac{vpl} formula is
+not unique; that is, the same set of variants may be encoded by different
+formulas. \autoref{fig:cc:eqv} defines a set of equivalence laws for \ac{vpl}
+formulas. These laws follow directly from the configuration semantics in
+\autoref{fig:cc:cfg} and can be used to derive semantics-preserving
+transformations of \ac{vpl} formulas.
+%
+For example, we can simplify the formula $\chc[A]{p\vee q, p\vee r}$ by first
+applying the \rn{Or} law to obtain $\chc[A]{p,p}\vee\chc[A]{q,r}$, then applying
+the \rn{Idemp} law to the first argument to obtain $p\vee\chc[A]{q,r}$ in which
+the redundant $p$ has been factored out of the choice.
+
+\subsection{Research Plan}
+
+The previous sections describe \ac{vpl} but is missing an efficient strategy for
+encoding sets of \pl{} formulas in a \ac{vpl} formula. The proposed thesis will
+directly address this gap:
+
+\paragraph{Encoding strategies} This item will produce an efficient algorithm
+that combines a set of \pl{} formulas into a single \ac{vpl} formula. Efficient
+has two meanings: It should produce a \ac{vpl} formula in reasonable time, and
+it should produce a \ac{vpl} formula that has measurably less variation if
+possible. Such an algorithm is desirable for two reasons. First, it is
+practically important; a result of a previous study of variational
+satisfiability solving~\cite{10.1145/3382025.3414965} was that the greater the
+\emph{sharing ratio}, the ratio of plain to total terms in a variational
+formula, the faster the \ac{vpl} formula was solved, on average. Thus, by
+developing a more efficient encoding algorithm, the performance of the solver is
+less volatile. Second, it lowers the barrier of use, with such an algorithm, the
+a new user because the new user need not understand \ac{vpl}, rather they only
+need to identify the problem set they desire to solve.
+
+A naive encoding algorithm is easy to construct: one wraps all formulas in
+unique choices and then uses equivalency rules to increase the sharing ratio.
+However, it is likely that better algorithms exist. I envision an algorithm that
+utilizes a strategy similar to Huffman coding~\cite{4051119} to find similar
+formulas to merge.
+
+This work is able to be done in parallel to much of the other deliverables but
+intersects with two other items. First, a proof of variation preservation,
+\autoref{proof-deliverable}, for a variational solver must include a similar
+proof for the encoding strategy. Second, the encoding strategy will affect
+solver performance and thus also affect the evaluation,
+\autoref{eval-deliverable}. Lastly, the performance of the encoding strategy
+itself will require a set of data to be evaluated on. I discuss harvesting such
+a set of data from real world software product lines in \autoref{sec:vsmt},
+although enough real world data is already available to begin on this item.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../main"
+%%% End:

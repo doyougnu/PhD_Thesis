@@ -1,0 +1,121 @@
+~\label{sec:related-work}
+Related work has been discussed throughout the previous sections. This section
+collects related work that was not previously covered. To my knowledge, this
+work is the first to translate the specific ideas of a nanopass architecture,
+and a variational compiler, to the \ac{sat}/\ac{smt} domains. Furthermore, at
+time of this writing this work is the first to investigate variational
+concurrency.
+
+% \paragraph{Incremental Solving}
+% The main goal of variational solving is to solve multiple satisfiability
+% problems efficiently. In the SAT community, this problem was mainly addressed
+% before by means of incremental solving, which is supported by many modern SAT or
+% SMT solvers. With incremental solving, we can feed a solver with formulas,
+% compute satisfiability, and then compute satisfiability again after adding or
+% removing formulas. This way, the solver can reuse learned knowledge about the
+% part of the formulas that remains in the solver. However, when applying
+% incremental solving in such an adhoc fashion, it is likely that the full reuse
+% potential is not exploited. In contrast, with variational solving, we create a
+% variational formula first, such that variation becomes explicit and can be
+% utilized as all variation points are known prior to the solving. While we have
+% experienced speed-ups of variational solving over incremental solving, it
+% requires that all those satisfiability problems are known in advance.
+
+% \paragraph{Similar Solvers, Related Techniques}
+%
+This work is most similar to \cite{Visser:2012:GRR:2393596.2393665}, which also
+constructs a \ac{sat} solver that exploits shared terms and prevents redundant
+computation. However, the projects differ in important ways. Visser et al.'s
+solver is oriented for program analysis and does not use incremental \ac{sat}
+solving. Rather, it uses heuristics to find canonical forms of sliced programs,
+and caches solver results on these canonical forms in a key-value
+store~\cite{redis}. In contrast, variational \ac{sat} solving is domain
+agnostic, solves \ac{sat} problems expressed in \ac{vpl}, returns a variational
+model, and uses incremental \ac{sat} solving.
+
+
+Variational \ac{sat} solving is the latest in a line of work that uses the
+choice calculus to investigate variation as a computational phenomena. The
+choice calculus has been successfully applied to diverse areas of computer
+science, such as databases~\cite{ATW17dbpl,ATW18poly},
+graphics~\cite{ES18diagrams}, data
+structures~\cite{MMWWK17vamos,Walk14onward,SE17fosd,EWC13fosd}, type
+systems~\cite{CCEW18popl,CCW18icfp,CEW12icfp,CEW14toplas}, error
+messages~\cite{CES17jvlc,CE14popl,CEW12icfp,CES14hcc}, and now satisfiability
+solving.
+%
+Our use of choices is similar to the concept of
+\textit{facets}~\cite{austin2012multiple} and \textit{faceted
+execution}~\cite{Schmitz2018FacetedSM,Micinski2018AbstractingFE,10.1145/2465106.2465121},
+which have been successfully applied to information-flow security and
+policy-agnostic programming.
+%
+% Facets, like choices, provide a syntactic form to parameterize a value or
+% expression in a language, but differ from choices by having specific meaning
+% in the domain of information security, namely to hide information between
+% public and private information consumers. Choices, in contrast, are given
+% meaning by the object language (i.e., the application domain.), thus one can
+% view choices as a syntactic abstraction of facets, and may recover faceted
+% execution through the construction of a variational interpreter.
+
+The use of compiler optimization techniques in \ac{sat} solvers is not novel,
+for example \ac{cse} and variable elimination has been successfully implemented
+in \ac{sat} solvers\cite{10.1007/11499107_5,10.1007/978-3-319-23219-5_23}. Other
+pre-processing techniques such as removing blocked
+clauses~\cite{10.5555/1928380.1928406}, and detecting
+autarkies~\cite{10.1007/978-3-540-79719-7_18} have been very successful at
+automatically increasing performance of the \ac{sat} or \ac{smt} solver. From
+this perspective, our use of choices is a pre-processing technique to speed up
+incremental solving over sets of related problems.
+
+Some solvers such as z3~\cite{10.1007/978-3-540-78800-3_24}, allow users to
+program the heuristics used by the solver to find choose efficient solving
+techniques, z3 in particular calls these constructs \emph{strategies}.
+Strategies are thus similar to many optimizing compiler
+techniques~\cite{10.5555/6448}, only applied to the \ac{sat} domain
+
+% \paragraph{Applications for Variational Solving}
+%
+% \itodo{Thomas: Ideally, we would give an overview on applications that could
+% benefit from incremental/variational solving. For example: program analysis
+% \cite{VGD:FSE12}. Another application, namely reasoning about software
+% variability, is described below in more detail.}
+%
+% Software variability, as explored in this paper, is a natural application domain
+% for our work. The variability of SPLs or configurable software is often reduced
+% to propositional logic~\cite{B05,CW07,MWCC08} for analysis
+% purposes~\cite{BSRC10,TAK+:CSUR14,GBT+19}. Many analyses have been implemented
+% using \ac{} solving~\cite{TAK+:CSUR14}, including feature-model
+% analysis~\cite{BSRC10,GBT+19}, parsing~\cite{KGR+:OOPSLA11}, dead-code
+% analysis~\cite{TLSS:EuroSys11}, code simplification~\cite{RGA+:ICSE15}, type
+% checking~\cite{TBKC07}, consistency checking~\cite{CP06}, dataflow
+% analysis~\cite{LKA+:ESECFSE13}, model checking~\cite{CCS+13}, variability-aware
+% execution~\cite{NKN:ICSE14}, testing~\cite{MMCA:IST14}, product
+% sampling~\cite{MKR+:ICSE16,VAT+:SPLC18}, product
+% configuration~\cite{SIMA:ASE13}, optimization of non-functional
+% properties~\cite{SRK+:SQJ12}, and variant-preserving
+% refactoring~\cite{FMS+:SANER17}. While each of these analyses gives rise to
+% multiple \ac{sat} problems for even a single analysis run, the authors typically
+% do not discuss how they are solved. We argue that many could benefit from
+% variational solving.
+
+% More generally, any scenario that involves solving many related \ac{sat}
+% problems, and where all of these problems are known or can be generated in
+% advance, is a potential application for variational \ac{sat} solving.
+% %
+% Such situations arise in program analysis~\cite{VGD:FSE12}, and especially in
+% \emph{speculative} program analyses that involve generating and exploring huge
+% numbers of variations of a program, for example, as in
+% counterfactual~\cite{CE14popl} and migrational~\cite{CCW18icfp,CCEW18popl}
+% typing. Furthermore, we believe that variational solving provides a basis for
+% such speculative analyses on feature models.
+%
+% where Generating type-error suggestions can be reduced to a variational
+% \ac{} problem with choices isolating describe variants where a suggestion is
+% applied. \itodo{jeff: other applications: variational route planning,
+% variational circuit layout, variational (or counterfactual) scheduling}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../main"
+%%% End:

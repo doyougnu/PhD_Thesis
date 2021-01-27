@@ -1,0 +1,125 @@
+% -*- mode: latex; -*-
+\documentclass[11pt]{article}
+
+\topmargin      0.0in
+\headheight     0.0in
+\headsep        0.0in
+\oddsidemargin  0.0in
+\evensidemargin 0.0in
+\textheight     9.0in
+\textwidth      6.5in
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Packages %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{graphics}
+\usepackage{epsfig}
+\usepackage{times}
+\usepackage{amsmath}
+\usepackage{amssymb}                 %% for more arrows like rightarrowtail
+\usepackage{amsfonts}                %% \mathbb
+\usepackage{mathtools}               %% for coloneqq and others
+\usepackage{cases}                   %% better math brackets
+\usepackage{mathpartir}              %%% for inference rules
+\usepackage[nolist]{acronym}
+\usepackage{hyperref}                %% for auto references
+\usepackage{xpunctuate}              %% for punctuation's after macros
+\usepackage{cite}                    %% for bibliography ranges
+\usepackage{subcaption}              %% For complex figures with subfigures/subcaptions
+\usepackage{wrapfig}                 %% wrapping figures around text
+\usepackage{listings}                %% for source code lstlisting
+\usepackage{xcolor}                  %% For listings
+\usepackage{caption}
+\usepackage{tikz}                    %% assertion stack visualization
+\usetikzlibrary{matrix}
+\usetikzlibrary{arrows}
+\usetikzlibrary{positioning}
+\usetikzlibrary{shapes.multipart}
+\usetikzlibrary{automata}
+
+\usepackage{lib/cc}
+\usepackage{lib/lambda}
+\usepackage{lib/paperCommands}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Packages %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\lstset{%
+  frame=top,frame=bottom,
+  basicstyle=\small\normalfont\ttfamily,    % the size of the fonts that are used for the code
+  stepnumber=1,                           % the step between two line-numbers. If it is 1 each line will be numbered
+  numbersep=10pt,                         % how far the line-numbers are from the code
+  tabsize=2,                              % tab size in blank spaces
+  extendedchars=true,                     %
+  breaklines=true,                        % sets automatic line breaking
+  captionpos=t,                           % sets the caption-position to top
+  mathescape=true,
+  showstringspaces=false,
+  escapeinside={(*@}{@*)},
+}%
+
+\title{{\bf Variational Satisfiability Solving} \\
+\it PhD. Thesis}%
+\author{{\bf Jeffrey M. Young}  \\
+Department of Electrical Engineering and Computer Science \\
+Oregon State University\\
+{\small youngjef@oregonstate.edu}
+}
+\date{\today}
+
+\begin{document}
+\pagestyle{plain}
+\pagenumbering{roman}
+\maketitle
+
+\begin{abstract}
+  \input{Chapters/Abstract}
+\end{abstract}
+
+\pagenumbering{arabic}
+
+\section{Introduction}
+\input{Chapters/Introduction}
+
+\section{Background}
+\input{Chapters/Background}
+
+\section{Proposal Contribution 1: VPL =\@ Variation + Propositional Logic}
+\input{Chapters/VPL}
+
+\section{Proposal Contribution 2: Variational Satisfiability Solving}
+\input{Chapters/VSAT}
+
+\section{Proposal Contribution 3: Variational Satisfiable-Modulo Theory Solving}
+\input{Chapters/VSMT}
+
+\section{Related Work}
+\input{Chapters/RelatedWork}
+
+\section{Research plan}
+\input{Chapters/ResearchPlan}
+
+\section{Conclusion}
+\input{Chapters/Conclusion}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Acronyms %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{acronym}[]
+  \acro{cnf}[CNF]{conjunctive normal form}
+  \acro{dmf}[DMF]{disjunctive minimal form}
+  \acro{dnf}[DNF]{disjunctive normal form}
+  \acro{dsl}[DSL]{domain specific language}
+  \acro{bdd}[BDD]{Binary Decision Diagram}
+  \acro{sat}[SAT]{satisfiability solving}
+  \acro{smt}[SMT]{satisfiability-modulo theories}
+  \acro{spl}[SPL]{software product-lines}
+  \acro{cdcl}[CDCL]{conflict-driven clause learning}
+  \acro{dpll}[DPLL]{Davis-Putnam-Logemann-Loveland}
+  \acro{cs}[CS]{clause sharing}
+  \acro{vpl}[VPL]{variational propositional logic}
+  \acro{cse}[CSE]{common subexpression elimination}
+\end{acronym}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Bibilography %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{footnotesize}
+  \bibliographystyle{unsrt}
+  \bibliography{bib/abrv, bib/jeff,bib/eric,bib/martin,bib/spl,bib/satsolvers}
+\end{footnotesize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Bibilography %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}

@@ -1,0 +1,111 @@
+\begin{mathpar}
+  %%% Computation rules
+  \inferrule*[Right=Ev-Term]
+  { \texttt{assert($(\Gamma, \Delta), t$)} = \Gamma' }
+  {(\Gamma, \Delta, t) \rightarrowtail (\Gamma', \Delta, \unit{}) }
+
+  \inferrule*[Right=Ev-Sym]
+  { \texttt{assert($(\Gamma, \Delta), s$)} = \Gamma'}
+  { (\Gamma, \Delta, s) \rightarrowtail (\Gamma', \Delta, \unit{}) }
+\end{mathpar}
+% \inferrule*[Right=Ev-Chc]
+%   { }
+%   {(\Theta, \chc[D]{e_{1}, e_{2}}) \rightarrowtail (\Theta, \chc[D]{e_{1}, e_{2}})}
+%
+%   \hspace{0.5cm}
+%   \inferrule*[Right=Ev-Unit]
+%   { }
+%   { (\Theta,\unit{}) \rightarrowtail (\Theta, \unit{}) }
+
+  \begin{mathpar}
+  %%%\unit{} elimination rules
+  \inferrule*[Right=Ev-UL]
+  {  }
+  { (\Theta,\unit{} \wedge v) \rightarrowtail (\Theta, v) }
+
+  \inferrule*[Right=Ev-UR]
+  { }
+  { (\Theta, v \wedge\unit{}) \rightarrowtail (\Theta, v)}
+\end{mathpar}
+\begin{mathpar}
+%   \inferrule*[Right=Ev-DM-VOr]
+%   { (\Theta ,\neg e_{1} \wedge \neg e_{2}) \rightarrowtail (\Theta', v)}
+%   { (\Theta, \neg (e_{1} \vee e_{2})) \rightarrowtail (\Theta', v)}
+%
+%   \hspace{1cm}
+%   \inferrule*[Right=Ev-DM-VAnd]
+%   { (\Theta, \neg e_{1} \vee \neg e_{2}) \rightarrowtail (\Theta', v)}
+%   { (\Theta, \neg (e_{1} \wedge e_{2})) \rightarrowtail (\Theta', v)}
+%
+  %%% Negation rules
+  % \inferrule*[Right=Ev-NegS]
+  % { (\Delta, \neg s) \mapsto (\Delta', s') \\
+  %   ((\Gamma, \Delta'), s') \rightarrowtail (\Theta, \unit{})
+  % }
+  % { ((\Gamma, \Delta), \neg s) \rightarrowtail (\Theta, \unit{})}
+%   \inferrule*[Right=Ev-Neg-Chc]
+%   { }
+%   { (\Theta, \neg \chc[D]{e_{1},e_{2}}) \rightarrowtail (\Theta, \chc[D]{\neg e_{1}, \neg e_{2}}) }
+%
+  \inferrule*[Right=Ev-Neg]
+  { (\Delta,\neg v) \mapsto (\Delta', v')
+    % ((\Gamma, \Delta') ,\neg v) \rightarrowtail (\Theta, v')
+  }
+  { (\Gamma, \Delta, \neg v) \rightarrowtail (\Gamma, \Delta', v') }
+\end{mathpar}
+  %%% And with Choice rules
+% \begin{mathpar}
+%   \hspace{-1.5cm}
+%   \inferrule*[Right=Ev-And-ChcL]
+%   { \Gamma, \Delta,e \rightarrowtail \Gamma', \Delta',e'}
+%   { \Gamma, \Delta,\chc[D]{e_{1},e_{2}} \wedge e \rightarrowtail \Gamma',
+%     \Delta',\chc[D]{e_{1},e_{2}} \wedge e' }
+% \end{mathpar}
+% \begin{mathpar}
+%   \hspace{-1.5cm}
+%   \inferrule*[Right=Ev-And-ChcR]
+%   { \Gamma, \Delta,e \rightarrowtail \Gamma', \Delta',e'}
+%   { \Gamma, \Delta,e \wedge \chc[D]{e_{1},e_{2}} \rightarrowtail \Gamma',
+%     \Delta',e' \wedge \chc[D]{e_{1},e_{2}} }
+%   % {l \rightarrowtail l'}
+%   % { l \wedge \chc[D]{e_{1},e_{2}} \rightarrowtail l' \wedge \chc[D]{e_{1},e_{2}}}
+% \end{mathpar}
+%   %%% Or with Choice rules
+% \begin{mathpar}
+%   \hspace{-1.5cm}
+%   \inferrule*[Right=Ev-Or-ChcL]
+%   {\Delta,e \mapsto \Delta',v}
+%   { \Gamma, \Delta,\chc[D]{e_{1},e_{2}} \vee e \rightarrowtail \Gamma,
+%     \Delta',\chc[D]{e_{1},e_{2}} \vee v}
+% \end{mathpar}
+% \begin{mathpar}
+%   \hspace{-1.5cm}
+%   \inferrule*[Right=Ev-Or-ChcR]
+%   {\Delta,e \mapsto \Delta',v}
+%   { \Gamma, \Delta,e \vee \chc[D]{e_{1},e_{2}} \rightarrowtail \Gamma,
+%     \Delta',v \vee \chc[D]{e_{1},e_{2}} }
+% \end{mathpar}
+% \begin{mathpar% }
+%   \inferrule*[Right=Ev-Or-Value]
+%   {(\Delta, e_{1}) \mapsto (\Delta_{1}, s_{1}) \\
+%     (\Delta_{1}, e_{2}) \mapsto (\Delta_{2}, s_{2}) \\
+%     (\Delta_{2}, s_{1} \vee s_{2}) \mapsto (\Delta_{s}, s) \\
+%     ((\Gamma, \Delta_{s}), s) \twoheadrightarrow (\Theta,\unit{})
+%   }
+%   { ((\Gamma, \Delta),e_{1} \vee e_{2}) \rightarrowtail (\Theta,\unit{})}
+% \end{mathpar}
+  %%% Congruence rules with symbolic execution
+\begin{mathpar}
+  \inferrule*[Right=Ev-Or]
+  { (\Delta, v_{1}) \mapsto (\Delta', v_{1}') \\
+    (\Delta',v_{2}) \mapsto (\Delta'', v_{2}')}
+  { (\Gamma, \Delta, v_{1} \vee v_{2}) \rightarrowtail (\Gamma, \Delta'', v_{1}' \vee v_{2}')}
+\end{mathpar}%
+\begin{mathpar}
+  \inferrule*[Right=Ev-And]
+  {(\Theta, v_{1}) \rightarrowtail (\Theta', v_{1}') \\
+    (\Theta', v_{2}) \rightarrowtail (\Theta'', v_{2}')
+  }
+  { (\Theta, v_{1} \wedge v_{2}) \rightarrowtail (\Theta'', v_{1}' \wedge v_{2}')
+  }
+\end{mathpar}%
