@@ -274,3 +274,8 @@ TSWLatexianTemp*
 
 # Makeindex log files
 *.lpz
+
+# template files
+*.loaf
+*.loap
+*.loat
