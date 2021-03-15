@@ -7,41 +7,45 @@ directly addressed by the SAT/SMT community with the invention of incremental
 SAT/SMT solving. However, incremental SAT/SMT solvers require end-users to hand
 write a program which dictates the terms that are shared between problems and
 terms which are unique. By placing the onus on end-users, incremental solvers
-couple the end-users' solution to the end-users' exact sequence of SAT/SMT
-problems---making the solution overly specific---and require the end-user to
-write extra infrastructure to coordinate or handle the results.
+couple the end-users' solution to the end-users' \emph{exact} sequence of
+SAT/SMT problems---making the solution overly specific---and require the
+end-user to write extra infrastructure to coordinate or handle the results.
 
-My work is concerned with proliferating the concept of variation as a
-computational concept similar to the concept of loops or objects, thereby
-obtaining improved usability, performance, and software reuse. Variation
-encapsulates the idea of \emph{similar yet different} objects in a domain. This
-dissertation applies theory from \emph{variational} programming to the domain of
-SAT/SMT solvers to solve the aforementioned problems and demonstrate the
-benefits of variation as a computational concept.
+This dissertation argues that the aforementioned problems are caused from the
+lack of variation as a computation concept, similar to that of a \rn{while}
+loop. To demonstrate the argument, this thesis applies theory from
+\emph{variational} programming to the domain of SAT/SMT solvers to create the
+first variational SAT solver.
+%
+The thesis formalizes a variational propositional logic and specifies
+variational SAT solving as a transpiler, which transpiles variational SAT
+problems to non-variational SAT that are then processed by an industrial SAT
+solver. It shows that the transpiler is an instance of a variational fold and
+uses that fact to extend the variational SAT solver to an asynchronous
+variational SMT solver. Finally, it defines a general algorithm to construct a
+single variational string from a set of non-variational strings.
+% I show numerous benefits gained with this approach:
+% %
+% A variational solver is more declarative than a SAT solver as previously
+% necessary control flow operations are no longer required.
+% %
+% As a result, end-users need only identify the set of SAT problems of interest
+% rather than identify the set \emph{and} direct the solver via the control flow
+% operations.
+% %
+% With the concept of variation, previously difficult optimizations can be
+% syntactically detected and applied before the solver runtime.
+% %
+% When solving a set of related problems a variational solver promotes more reuse
+% of information and can thus be more performent than a non-variational solver in
+% its use case.
 
-This thesis formalizes a variational propositional logic and specifies the first
-variational SAT solver. I show numerous benefits gained with this approach:
-%
-A variational solver is more declarative than a SAT solver as previously
-necessary control flow operations are no longer required.
-%
-As a result, end-users need only identify the set of SAT problems of interest
-rather than identify the set \emph{and} direct the solver via the control flow
-operations.
-%
-With the concept of variation previously difficult optimizations can be
-syntactically detected and applied before the solver runtime.
-%
-When solving a set of related problems a variational solver promotes more reuse
-of information and can thus be more performent than a non-variational solver in
-its use case.
-
-Furthermore, \todo{double check these}the thesis explores several extensions and
-reflect on lessons learned from implementing a large scale variation-aware
-system. It defines a general algorithm to construct a single variational string
-from a set of non-variational strings. It extends variational SAT solving to
-variational SMT solving, and with variational constructs, it shows that a
-variational SAT/SMT solver can trivially  be made asynchronous.
+% Furthermore, \todo{double check these}the thesis explores several extensions and
+% reflect on lessons learned from implementing a large scale variation-aware
+% system. It defines a general algorithm to construct a single variational string
+% from a set of non-variational strings. It extends variational SAT solving to
+% variational SMT solving, and with variational constructs, it shows that a
+% variational SAT/SMT solver can trivially  be made asynchronous.
 
 %%% Local Variables:
 %%% mode: latex
