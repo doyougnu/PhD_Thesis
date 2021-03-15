@@ -1,0 +1,167 @@
+%%% paper specific citations, these should be topical or related to methodology
+
+@ARTICLE{Dunn61multiplecomparisons,
+    author = {Jean Dunn and Olive Jean Dunn},
+    title = {Multiple Comparisons Among Means},
+    journal = {American Statistical Association},
+    year = {1961},
+    pages = {52--64}
+}
+
+@article{10.2307/4615733,
+ ISSN = {03036898, 14679469},
+ URL = {http://www.jstor.org/stable/4615733},
+ abstract = {This paper presents a simple and widely applicable multiple test procedure of the sequentially rejective type, i.e. hypotheses are rejected one at a time until no further rejections can be done. It is shown that the test has a prescribed level of significance protection against error of the first kind for any combination of true hypotheses. The power properties of the test and a number of possible applications are also discussed.},
+ author = {Sture Holm},
+ journal = {Scandinavian Journal of Statistics},
+ number = {2},
+ pages = {65--70},
+ publisher = {[Board of the Foundation of the Scandinavian Journal of Statistics, Wiley]},
+ title = {A Simple Sequentially Rejective Multiple Test Procedure},
+ volume = {6},
+ year = {1979}
+}
+
+
+@inproceedings{Kocher2018spectre,
+ author = {Paul Kocher and Jann Horn and Anders Fogh and and Daniel Genkin and Daniel Gruss and Werner Haas and Mike Hamburg and Moritz Lipp and Stefan Mangard and Thomas Prescher and Michael Schwarz and Yuval Yarom},
+ title = {Spectre Attacks: Exploiting Speculative Execution},
+ booktitle = {40th IEEE Symposium on Security and Privacy (S\&P'19)},
+ year = {2019},
+}
+
+@inproceedings{Lipp2018meltdown,
+ author = {Moritz Lipp and Michael Schwarz and Daniel Gruss and Thomas Prescher and Werner Haas and Anders Fogh and Jann Horn and Stefan Mangard and Paul Kocher and Daniel Genkin and Yuval Yarom and Mike Hamburg},
+ title = {Meltdown: Reading Kernel Memory from User Space},
+ booktitle = {27th {USENIX} Security Symposium ({USENIX} Security 18)},
+ year = {2018},
+}
+
+@article{WilcoxonPairwise,
+ ISSN = {00994987},
+ URL = {http://www.jstor.org/stable/3001968},
+ author = {Frank Wilcoxon},
+ journal = {Biometrics Bulletin},
+ number = {6},
+ pages = {80--83},
+ publisher = {[International Biometric Society, Wiley]},
+ title = {Individual Comparisons by Ranking Methods},
+ volume = {1},
+ year = {1945}
+}
+
+@misc{gauge,
+  author = {Bryan O'Sullivan},
+  title = {{Criterian: A Haskell microbenchmarking library}},
+  howpublished = {Website},
+  note = {Available online at
+          \url{https://hackage.haskell.org/package/gauge-0.2.5};
+          visited on May 7th, 2020.},
+  tt-tags = {},
+  year = 2009
+}
+
+@misc{sbv,
+  author = {Levent Erkok},
+  title = {{SBV: SMT Based Verification: Symbolic Haskell theorem prover using SMT solving}},
+  howpublished = {Website},
+  note = {Available online at
+          \url{https://hackage.haskell.org/package/sbv-8.10};
+          visited on Feb 14th, 2020.},
+  tt-tags = {},
+  year = 2011
+}
+
+@misc{mitigations,
+  title = {{A Global Switch To Kill Linux's CPU Spectre/Meltdown Workarounds?}},
+  author = {Micahel Larabel},
+  howpublished={\url{https://www.phoronix.com/scan.php?page=news_item&px=Global-Switch-Skip-Spectre-Melt}},
+  year={2020},
+  note={Accessed at March 25th, 2020},
+}
+
+@misc{nist,
+  title = {{NIST e-Handbook of Statistical Methods}},
+  author = {National Institute of Standards and Technology},
+  howpublished={\url{https://www.itl.nist.gov/div898/handbook/index.htm}},
+  year={2020},
+  note={Accessed at May 7th, 2020},
+}
+
+%%%%% Solvers
+% yices2
+@InProceedings{Dutertre:cav2014,
+  author =   {Dutertre, Bruno},
+  title =    {Yices 2.2},
+  booktitle = {Computer-Aided Verification (CAV'2014)},
+  editor =       {Biere, Armin and Bloem, Roderick},
+  year =   2014,
+  volume =       8559,
+  series =       {Lecture Notes in Computer Science},
+  pages =        {737--744},
+  month =    {July},
+  publisher =    {Springer}
+}
+
+% cvc4
+@InProceedings{10.1007/978-3-642-22110-1_14,
+author="Barrett, Clark
+and Conway, Christopher L.
+and Deters, Morgan
+and Hadarean, Liana
+and Jovanovi{\'{c}}, Dejan
+and King, Tim
+and Reynolds, Andrew
+and Tinelli, Cesare",
+editor="Gopalakrishnan, Ganesh
+and Qadeer, Shaz",
+title="CVC4",
+booktitle="Computer Aided Verification",
+year="2011",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="171--177",
+abstract="CVC4 is the latest version of the Cooperating Validity Checker. A joint project of NYU and U Iowa, CVC4 aims to support the useful feature set of CVC3 and SMT-LIBv2 while optimizing the design of the core system architecture and decision procedures to take advantage of recent engineering and algorithmic advances. CVC4 represents a completely new code base; it is a from-scratch rewrite of CVC3, and many subsystems have been completely redesigned. Additional decision procedures for CVC4 are currently under development, but for what it currently achieves, it is a lighter-weight and higher-performing tool than CVC3. We describe the system architecture, subsystems of note, and discuss some applications and continuing work.",
+isbn="978-3-642-22110-1"
+}
+
+% boolector
+@inproceedings{DBLP:conf/tacas/BrummayerB09,
+  author    = {Robert Brummayer and
+               Armin Biere},
+  editor    = {Stefan Kowalewski and
+               Anna Philippou},
+  title     = {Boolector: An Efficient {SMT} Solver for Bit-Vectors and Arrays},
+  booktitle = {Tools and Algorithms for the Construction and Analysis of Systems,
+               15th International Conference, {TACAS} 2009, Held as Part of the Joint
+               European Conferences on Theory and Practice of Software, {ETAPS} 2009,
+               York, UK, March 22-29, 2009. Proceedings},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {5505},
+  pages     = {174--177},
+  publisher = {Springer},
+  year      = {2009},
+  url       = {https://doi.org/10.1007/978-3-642-00768-2\_16},
+  doi       = {10.1007/978-3-642-00768-2\_16},
+  timestamp = {Mon, 16 Sep 2019 15:27:51 +0200},
+  biburl    = {https://dblp.org/rec/conf/tacas/BrummayerB09.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{10.1145/3442391.3442405,
+author = {Mauro, Jacopo},
+title = {Anomaly Detection in Context-Aware Feature Models},
+year = {2021},
+isbn = {9781450388245},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3442391.3442405},
+doi = {10.1145/3442391.3442405},
+abstract = {Feature Models are a mechanism to organize the configuration space and facilitate the construction of software variants by describing configuration options using features, i.e., a name representing a functionality. The development of Feature Models is an error prone activity and detecting their anomalies is a challenging and important task needed to promote their usage. Feature Models have been extended with context to capture the correlation of configuration options with contextual influences and user customizations. Unfortunately, this extension makes the task of detecting anomalies harder. In this paper, we formalize the anomaly analysis in Context-aware Feature Models and we show how Quantified Boolean Formula (QBF) solvers can be used to detect anomalies without relying on iterative calls to a SAT solver. By extending the reconfigurator engine HyVarRec, we present findings evidencing that QBF solvers can outperform the common techniques for anomaly analysis on some instances.},
+booktitle = {15th International Working Conference on Variability Modelling of Software-Intensive Systems},
+articleno = {13},
+numpages = {9},
+keywords = {SMT solver, Feature Model Anomalies},
+location = {Krems, Austria},
+series = {VaMoS'21}
+}
