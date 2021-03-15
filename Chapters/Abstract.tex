@@ -1,26 +1,26 @@
 Over the last two decades, satisfiability and satisfiability-modulo theory
 (SAT/SMT) solvers have grown powerful enough to be general purpose reasoning
-engines employed in various areas of software engineering and computer science.
-However, most practical use cases of SAT/SMT solvers require not just solving a
-single SAT/SMT problem, but solving sets of related SAT/SMT problems. This
-discrepancy was directly addressed by the SAT/SMT community with the invention
-of incremental SAT/SMT solving. However, incremental SAT/SMT solvers require
-end-users to hand write a program which dictates terms in a set that are shared
-between problems and terms which are unique. By placing the onus on end-users to
-write a program, incremental solvers couple the end-users' solution to the
-end-users' exact sequence of SAT/SMT problems---making the solution overly
-specific---and require the end-user to write extra infrastructure to coordinate
-or handle the results. In this thesis, I apply results from research on
-\emph{variational} programming languages to the domain of SAT/SMT solvers to
-automate this interaction, creating the first variational SAT/SMT solver. I
-demonstrate numerous benefits to this approach: End-users need only identify the
-set of SAT/SMT problems to solve rather than identify the set \emph{and} provide
-a program. Otherwise difficult optimizations can now be automatically detected
-and applied. Through use of variational constructs, the variational SAT/SMT can
-be made asynchronous and both single threaded and multi-threaded versions of
-variational SAT/SMT solvers are more performent in their expected use case.
+engines throughout software engineering and computer science. However, most
+practical use cases of SAT/SMT solvers require not just solving a single SAT/SMT
+problem, but solving sets of related SAT/SMT problems. This discrepancy was
+directly addressed by the SAT/SMT community with the invention of incremental
+SAT/SMT solving. However, incremental SAT/SMT solvers require end-users to hand
+write a program which dictates terms in a set that are shared between problems
+and terms which are unique. By placing the onus on end-users to write a program,
+incremental solvers couple the end-users' solution to the end-users' exact
+sequence of SAT/SMT problems---making the solution overly specific---and require
+the end-user to write extra infrastructure to coordinate or handle the results.
+In this thesis, I apply results from research on \emph{variational} programming
+languages to the domain of SAT/SMT solvers to automate this interaction,
+creating the first variational SAT/SMT solver. I demonstrate numerous benefits
+to this approach: End-users need only identify the set of SAT/SMT problems to
+solve rather than identify the set \emph{and} provide a program. Otherwise
+difficult optimizations can now be automatically detected and applied. Through
+use of variational constructs, the variational SAT/SMT can be made asynchronous
+and both single threaded and multi-threaded versions of variational SAT/SMT
+solvers are more performent in their expected use case.
 
 %%% Local Variables:
 %%% mode: latex
-%%% TeX-master: "../main"
+%%% TeX-master: "../thesis"
 %%% End:

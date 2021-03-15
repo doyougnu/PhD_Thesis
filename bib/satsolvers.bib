@@ -1,33 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% Journal Papers    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% Texbook Chapters  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-@book{10.5555/1557461,
-author = {van Harmelen, Frank and van Harmelen, Frank and Lifschitz, Vladimir and Porter, Bruce},
-title = {Handbook of Knowledge Representation},
-year = {2007},
-isbn = {0444522115},
-publisher = {Elsevier Science},
-address = {San Diego, CA, USA},
-abstract = {Knowledge Representation, which lies at the core of Artificial
-                  Intelligence, is concerned with encoding knowledge on
-                  computers to enable systems to reason automatically. The
-                  Handbook of Knowledge Representation is an up-to-date review
-                  of twenty-five key topics in knowledge representation, written
-                  by the leaders of each field.This book is an essential
-                  resource for students, researchers and practitioners in all
-                  areas of Artificial Intelligence. * Make your computer
-                  smarter* Handle qualitative and uncertain information* Improve
-                  computational tractability to solve your problems easily}
-}
-
-%% for propositional logic reference
-@book{10.5555/1324777,
-author = {Bradley, Aaron R. and Manna, Zohar},
-title = {The Calculus of Computation: Decision Procedures with Applications to Verification},
-year = {2007},
-isbn = {3540741127},
-publisher = {Springer-Verlag},
-address = {Berlin, Heidelberg}
-}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% Conference Papers %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% The base minisat paper that describes incremental solvers %%%%
 @InProceedings{10.1007/978-3-540-24605-3_37,
@@ -41,18 +13,7 @@ year="2004",
 publisher="Springer Berlin Heidelberg",
 address="Berlin, Heidelberg",
 pages="502--518",
-abstract="In this article, we present a small, complete, and efficient
-                  SAT-solver in the style of conflict-driven learning, as
-                  exemplified by Chaff. We aim to give sufficient details about
-                  implementation to enable the reader to construct his or her
-                  own solver in a very short time. This will allow users of
-                  SAT-solvers to make domain specific extensions or adaptions of
-                  current state-of-the-art SAT-techniques, to meet the needs of
-                  a particular application area. The presented solver is
-                  designed with this in mind, and includes among other things a
-                  mechanism for adding arbitrary boolean constraints. It also
-                  supports solving a series of related SAT-problems efficiently
-                  by an incremental SAT-interface.",
+abstract="In this article, we present a small, complete, and efficient SAT-solver in the style of conflict-driven learning, as exemplified by Chaff. We aim to give sufficient details about implementation to enable the reader to construct his or her own solver in a very short time. This will allow users of SAT-solvers to make domain specific extensions or adaptions of current state-of-the-art SAT-techniques, to meet the needs of a particular application area. The presented solver is designed with this in mind, and includes among other things a mechanism for adding arbitrary boolean constraints. It also supports solving a series of related SAT-problems efficiently by an incremental SAT-interface.",
 isbn="978-3-540-24605-3"
 }
 
@@ -96,20 +57,17 @@ isbn="978-3-540-24605-3"
 }
 
 @InProceedings{10.1007/978-3-540-78800-3_24,
-author="de Moura, Leonardo and Bj{\o}rner, Nikolaj",
-editor="Ramakrishnan, C. R. and Rehof, Jakob",
+author="de Moura, Leonardo
+and Bj{\o}rner, Nikolaj",
+editor="Ramakrishnan, C. R.
+and Rehof, Jakob",
 title="Z3: An Efficient SMT Solver",
 booktitle="Tools and Algorithms for the Construction and Analysis of Systems",
 year="2008",
 publisher="Springer Berlin Heidelberg",
 address="Berlin, Heidelberg",
 pages="337--340",
-abstract="Satisfiability Modulo Theories (SMT) problem is a decision problem for
-                  logical first order formulas with respect to combinations of
-                  background theories such as: arithmetic, bit-vectors, arrays,
-                  and uninterpreted functions. Z3 is a new and efficient SMT
-                  Solver freely available from Microsoft Research. It is used in
-                  various software verification and analysis applications.",
+abstract="Satisfiability Modulo Theories (SMT) problem is a decision problem for logical first order formulas with respect to combinations of background theories such as: arithmetic, bit-vectors, arrays, and uninterpreted functions. Z3 is a new and efficient SMT Solver freely available from Microsoft Research. It is used in various software verification and analysis applications.",
 isbn="978-3-540-78800-3"
 }
 
@@ -136,160 +94,4 @@ address="Cham",
 pages="206--218",
 abstract="Incremental SAT solving under assumptions, introduced in Minisat, is in wide use. However, Minisat's algorithm for incremental SAT solving under assumptions has two main drawbacks which hinder performance considerably. First, it is not compliant with the highly effective and commonly used preprocessor SatELite. Second, all the assumptions are left in the formula, rather than being represented as unit clauses, propagated, and eliminated. Two previous attempts to overcome these problems solve either the first or the second of them, but not both. This paper remedies this situation by proposing a comprehensive solution for incremental SAT solving under assumptions, where SatELite is applied and all the assumptions are propagated. Our algorithm outperforms existing approaches over publicly available instances generated by a prominent industrial application in hardware validation.",
 isbn="978-3-319-09284-3"
-}
-
-% paper on chaff and Variable State Independent Decaying Sum Hueristic
-@inproceedings{chaff,
-  title={Chaff: Engineering an efficient SAT solver},
-  author={Moskewicz, Matthew W and Madigan, Conor F and Zhao, Ying and Zhang, Lintao and Malik, Sharad},
-  booktitle={Proceedings of the 38th annual Design Automation Conference},
-  pages={530--535},
-  year={2001},
-  organization={ACM}
-}
-
-%% VSAT
-@inproceedings{10.1145/3382025.3414965,
-author = {Young, Jeffrey M. and Walkingshaw, Eric and Th\"{u}m, Thomas},
-title = {Variational Satisfiability Solving},
-year = {2020},
-isbn = {9781450375696},
-publisher = {Association for Computing Machinery},
-address = {New York, NY, USA},
-url = {https://doi.org/10.1145/3382025.3414965},
-doi = {10.1145/3382025.3414965},
-abstract = {Incremental satisfiability (SAT) solving is an extension of classic
-                  SAT solving that allows users to efficiently solve a set of
-                  related SAT problems by identifying and exploiting shared
-                  terms. However, using incremental solvers effectively is hard
-                  since performance is sensitive to a problem's structure and
-                  the order sub-terms are fed to the solver, and the burden to
-                  track results is placed on the end user. For analyses that
-                  generate sets of related SAT problems, such as those in
-                  software product lines, incremental SAT solvers are either not
-                  used at all, used but not explicitly stated so in the
-                  literature, or used but suffer from the aforementioned
-                  usability problems. This paper translates the ordering problem
-                  to an encoding problem and automates the use of incremental
-                  SAT solving. We introduce variational SAT solving, which
-                  differs from incremental SAT solving by accepting all related
-                  problems as a single variational input and returning all
-                  results as a single variational output. Our central idea is to
-                  make explicit the operations of incremental SAT solving,
-                  thereby encoding differences between related SAT problems as
-                  local points of variation. Our approach automates the
-                  interaction with the incremental solver and enables methods to
-                  automatically optimize sharing of the input. To evaluate our
-                  methods we construct a prototype variational SAT solver and
-                  perform an empirical analysis on two real-world datasets that
-                  applied incremental solvers to software evolution scenarios.
-                  We show, assuming a variational input, that the prototype
-                  solver scales better for these problems than naive incremental
-                  solving while also removing the need to track individual
-                  results.},
-booktitle = {Proceedings of the 24th ACM Conference on Systems and Software Product Line: Volume A - Volume A},
-articleno = {18},
-numpages = {12},
-keywords = {software product lines, choice calculus, variation, satisfiability solving},
-location = {Montreal, Quebec, Canada},
-series = {SPLC '20}
-}
-
-%% The satire incremental solver
-@inproceedings{10.1145/378239.379019,
-author = {Whittemore, Jesse and Kim, Joonyoung and Sakallah, Karem},
-title = {SATIRE: A New Incremental Satisfiability Engine},
-year = {2001},
-isbn = {1581132972},
-publisher = {Association for Computing Machinery},
-address = {New York, NY, USA},
-url = {https://doi.org/10.1145/378239.379019},
-doi = {10.1145/378239.379019},
-abstract = {We introduce SATIRE, a new satisfiability solver that is
-                  particular-ly suited to verification and optimization problems
-                  in electronic de-sign automation. SATIRE builds on the most
-                  recent advances in satisfiability research, and includes two
-                  new features to achieve even higher performance: a facility
-                  for incrementally solving sets of related problems, and the
-                  ability to handle non-CNF constraints. We provide experimental
-                  evidence showing the effectiveness of these additions to
-                  classical satisfiability solvers.},
-booktitle = {Proceedings of the 38th Annual Design Automation Conference},
-pages = {542–545},
-numpages = {4},
-location = {Las Vegas, Nevada, USA},
-series = {DAC '01}
-}
-
-% cvc4
-@InProceedings{10.1007/978-3-642-22110-1_14,
-author="Barrett, Clark
-and Conway, Christopher L.
-and Deters, Morgan
-and Hadarean, Liana
-and Jovanovi{\'{c}}, Dejan
-and King, Tim
-and Reynolds, Andrew
-and Tinelli, Cesare",
-editor="Gopalakrishnan, Ganesh
-and Qadeer, Shaz",
-title="CVC4",
-booktitle="Computer Aided Verification",
-year="2011",
-publisher="Springer Berlin Heidelberg",
-address="Berlin, Heidelberg",
-pages="171--177",
-abstract="CVC4 is the latest version of the Cooperating Validity Checker. A joint project of NYU and U Iowa, CVC4 aims to support the useful feature set of CVC3 and SMT-LIBv2 while optimizing the design of the core system architecture and decision procedures to take advantage of recent engineering and algorithmic advances. CVC4 represents a completely new code base; it is a from-scratch rewrite of CVC3, and many subsystems have been completely redesigned. Additional decision procedures for CVC4 are currently under development, but for what it currently achieves, it is a lighter-weight and higher-performing tool than CVC3. We describe the system architecture, subsystems of note, and discuss some applications and continuing work.",
-isbn="978-3-642-22110-1"
-}
-
-% boolector
-@inproceedings{Brummayer:2009:BES:1532891.1532912,
- author = {Brummayer, Robert and Biere, Armin},
- title = {Boolector: An Efficient SMT Solver for Bit-Vectors and Arrays},
- booktitle = {Proceedings of the 15th International Conference on Tools and Algorithms for the Construction and Analysis of Systems: Held As Part of the Joint European Conferences on Theory and Practice of Software, ETAPS 2009,},
- series = {TACAS '09},
- year = {2009},
- isbn = {978-3-642-00767-5},
- location = {York, UK},
- pages = {174--177},
- numpages = {4},
- url = {http://dx.doi.org/10.1007/978-3-642-00768-2_16},
- doi = {10.1007/978-3-642-00768-2_16},
- acmid = {1532912},
- publisher = {Springer-Verlag},
- address = {Berlin, Heidelberg},
-}
-
-% yices
-@InProceedings{10.1007/978-3-319-08867-9_49,
-author="Dutertre, Bruno",
-editor="Biere, Armin
-and Bloem, Roderick",
-title="Yices 2.2",
-booktitle="Computer Aided Verification",
-year="2014",
-publisher="Springer International Publishing",
-address="Cham",
-pages="737--744",
-abstract="Yices is an SMT solver developed by SRI International. The first version of Yices was released in 2006 and has been continuously updated since then. In 2007, we started a complete re-implementation of the solver to improve performance and increase modularity and flexibility. We describe the latest release of Yices, namely, Yices 2.2. We present the tool's architecture and discuss the algorithms it implements, and we describe recent developments such as support for the SMT-LIB 2.0 notation and various performance improvements.",
-isbn="978-3-319-08867-9"
-}
-
-% mathsat
-@inproceedings{Bruttomesso:2008:MSS:1427782.1427820,
- author = {Bruttomesso, Roberto and Cimatti, Alessandro and Franz{\'e}n, Anders and Griggio, Alberto and Sebastiani, Roberto},
- title = {The MathSAT 4 SMT Solver},
- booktitle = {Proceedings of the 20th International Conference on Computer Aided Verification},
- series = {CAV '08},
- year = {2008},
- isbn = {978-3-540-70543-7},
- location = {Princeton, NJ, USA},
- pages = {299--303},
- numpages = {5},
- url = {http://dx.doi.org/10.1007/978-3-540-70545-1_28},
- doi = {10.1007/978-3-540-70545-1_28},
- acmid = {1427820},
- publisher = {Springer-Verlag},
- address = {Berlin, Heidelberg},
 }

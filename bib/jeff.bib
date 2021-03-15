@@ -1819,9 +1819,10 @@ isbn="978-3-540-44618-7"
 }
 
 % kleenes 3 valued logic
-@article{kleene1968introduction,
+@book{kleene1968introduction,
   title={Introduction to metamathematics},
   author={Kleene, Stephen Cole},
+  publisher={Ishi Press},
   year={1968}
 }
 
@@ -2174,10 +2175,11 @@ edition = {PLDI’11, June 4–8, 2011, San Jose, California, USA},
 }
 
 %%%%%%%%%%%%%%% software products %%%%%%%%%%%%%%%%
-@online{busybox,
+@misc{busybox,
   title = {{BusyBox}},
   howpublished = {\url{https://busybox.net/}},
-  note = {Accessed at October 27, 2020}
+  year = {2020},
+  note = {Accessed at October 27, 2020},
 }
 
 %%%%%%%%%%%%% sat phase transition
@@ -2186,7 +2188,7 @@ edition = {PLDI’11, June 4–8, 2011, San Jose, California, USA},
     title = {The SAT Phase Transition},
     booktitle = {In Proc. ECAI-94},
     year = {1994},
-    pages = {105--109}
+    pages = {105--109},
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text Books %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2505,7 +2507,7 @@ series = {AAAI'97/IAAI'97}
 
 }
 
-@inproceedings{10.1145/351240.351266,
+@inproceedings{quickcheck,
 author = {Claessen, Koen and Hughes, John},
 title = {QuickCheck: A Lightweight Tool for Random Testing of Haskell Programs},
 year = {2000},
@@ -2706,7 +2708,7 @@ doi="10.1007/978-3-642-32096-5_7",
 url="https://doi.org/10.1007/978-3-642-32096-5_7"
 }
 
-@online{linux,
+@misc{linux,
   title = {{Linux Operating System}},
   author = {Linus Torvalds},
   howpublished = {\url{www.kernel.org}},
@@ -2714,7 +2716,7 @@ url="https://doi.org/10.1007/978-3-642-32096-5_7"
 }
 
 
-@online{interSatComp,
+@misc{interSatComp,
   title = {{International SAT Competition}},
   author = {Co-located with the Interaction Conference on Theory and
                   Applications of Satisfiability Testing},
@@ -2723,17 +2725,18 @@ url="https://doi.org/10.1007/978-3-642-32096-5_7"
 }
 
 
-@online{openSMT,
+@misc{openSMT,
   title = {{openSMT}},
   author = {University of Lugano: Formal Verification and Security Lab},
   howpublished={\url{http://verify.inf.usi.ch/opensmt}},
   note={Accessed at Nov 27th, 2020},
 }
 
-@online{redis,
+@misc{redis,
   title = {{Redis}},
   author = {Redis Labs},
   howpublished={\url{https://redis.io/}},
+  year={2020},
   note={Accessed at May 4th, 2020},
 }
 
@@ -3070,4 +3073,69 @@ year = {1986},
 isbn = {0201100886},
 publisher = {Addison-Wesley Longman Publishing Co., Inc.},
 address = {USA}
+}
+
+
+@InProceedings{at-most-k-SAT,
+author="Bittner, Paul Maximilian
+and Th{\"u}m, Thomas
+and Schaefer, Ina",
+editor="{\"O}lveczky, Peter Csaba
+and Sala{\"u}n, Gwen",
+title="SAT Encodings of the At-Most-k Constraint",
+booktitle="Software Engineering and Formal Methods",
+year="2019",
+publisher="Springer International Publishing",
+address="Cham",
+pages="127--144",
+abstract="At universities, some fields of study offer multiple branches to graduate in. These branches are defined by mandatory and optional courses. Configuring a branch manually can be a difficult task, especially if some courses have already been attended. Hence, a tool providing guidance on choosing courses is desired. Feature models enable modelling such behaviour, as they are designed to define valid configurations from a set of features. Unfortunately, the branches contain constraints instructing to choose at least k out of n courses in essence. Encoding some of these constraints na{\"i}vely in propositional calculus is practically infeasible. We develop a new encoding by combining existing approaches. Furthermore, we report on our experience of encoding the constraints of the computer science master at TU Braunschweig and discuss the impact for research on configurability.",
+isbn="978-3-030-30446-1"
+}
+
+% R
+@Manual{RLang,
+    title = {R: A Language and Environment for Statistical Computing},
+    author = {{R Core Team}},
+    organization = {R Foundation for Statistical Computing},
+    address = {Vienna, Austria},
+    year = {2020},
+    url = {https://www.R-project.org/},
+  }
+
+%%% Variational execution theses
+@article{10.1145/3276487,
+author = {Wong, Chu-Pan and Meinicke, Jens and Lazarek, Lukas and K\"{a}stner, Christian},
+title = {Faster Variational Execution with Transparent Bytecode Transformation},
+year = {2018},
+issue_date = {November 2018},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {2},
+number = {OOPSLA},
+url = {https://doi.org/10.1145/3276487},
+doi = {10.1145/3276487},
+abstract = {Variational execution is a novel dynamic analysis technique for exploring highly configurable systems and accurately tracking information flow. It is able to efficiently analyze many configurations by aggressively sharing redundancies of program executions. The idea of variational execution has been demonstrated to be effective in exploring variations in the program, especially when the configuration space grows out of control. Existing implementations of variational execution often require heavy lifting of the runtime interpreter, which is painstaking and error-prone. Furthermore, the performance of this approach is suboptimal. For example, the state-of-the-art variational execution interpreter for Java, VarexJ, slows down executions by 100 to 800 times over a single execution for small to medium size Java programs. Instead of modifying existing JVMs, we propose to transform existing bytecode to make it variational, so it can be executed on an unmodified commodity JVM. Our evaluation shows a dramatic improvement on performance over the state-of-the-art, with a speedup of 2 to 46 times, and high efficiency in sharing computations.},
+journal = {Proc. ACM Program. Lang.},
+month = oct,
+articleno = {117},
+numpages = {30},
+keywords = {Java Virtual Machine, Bytecode Transformation, Variational Execution, Configurable System}
+}
+
+%%% delimited continuations base paper
+@inproceedings{10.1145/73560.73576,
+author = {Felleisen, Mattias},
+title = {The Theory and Practice of First-Class Prompts},
+year = {1988},
+isbn = {0897912527},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/73560.73576},
+doi = {10.1145/73560.73576},
+abstract = {An analysis of the λugr;-C-calculus and its problematic relationship to operational equivalence leads to a new control facility: the prompt-application. With the introduction of prompt-applications, the control calculus becomes a traditional calculus all of whose equations imply operational equivalence. In addition, prompt-applications enhance the expressiveness and efficiency of the language. We illustrate the latter claim with examples from such distinct areas as systems programming and tree processing.},
+booktitle = {Proceedings of the 15th ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages},
+pages = {180–190},
+numpages = {11},
+location = {San Diego, California, USA},
+series = {POPL '88}
 }
