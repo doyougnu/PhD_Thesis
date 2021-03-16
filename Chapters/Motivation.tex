@@ -34,9 +34,9 @@ detection~\cite{AKTS:FOSD16,KAT:TR16,MNS+:SPLC17}, and dead code
 analysis~\cite{TLSS:EuroSys11}.
 
 The misalignment the \ac{sat} research community and the practical use cases of
-\ac{sat} solvers is well known. To address the gap, modern solvers attempt to
-propagate information from one solving instance, on one problem, to future
-instances in the problem set. Initial attempts focused on
+\ac{sat} solvers is well known. To address the misalignment, modern solvers
+attempt to propagate information from one solving instance, on one problem, to
+future instances in the problem set. Initial attempts focused on
 \ac{cs}~\cite{10.1007/3-540-44798-9_4,10.1145/378239.379019} where learned
 clauses from one problem in the problem set are propagated forward to future
 problems. Modern solvers are based on a major breakthrough that occurred with
@@ -60,23 +60,20 @@ variables under which the problem at hand was found to be satisfiable, then the
 user must create additional infrastructure to track results; which again couples
 to the input and is therefore difficult to reuse.
 
-In this thesis, I hypothesize usability and performance improvements to
-incremental \ac{sat} are possible by applying recent work on \emph{variation},
-and \emph{variational
-  programming}~\cite{EW11gttse,EW11tosem,HW16fosd,CEW16ecoop,Walk14onward},
-which defines a theory of variation and formalizes a language to expresses
-variation called the \emph{choice calculus}. With the choice calculus, the
-aforementioned set of problems is able to be expressed statically as a
-\emph{variational artifact}. With this representation, the interface to
-incremental solving can be automated through a \emph{variational interpreter},
-furthermore by identifying and isolating the variational nature in incremental
-solvers, optimizations derived from the choice calculus become possible.
-
 The goal of my research is to explore the design space and architecture of a
 \emph{variational satisfiability solver} that uses research on variation in the
 context of incremental \ac{sat} solving. The rest of this section expands on
 these claims. \autoref{sec:prop-contr} lists the specific contributions this
 thesis will make and outlines the rest of this document.
+
+The essence of variational programming is a formal language called the
+\emph{choice calculus}. With the choice calculus, sets of problems in the
+\ac{sat} domain are able to be expressed statically as a \emph{variational
+  artifact}. With this representation, the interface to incremental solving is
+automated through a \emph{variational interpreter} to , furthermore by identifying
+and isolating the variational nature in incremental solvers, optimizations
+derived from the choice calculus become possible.
+
 
 \subsection{Proposed Contributions}%
 \label{sec:prop-contr}
