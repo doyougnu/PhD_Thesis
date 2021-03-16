@@ -1,39 +1,33 @@
 One of the most important aspects of any programming language is the ability to
-control complexity, especially as software written in that language grow. Novel
-and recent work on \emph{variation} and \emph{variational
+control complexity, especially as software written in that language grows. The
+burgeoning field of \emph{variation theory} and \emph{variational
   programming}~\cite{EW11gttse,EW11tosem,HW16fosd,CEW16ecoop,Walk14onward}
 attempt to control complexity that is induced in software when many
 \emph{similar yet distinct} kinds of software must coexist. For example, the
-same piece of software is often created and \emph{ported} to other platforms,
-thus creating many similar, yet distinct kinds of that software which must be
-maintained. Such instances of \emph{variation} are ubiquitous: Web applications
-are tested on development, staging, and then production servers; programming
-languages maintain backwards compatibility across versions and so do libraries;
-databases evolve over time and locale; and device drivers must work with
-different processors. However, the theory of variation and variational
-programming has been successful in small systems, it has yet to be tested in a
-performance demanding practical domain. In the words of Joe
+same piece of software is often \emph{ported} to other platforms, creating many
+similar, yet distinct instances of that software which must be maintained. Such
+instances of variation are ubiquitous: Web applications are tested on multiple
+servers; programming languages maintain backwards compatibility and so do
+software libraries; databases evolve over time and locale; and device drivers
+must work with different processors. Variation theory and variational
+programming has been successful in small systems, yet it has not been tested in
+a performance demanding practical domain. In the words of Joe
 Armstrong\cite{armstrongThesis}, ``No theory is complete without proof that the
 ideas work in practice''; this is the central project of this thesis, to put the
 ideas of \emph{variation} and \emph{variational programming}to the test in the
 practical domain of \ac{sat}.
 
-I begin by identifying and defining instances of variation in \acl{sat} problems
-and \acl{sat} solvers. The thesis major contributions of this thesis is the
-formalization of a \emph{\ac{vpl}} and \emph{variational \acl{sat}} and the
-construction of a \emph{variational \ac{sat} solver}. Variational \ac{sat}
-solving is then
-
-In this thesis I use \ac{sat} solving to explore the characteristics a domain
-must have to benefit from the concept of variation. I show that given a
-non-variational system a \emph{variational-aware} system can be constructed by
-using the non-variational system as a backend engine.
-
-
-I then demonstrate that the theory ``works'' through
-performance and usability improvements to classes of problems which previously
-required hand-written solutions.
-
+The major contribution of the thesis is the formalization of a \emph{\ac{vpl}},
+\emph{variational \acl{sat}}, and the construction of a \emph{variational
+  \ac{sat} solver}. The thesis makes several other contributions. It extends
+variational \acl{sat} to variational \acl{smt}. It demonstrates reusable
+techniques and architecture for constructing \emph{variational or
+  variation-aware} systems using their non-variational counterparts. It shows
+that, with the concept of variation, the variational \ac{smt} and \ac{sat}
+solvers can be trivially parallelized. Lastly, the thesis provides a general
+algorithm to construct variational strings from a set of non-variational strings
+and argues for the proliferation of variation theory to other domains in
+computer science.
 
 %%% Local Variables:
 %%% mode: latex
