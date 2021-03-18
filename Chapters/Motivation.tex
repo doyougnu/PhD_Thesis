@@ -20,8 +20,8 @@ proliferation into several fields of scientific inquiry ranging from software
 engineering to
 Bioinformatics~\cite{10.1007/11814948_16,10.1007/978-3-642-31612-8_12}.
 
-However, the majority of research in the \ac{sat} community focuses on solving a
-single \ac{sat} problem as fast as possible, yet many practical applications of
+The majority of research in the \ac{sat} community focuses on solving a single
+\ac{sat} problem as fast as possible, yet many practical applications of
 \ac{sat}
 solvers~\cite{silva1997robust,10.1007/3-540-44798-9_4,10.1145/378239.379019,10.1145/1698759.1698762,Een_asingle-instance,een2003temporal,10.5555/1998496.1998520}
 require solving a set of related \ac{sat}
@@ -33,46 +33,55 @@ sampling~\cite{MKR+:ICSE16,VAT+:SPLC18}, anomaly
 detection~\cite{AKTS:FOSD16,KAT:TR16,MNS+:SPLC17}, and dead code
 analysis~\cite{TLSS:EuroSys11}.
 
-The misalignment the \ac{sat} research community and the practical use cases of
-\ac{sat} solvers is well known. To address the misalignment, modern solvers
-attempt to propagate information from one solving instance, on one problem, to
-future instances in the problem set. Initial attempts focused on
+This misalignment between the \ac{sat} research community and the practical use
+cases of \ac{sat} solvers is well known. To address the misalignment, modern
+solvers attempt to propagate information from one solving instance, on one
+problem, to future instances in the problem set. Initial attempts focused on
 \ac{cs}~\cite{10.1007/3-540-44798-9_4,10.1145/378239.379019} where learned
 clauses from one problem in the problem set are propagated forward to future
-problems. Modern solvers are based on a major breakthrough that occurred with
-\emph{incremental \ac{sat} under assumptions}, introduced in
+problems. Although, modern solvers are based on a major breakthrough that
+occurred with \emph{incremental \ac{sat} under assumptions}, introduced in
 Minisat~\cite{10.1007/978-3-540-24605-3_37}.
 
 Incremental \ac{sat} under assumptions, made two major contributions: a
-performance contribution, where several pieces of information including learned
-clauses, restart and clause-detection heuristics are carried forward. A
-usability contribution; Minisat exposed an interface which allowed the end-user
-to directly program the solver. Through the interface the user can add or remove
-clauses and dictate which clauses or variables are shared and which are unique
-in the problem set.
+performance contribution, where information including learned clauses, restart
+and clause-detection heuristics are carried forward. A usability contribution;
+Minisat exposed an interface that allowed the end-user to directly program the
+solver. Through the interface the user can add or remove clauses and dictate
+which clauses or variables are shared and which are unique to the problem set,
+thus directly addressing the practical use case of \ac{sat} solvers.
 
-Despite the success of incremental \ac{sat}, the incremental interface can be
-improved in two ways: First, by requiring the user to direct the solver, the
-users' solution is specific to the exact set of satisfiability problems at hand,
-thus the programmed solution is specific to the problem set and therefore to the
-solver input. Second, should the user be interested in the assignment of
-variables under which the problem at hand was found to be satisfiable, then the
-user must create additional infrastructure to track results; which again couples
-to the input and is therefore difficult to reuse.
+Despite the its success, the incremental interface introduced a programming
+language that required an extra input, the set of \ac{sat} problems, \emph{and}
+a program to direct the solver with side-effectual control flow operations. This
+places further burden on the end-user: the system is less-declarative as the
+user must be concerned with the internals of the solver. A new class of errors
+is possible as the input program could misuse the introduced control-flow
+operators. By requiring the user to direct the solver, the users'
+solution is specific to the exact set of satisfiability problems at hand, thus
+the programmed solution is specific to the problem set and therefore to the
+solver input. Should the user be interested in the assignment of variables under
+which the problem at hand was found to be satisfiable, then the user must create
+additional infrastructure to track results; which again couples to the input and
+is therefore difficult to reuse.
 
-The goal of my research is to explore the design space and architecture of a
-\emph{variational satisfiability solver} that uses research on variation in the
-context of incremental \ac{sat} solving. The rest of this section expands on
-these claims. \autoref{sec:prop-contr} lists the specific contributions this
-thesis will make and outlines the rest of this document.
-
-The essence of variational programming is a formal language called the
-\emph{choice calculus}. With the choice calculus, sets of problems in the
-\ac{sat} domain are able to be expressed statically as a \emph{variational
-  artifact}. With this representation, the interface to incremental solving is
-automated through a \emph{variational interpreter} to , furthermore by identifying
-and isolating the variational nature in incremental solvers, optimizations
-derived from the choice calculus become possible.
+I argue that solving a set of related \ac{sat} problems \emph{is a variational
+  programming problem} and that by directly addressing the problem's variational
+nature the incremental \ac{sat} interface can be improved. The essence of
+variational programming is a formal language called the \emph{choice calculus}.
+With the choice calculus, sets of problems in the \ac{sat} domain can be
+expressed syntactically as a single \emph{variational artifact}. The benefits
+are numerous:
+\begin{enumerate}
+  \item The side-effectual control flow operations are hidden from the user,
+    recovering the declarative nature of non-incremental \ac{sat} solving.
+  \item Malformed programs built around the control flow operators become
+    syntactically impossible.
+  \item The end-user's programmed solution is decoupled from the specific problem
+    set, increasing software reuse.
+  \item The solver has enough syntactic information to produce results which
+    previously required extra infrastructure constructed by the end-user.
+\end{enumerate}
 
 
 \subsection{Proposed Contributions}%
