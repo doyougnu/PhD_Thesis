@@ -9,13 +9,13 @@
 \usepackage{cases}                   %% better math brackets
 \usepackage{mathpartir}              %%% for inference rules
 \usepackage[nolist]{acronym}
-\usepackage{hyperref}                %% for auto references
+\usepackage[colorlinks]{hyperref}                %% for auto references
 \usepackage{xpunctuate}              %% for punctuation's after macros
 \usepackage{cite}                    %% for bibliography ranges
 \usepackage{subcaption}              %% For complex figures with subfigures/subcaptions
 \usepackage{wrapfig}                 %% wrapping figures around text
 \usepackage{listings}                %% for source code lstlisting
-\usepackage{xcolor}                  %% For listings
+\usepackage[dvipsnames]{xcolor}                  %% For listings
 \usepackage{caption}
 \usepackage{todonotes}
 \usepackage{tikz}                    %% assertion stack visualization
@@ -28,4 +28,18 @@
 \usepackage{lib/cc}
 \usepackage{lib/lambda}
 \usepackage{lib/paper}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Packages %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Packages Config %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand\myshade{85}
+\colorlet{mylinkcolor}{NavyBlue}
+\colorlet{mycitecolor}{YellowOrange}
+\colorlet{myurlcolor}{Aquamarine}
+
+\hypersetup{
+  linkcolor  = mylinkcolor!,
+  % citecolor  = mycitecolor!\myshade!black,
+  % urlcolor   = myurlcolor!\myshade!black,
+  colorlinks = true,
+}
+
+\renewcommand{\chapterautorefname}{Chapter}%
+\renewcommand{\sectionautorefname}{Section}%

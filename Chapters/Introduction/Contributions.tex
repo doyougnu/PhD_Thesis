@@ -1,152 +1,156 @@
 ~\label{sec:prop-contr}
+
 The high-level goal of this thesis is to use variation theory to formalize and
 construct a variational satisfiability solver that understands and can solve
 \ac{sat} problems that contain \emph{variational values} in addition to boolean
 values. It is our desire that the work not only be of theoretical interest but
 of practical use. Thus, the thesis provides numerous examples of variational
 \ac{sat} and variational \ac{smt} problems to motivate and demonstrate the
-solver. In addition to providing an algorithm to generate a collapse sets of
-non-variational strings to a single variational string. The rest of this section
-outlines the thesis and expands on the contributions of each chapter:
-\begin{enumerate}
-\item\label{vpl-deliverable} \emph{Variational propositional logic}: \ac{sat}
-  solvers input and operate on sentences in propositional
-  logic\cite{10.5555/1324777}. Variational satisfiability solvers, in order to
-  reason about variation, must input sentences in a propositional logic that is
-  \textit{variational}, \ie{} a many-valued logic~\cite{Rescher1969-RESML} which
-  contains variational values, called \emph{choices} in addition to boolean
-  values.
-
-  The formulation of \ac{vpl} is requisite and central to the high level goal of
-  designing a variational satisfiability solver. Furthermore, \ac{vpl} serves
-  two other functions: It provides an avenue for future work through the
-  formalization of variation in the domain of propositional logic for
-  variational satisfiability solvers. It provides a foundation for research on
-  variation in propositional logic outside of the considerations of
-  satisfiability solvers.
-
-  This work is nearly complete. The logic has been formalized and successfully
-  used in a prototype variational solver\cite{10.1145/3382025.3414965}.
-  \autoref{sec:vpl} introduces \ac{vpl} and describes the following
-  contributions which are directly enabled by it:
+solver. The rest of this section outlines the thesis and expands on the
+contributions of each chapter:
 
   \begin{enumerate}
-  \item \checkmark{} A set of variation preserving equivalences. Similar to the well known
-    propositional logic equivalences, such as DeMorgan's law, these equivalences
-    allow a variational solver to refactor input possibly yielding simpler
-    variational sentences.
-  \item\label{encoding-strat-deliverable} An efficient algorithm for translating
-    a set of propositional formulae into a single \ac{vpl} formula. The
-    prototype variational \ac{sat} solver used a naive algorithm, and
-    preliminary results showed that the encoding impacts solver performance.
-    Hence, finding a more efficient encoding algorithm is desirable. This work
-    is yet to be done but there are two promising routes forward. First, a naive
-    algorithm which interleaves syntactic equivalences to produce a \ac{vpl}
-    formula that is easier to solve. Second, an algorithm similar to Huffman
-    codes\cite{4051119} to translate the \ac{sat} problems into a data
-    structure, then use heuristics to select high quality candidates to combine.
-    With such an algorithm the end-user of the variational solver only needs to
-    input their problem sequence rather than a \ac{vpl} formula.
+  \item \autoref{chapter:background}
   \end{enumerate}
 
-\item\label{vsat-deliverable} \emph{A variational satisfiability solver}: This
-  is the central contribution of my thesis. It is completed and is published in
-  a peer-reviewed conference~\cite{10.1145/3382025.3414965} paper. Preliminary
-  results are promising but based on only two case studies from the \ac{spl}
-  community.
+% \begin{enumerate}
+% \item\label{vpl-deliverable} \emph{Variational propositional logic}: \ac{sat}
+%   solvers input and operate on sentences in propositional
+%   logic\cite{10.5555/1324777}. Variational satisfiability solvers, in order to
+%   reason about variation, must input sentences in a propositional logic that is
+%   \textit{variational}, \ie{} a many-valued logic~\cite{Rescher1969-RESML} which
+%   contains variational values, called \emph{choices} in addition to boolean
+%   values.
 
-  \autoref{sec:vsat} discusses these results and provides an overview of the
-  variational solving algorithm. The following contributions are based on this
-  work:
-  \begin{enumerate}
-  \item \checkmark{} Formalization of a variational \ac{sat} solving algorithm
-    that inputs a \ac{vpl} formula and outputs a \emph{variational model}.
-  \item \checkmark{} Formalization of variational models; that is satisfying
-    assignments of values to variables in input formula that succinctly
-    represent results in the context of variation.
-  \item \checkmark{} A method for determining the amount of variation in a given
-    \ac{vpl} formula.
-  \item\label{phase-change-deliverable} A method for determining the relative
-    hardness of a \ac{vpl} formula based on work in the random-\ac{sat}
-    community~\cite{Gent94thesat}. This item is orthogonal to all other items
-    and thus can be done in parallel.
-  \end{enumerate}
+%   The formulation of \ac{vpl} is requisite and central to the high level goal of
+%   designing a variational satisfiability solver. Furthermore, \ac{vpl} serves
+%   two other functions: It provides an avenue for future work through the
+%   formalization of variation in the domain of propositional logic for
+%   variational satisfiability solvers. It provides a foundation for research on
+%   variation in propositional logic outside of the considerations of
+%   satisfiability solvers.
 
-\item\label{vsmt-deliverable} \emph{A concurrent variational \ac{smt} solver}:
-  Contingent on \autoref{vsat-deliverable}, \emph{satisfiability modulo
-    theories} extends \ac{sat} solvers such that they are able to reason about
-  logical formulas in combination to \textit{background theories}, such as
-  arithmetic or arrays. Furthermore, with variation statically represented in a
-  \ac{vpl} formula, the \ac{sat} or \ac{smt} procedure can be made asynchronous
-  leading to speedups on multi-core machines. The approach is to change the
-  semantics of a choice; in the prototype \ac{sat} solver each choice blocks
-  future \ac{sat} problems from being solved, by creating an asynchronous
-  solving algorithm these future problems are unblocked and can be processed
-  earlier.
+%   This work is nearly complete. The logic has been formalized and successfully
+%   used in a prototype variational solver\cite{10.1145/3382025.3414965}.
+%   \autoref{sec:vpl} introduces \ac{vpl} and describes the following
+%   contributions which are directly enabled by it:
 
-  This item is an extension of the central contributions of the thesis. There
-  are two extensions to the previous work to construct a variational \ac{smt}
-  solver and one to make it asynchronous.
+%   \item \checkmark{} A set of variation preserving equivalences. Similar to the well known
+%     propositional logic equivalences, such as DeMorgan's law, these equivalences
+%     allow a variational solver to refactor input possibly yielding simpler
+%     variational sentences.
+%   \item\label{encoding-strat-deliverable} An efficient algorithm for translating
+%     a set of propositional formulae into a single \ac{vpl} formula. The
+%     prototype variational \ac{sat} solver used a naive algorithm, and
+%     preliminary results showed that the encoding impacts solver performance.
+%     Hence, finding a more efficient encoding algorithm is desirable. This work
+%     is yet to be done but there are two promising routes forward. First, a naive
+%     algorithm which interleaves syntactic equivalences to produce a \ac{vpl}
+%     formula that is easier to solve. Second, an algorithm similar to Huffman
+%     codes\cite{4051119} to translate the \ac{sat} problems into a data
+%     structure, then use heuristics to select high quality candidates to combine.
+%     With such an algorithm the end-user of the variational solver only needs to
+%     input their problem sequence rather than a \ac{vpl} formula.
+%   \end{enumerate}
 
-  First, the extensions to \ac{vpl} abstract logical connectives in \ac{vpl}
-  allowing for theories which conclude to a Boolean value, such as arithmetic
-  inequalities, and thus can be reasoned about in a \ac{smt} solver. Second,
-  variational models are similarly extended, rather than assuming only Boolean
-  values, the extension allows for polymorphic results through the use of
-  SMTLIB2 compliant functions.
+% \item\label{vsat-deliverable} \emph{A variational satisfiability solver}: This
+%   is the central contribution of my thesis. It is completed and is published in
+%   a peer-reviewed conference~\cite{10.1145/3382025.3414965} paper. Preliminary
+%   results are promising but based on only two case studies from the \ac{spl}
+%   community.
 
-  Third, I extend the semantics of choices in the variational \ac{sat} solver to
-  include atomic concurrent operations. When a choice is observed the solver
-  state is copied and sent to a thread with instructions to compute continue the
-  computation.
+%   \autoref{sec:vsat} discusses these results and provides an overview of the
+%   variational solving algorithm. The following contributions are based on this
+%   work:
+%   \begin{enumerate}
+%   \item \checkmark{} Formalization of a variational \ac{sat} solving algorithm
+%     that inputs a \ac{vpl} formula and outputs a \emph{variational model}.
+%   \item \checkmark{} Formalization of variational models; that is satisfying
+%     assignments of values to variables in input formula that succinctly
+%     represent results in the context of variation.
+%   \item \checkmark{} A method for determining the amount of variation in a given
+%     \ac{vpl} formula.
+%   \item\label{phase-change-deliverable} A method for determining the relative
+%     hardness of a \ac{vpl} formula based on work in the random-\ac{sat}
+%     community~\cite{Gent94thesat}. This item is orthogonal to all other items
+%     and thus can be done in parallel.
+%   \end{enumerate}
 
-  This work is completed but unpublished. \autoref{sec:vsmt} expands on this
-  item and discusses the evaluation of the prototype variational \ac{smt} solver
-  with additional case studies. The following summarizes the expected
-  contributions:
-  \begin{enumerate}
-  \item \checkmark{} Formalize the extension of \ac{vpl} with \ac{smt} theories.
-  \item \checkmark{} Formalize the extension of variational models to express
-    \ac{smt} results.
-  \item \checkmark{} Formalize the asynchronous variational solving algorithm
-  \item\label{nanopass-deliverable} A set of optimizations based on work on
-    nanopass compilers~\cite{10.1145/2500365.2500618} from the scheme
-    programming language community~\cite{r7rs-scheme}. The goal is to leverage
-    \ac{vpl} equivalence rules and other compiler optimizations, such as
-    inlining, on SMTLIB2 programs, thus optimizing variational SMT programs. The
-    prototype variational \ac{smt} solver is architected as a nanopass compiler
-    and thus is able to perform optimizations as a single pass over the input
-    formula. However, no optimizations are performed as of yet, although all
-    requisite items for this work to begin are done.
-  \item \label{eval-deliverable}An empirical evaluation of solver performance. The empirical evaluation
-    will reuse the datasets the prototype \ac{sat} solver was evaluated on. In
-    addition, three new data sets will be added, two by harvesting \ac{sat}
-    problems from work on variational lexing, parsing, and type
-    checking~\cite{KKHL:FOSD10} real world software such as
-    Busybox~\cite{busybox} and the Linux kernel~\cite{linux}, and one by
-    generating variational \ac{smt} problems. This dataset will be used several
-    times in the thesis and will be made public. First, as a foundation to test
-    the encoding strategies from \autoref{encoding-strat-deliverable}. Second,
-    to evaluation the optimizations from \autoref{nanopass-deliverable} and
-    third, to evaluate the performance of the single threaded and multi-threaded
-    variational \ac{smt} solver. This work is partially complete, random
-    generation of variational \ac{sat} and \ac{smt} problems is done, as is the
-    Busybox dataset. The remaining work is to scale the logging solution to
-    handle the Linux kernel.
-  \end{enumerate}
+% \item\label{vsmt-deliverable} \emph{A concurrent variational \ac{smt} solver}:
+%   Contingent on \autoref{vsat-deliverable}, \emph{satisfiability modulo
+%     theories} extends \ac{sat} solvers such that they are able to reason about
+%   logical formulas in combination to \textit{background theories}, such as
+%   arithmetic or arrays. Furthermore, with variation statically represented in a
+%   \ac{vpl} formula, the \ac{sat} or \ac{smt} procedure can be made asynchronous
+%   leading to speedups on multi-core machines. The approach is to change the
+%   semantics of a choice; in the prototype \ac{sat} solver each choice blocks
+%   future \ac{sat} problems from being solved, by creating an asynchronous
+%   solving algorithm these future problems are unblocked and can be processed
+%   earlier.
 
-\item \label{proof-deliverable} \textit{Proof of variation preservation}: A
-  proof of variation preservation is a proof that the results of the variational
-  solvers are sound, \ie{}, for any variant $\kf{v}$, if a variational solver
-  finds $\kf{VSat(v)} = \kf{True}$, then $\kf{Sat(v)} = \kf{True}$. Both
-  \autoref{vsat-deliverable} and \autoref{vsmt-deliverable} are verified sound
-  via property-based testing~\cite{10.1145/351240.351266} but the variational
-  solving algorithm itself has not been proven sound up to the soundness of the
-  underlying incremental solver. This work is in progress using the proof
-  assistant Agda\cite{10.1145/2841316} and is expected to yield such a proof.
-  \autoref{sec:vsmt} discusses this item further and lists the specific tasks
-  left to do.
-\end{enumerate}
+%   This item is an extension of the central contributions of the thesis. There
+%   are two extensions to the previous work to construct a variational \ac{smt}
+%   solver and one to make it asynchronous.
+
+%   First, the extensions to \ac{vpl} abstract logical connectives in \ac{vpl}
+%   allowing for theories which conclude to a Boolean value, such as arithmetic
+%   inequalities, and thus can be reasoned about in a \ac{smt} solver. Second,
+%   variational models are similarly extended, rather than assuming only Boolean
+%   values, the extension allows for polymorphic results through the use of
+%   SMTLIB2 compliant functions.
+
+%   Third, I extend the semantics of choices in the variational \ac{sat} solver to
+%   include atomic concurrent operations. When a choice is observed the solver
+%   state is copied and sent to a thread with instructions to compute continue the
+%   computation.
+
+%   This work is completed but unpublished. \autoref{sec:vsmt} expands on this
+%   item and discusses the evaluation of the prototype variational \ac{smt} solver
+%   with additional case studies. The following summarizes the expected
+%   contributions:
+%   \begin{enumerate}
+%   \item \checkmark{} Formalize the extension of \ac{vpl} with \ac{smt} theories.
+%   \item \checkmark{} Formalize the extension of variational models to express
+%     \ac{smt} results.
+%   \item \checkmark{} Formalize the asynchronous variational solving algorithm
+%   \item\label{nanopass-deliverable} A set of optimizations based on work on
+%     nanopass compilers~\cite{10.1145/2500365.2500618} from the scheme
+%     programming language community~\cite{r7rs-scheme}. The goal is to leverage
+%     \ac{vpl} equivalence rules and other compiler optimizations, such as
+%     inlining, on SMTLIB2 programs, thus optimizing variational SMT programs. The
+%     prototype variational \ac{smt} solver is architected as a nanopass compiler
+%     and thus is able to perform optimizations as a single pass over the input
+%     formula. However, no optimizations are performed as of yet, although all
+%     requisite items for this work to begin are done.
+%   \item \label{eval-deliverable}An empirical evaluation of solver performance. The empirical evaluation
+%     will reuse the datasets the prototype \ac{sat} solver was evaluated on. In
+%     addition, three new data sets will be added, two by harvesting \ac{sat}
+%     problems from work on variational lexing, parsing, and type
+%     checking~\cite{KKHL:FOSD10} real world software such as
+%     Busybox~\cite{busybox} and the Linux kernel~\cite{linux}, and one by
+%     generating variational \ac{smt} problems. This dataset will be used several
+%     times in the thesis and will be made public. First, as a foundation to test
+%     the encoding strategies from \autoref{encoding-strat-deliverable}. Second,
+%     to evaluation the optimizations from \autoref{nanopass-deliverable} and
+%     third, to evaluate the performance of the single threaded and multi-threaded
+%     variational \ac{smt} solver. This work is partially complete, random
+%     generation of variational \ac{sat} and \ac{smt} problems is done, as is the
+%     Busybox dataset. The remaining work is to scale the logging solution to
+%     handle the Linux kernel.
+%   \end{enumerate}
+
+% \item \label{proof-deliverable} \textit{Proof of variation preservation}: A
+%   proof of variation preservation is a proof that the results of the variational
+%   solvers are sound, \ie{}, for any variant $\kf{v}$, if a variational solver
+%   finds $\kf{VSat(v)} = \kf{True}$, then $\kf{Sat(v)} = \kf{True}$. Both
+%   \autoref{vsat-deliverable} and \autoref{vsmt-deliverable} are verified sound
+%   via property-based testing~\cite{10.1145/351240.351266} but the variational
+%   solving algorithm itself has not been proven sound up to the soundness of the
+%   underlying incremental solver. This work is in progress using the proof
+%   assistant Agda\cite{10.1145/2841316} and is expected to yield such a proof.
+%   \autoref{sec:vsmt} discusses this item further and lists the specific tasks
+%   left to do.
+% \end{enumerate}
 
 
 %%% Local Variables:

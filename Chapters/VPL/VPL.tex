@@ -1,4 +1,4 @@
-\label{sec:vlogic}
+~\label{chapter:vlogic}
 
 In this section, we present the logic of variational satisfiability problems.
 %
@@ -9,7 +9,7 @@ variation. We call the new logic \vpl{}, short for variational propositional
 logic, and refer to \vpl{} expressions as \emph{variational formulas}.
 %
 This section defines the syntax and semantics of \vpl{} and uses it to encode
-the example from Section~\ref{sec:bkgrnd}.
+the example from \autoref{sec:bkgrnd}.
 
 
 \begin{figure}
@@ -30,7 +30,7 @@ the example from Section~\ref{sec:bkgrnd}.
   \begin{subfigure}[t]{\linewidth}
     \input{Figures/Vsat_Logic_laws}
     \centering
-    \caption{\vpl{} equivalence laws}%
+    \caption{\vpl{} equivalence laws.}%
     \label{fig:cc:eqv}
   \end{subfigure}
 \caption{Formal definition of \vpl{}.}%
@@ -41,7 +41,7 @@ the example from Section~\ref{sec:bkgrnd}.
 \paragraph{Syntax}
 %
 The syntax of variational propositional logic is given in
-Figure~\ref{fig:cc:stx}. It extends the propositional formula notation of \pl{}
+\autoref{fig:cc:stx}. It extends the propositional formula notation of \pl{}
 with a single new connective called a \emph{choice} from the choice calculus.
 %
 A choice $\chc[D]{f_1,f_2}$ represents either $f_1$ or $f_2$ depending on the
@@ -63,21 +63,21 @@ Conceptually, a variational formula represents several propositional logic
 formulas at once, which can be obtained by resolving all of the choices. For
 software product-line researchers, it is useful to think of \vpl{} as analogous
 to \cpp{ifdef}-annotated \pl{}, where choices correspond to a
-disciplined~\cite{LKA:AOSD11} application of \cpp{ifdef} annotations.
+disciplined~\citep{LKA:AOSD11} application of \cpp{ifdef} annotations.
 %
 From a logical perspective, following the many-valued logic of
-Kleene~\cite{kleene1968introduction,Rescher1969-RESML}, the intuition behind
+Kleene~\citep{kleene1968introduction,Rescher1969-RESML}, the intuition behind
 \vpl{} is that a choice is a placeholder for two equally possible alternatives
 that is deterministically resolved by reference to an external environment.
 %
 In this sense, \vpl{} deviates from other many-valued logics, such as modal
-logic~\cite{sep-logic-modal}, because a choice \emph{waits} until there is
+logic~\citep{sep-logic-modal}, because a choice \emph{waits} until there is
 enough information to choose an alternative (i.e., until the formula is
 \emph{configured}).
 
 
 The \emph{configuration semantics} of \vpl{} is given in
-Figure~\ref{fig:cc:cfg} and describes how choices are eliminated from a
+\autoref{fig:cc:cfg} and describes how choices are eliminated from a
 formula. The semantics is parameterized by a \emph{configuration}\ $C$, which is
 a partial function from dimensions to Boolean values.
 %
@@ -118,9 +118,9 @@ configuration.
 %
 As the previous example illustrates, the representation of a \vpl{} formula is
 not unique; that is, the same set of variants may be encoded by different
-formulas. Figure~\ref{fig:cc:eqv} defines a set of equivalence laws for
+formulas. \autoref{fig:cc:eqv} defines a set of equivalence laws for
 \vpl{} formulas. These laws follow directly from the configuration semantics in
-Figure~\ref{fig:cc:cfg} and can be used to derive semantics-preserving
+\autoref{fig:cc:cfg} and can be used to derive semantics-preserving
 transformations of \vpl{} formulas.
 %
 For example, we can simplify the formula $\chc[A]{p\vee q, p\vee r}$ by first
@@ -140,12 +140,12 @@ models in order to avoid redundant analysis later.
 Every set of plain formulas can be encoded as a variational formula
 systematically by first constructing a nested choice containing all of the
 individual variables as alternatives, then factoring out shared subexpressions
-by applying the laws in Figure~\ref{fig:cc:eqv}. For sets of feature models this would
+by applying the laws in \autoref{fig:cc:eqv}. For sets of feature models this would
 correspond to a nested choice containing all of the individual feature models as
 alternatives, then factoring out commonalities in the variational formula.
 %
 Unfortunately, the process of globally minimizing a variational formula in this
-way is hard\footnote{We hypothesize that it is equivalent to BDD minimization,
+way is hard\footnote{\label{vpl:bdd}We hypothesize that it is equivalent to BDD minimization,
 which is NP-complete, but the equivalence has not been proved;
 see~\cite{Walk14onward}.} since often we must apply an arbitrary number of laws
 right-to-left in order to set up a particular sequence of left-to-right
@@ -199,7 +199,7 @@ Now that we have constructed the variational formula we need to ensure that it
 encodes all variants of interest and nothing else. In this example, this is
 relatively easy to confirm by enumerating all total configurations involving
 \Lx{1} and \Lx{2}. However, we'll return to the general case in the discussion
-of variational models in Section~\ref{sec:impl}.
+of variational models in \autoref{sec:impl}.
 
 %%% Local Variables:
 %%% mode: latex

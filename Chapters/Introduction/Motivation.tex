@@ -53,17 +53,17 @@ thus directly addressing the practical use case of \ac{sat} solvers.
 
 Despite the its success, the incremental interface introduced a programming
 language that required an extra input, the set of \ac{sat} problems, \emph{and}
-a program to direct the solver with side-effectual control flow operations. This
-places further burden on the end-user: the system is less-declarative as the
-user must be concerned with the internals of the solver. A new class of errors
-is possible as the input program could misuse the introduced control-flow
-operators. By requiring the user to direct the solver, the users'
-solution is specific to the exact set of satisfiability problems at hand, thus
-the programmed solution is specific to the problem set and therefore to the
-solver input. Should the user be interested in the assignment of variables under
-which the problem at hand was found to be satisfiable, then the user must create
-additional infrastructure to track results; which again couples to the input and
-is therefore difficult to reuse.
+a program to direct the solver with side-effectual statements. This places
+further burden on the end-user: the system is less-declarative as the user must
+be concerned with the internals of the solver. A new class of errors is possible
+as the input program could misuse the introduced side-effectual statements. By
+requiring the user to direct the solver, the users' solution is specific to the
+exact set of satisfiability problems at hand, thus the programmed solution is
+specific to the problem set and therefore to the solver input. Should the user
+be interested in the assignment of variables under which the problem at hand was
+found to be satisfiable, then the user must create additional infrastructure to
+track results; which again couples to the input and is therefore difficult to
+reuse.
 
 I argue that solving a set of related \ac{sat} problems \emph{is a variational
   programming problem} and that by directly addressing the problem's variational
@@ -73,16 +73,16 @@ essence of variational programming is a formal language called the \emph{choice
 can be expressed syntactically as a single \emph{variational artifact}. The
 benefits are numerous:
 \begin{enumerate}
-  \item The side-effectual control flow operations are hidden from the user,
-    recovering the declarative nature of non-incremental \ac{sat} solving.
-  \item Malformed programs built around the control flow operators become
-    syntactically impossible.
-  \item The end-user's programmed solution is decoupled from the specific problem
-    set, increasing software reuse.
-  \item The solver has enough syntactic information to produce results which
-    previously required extra infrastructure constructed by the end-user.
-  \item Previously difficult optimizations can be syntactically detected and
-    applied before the runtime of the solver.
+\item The side-effectual statements are hidden from the user, recovering the
+  declarative nature of non-incremental \ac{sat} solving.
+\item Malformed programs built around the control flow operators become
+  syntactically impossible.
+\item The end-user's programmed solution is decoupled from the specific problem
+  set, increasing software reuse.
+\item The solver has enough syntactic information to produce results which
+  previously required extra infrastructure constructed by the end-user.
+\item Previously difficult optimizations can be syntactically detected and
+  applied before the runtime of the solver.
 \end{enumerate}
 
 
