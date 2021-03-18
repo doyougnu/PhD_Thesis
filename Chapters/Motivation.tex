@@ -88,11 +88,15 @@ benefits are numerous:
 
 \subsection{Contributions and Outline of the thesis}%
 \label{sec:prop-contr}
-The high-level goal of this thesis is to formalize and construct a variational
-satisfiability solver that understands and can solve \ac{sat} problems that
-contain \emph{variational values} in addition to boolean values. In pursuit of
-this goal, my thesis will make the following contributions, items which are
-complete at time of this writing are indicated with a \checkmark:
+The high-level goal of this thesis is to use variation theory to formalize and
+construct a variational satisfiability solver that understands and can solve
+\ac{sat} problems that contain \emph{variational values} in addition to boolean
+values. It is our desire that the work not only be of theoretical interest but
+of practical use. Thus, the thesis provides numerous examples of variational
+\ac{sat} and variational \ac{smt} problems to motivate and demonstrate the
+solver. In addition to providing an algorithm to generate a collapse sets of
+non-variational strings to a single variational string. The rest of this section
+outlines the thesis and expands on the contributions of each chapter:
 \begin{enumerate}
 \item\label{vpl-deliverable} \emph{Variational propositional logic}: \ac{sat}
   solvers input and operate on sentences in propositional
