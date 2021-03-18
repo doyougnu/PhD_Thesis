@@ -67,11 +67,11 @@ is therefore difficult to reuse.
 
 I argue that solving a set of related \ac{sat} problems \emph{is a variational
   programming problem} and that by directly addressing the problem's variational
-nature the incremental \ac{sat} interface can be improved. The essence of
-variational programming is a formal language called the \emph{choice calculus}.
-With the choice calculus, sets of problems in the \ac{sat} domain can be
-expressed syntactically as a single \emph{variational artifact}. The benefits
-are numerous:
+nature the incremental \ac{sat} interface and performance can be improved. The
+essence of variational programming is a formal language called the \emph{choice
+  calculus}. With the choice calculus, sets of problems in the \ac{sat} domain
+can be expressed syntactically as a single \emph{variational artifact}. The
+benefits are numerous:
 \begin{enumerate}
   \item The side-effectual control flow operations are hidden from the user,
     recovering the declarative nature of non-incremental \ac{sat} solving.
@@ -81,12 +81,14 @@ are numerous:
     set, increasing software reuse.
   \item The solver has enough syntactic information to produce results which
     previously required extra infrastructure constructed by the end-user.
+  \item Previously difficult optimizations can be syntactically detected and
+    applied before the runtime of the solver.
 \end{enumerate}
 
 
-\subsection{Proposed Contributions}%
+\subsection{Contributions and Outline of the thesis}%
 \label{sec:prop-contr}
-The high-level goal of my research is to formalize and construct a variational
+The high-level goal of this thesis is to formalize and construct a variational
 satisfiability solver that understands and can solve \ac{sat} problems that
 contain \emph{variational values} in addition to boolean values. In pursuit of
 this goal, my thesis will make the following contributions, items which are
