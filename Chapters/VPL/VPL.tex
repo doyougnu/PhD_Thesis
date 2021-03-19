@@ -1,14 +1,14 @@
-~\label{chapter:vlogic}
+~\label{chapter:vpl}
 
 In this section, we present the logic of variational satisfiability problems.
 %
 The logic is a conservative extension of classic two-valued logic (\pl{})
 with a \emph{choice} construct from the choice
 calculus~\cite{EW11tosem,Walk13thesis}, a formal language for describing
-variation. We call the new logic \vpl{}, short for variational propositional
-logic, and refer to \vpl{} expressions as \emph{variational formulas}.
+variation. We call the new logic \acs{vpl}, short for variational propositional
+logic, and refer to \ac{vpl} expressions as \emph{variational formulas}.
 %
-This section defines the syntax and semantics of \vpl{} and uses it to encode
+This section defines the syntax and semantics of \ac{vpl} and uses it to encode
 the example from \autoref{sec:bkgrnd}.
 
 
@@ -16,24 +16,24 @@ the example from \autoref{sec:bkgrnd}.
   \begin{subfigure}[t]{\linewidth}
     \centering
     \input{Figures/Vsat_Logic_syntax}
-    \caption{Syntax of \vpl{}.}%
+    \caption{Syntax of \ac{vpl}.}%
     \label{fig:cc:stx}
   \end{subfigure}
 %
   \begin{subfigure}[t]{\linewidth}
     \input{Figures/Vsat_Logic_semantics}
     \centering
-    \caption{Configuration semantics of \vpl{}.}%
+    \caption{Configuration semantics of \ac{vpl}.}%
     \label{fig:cc:cfg}
   \end{subfigure}
 %
   \begin{subfigure}[t]{\linewidth}
     \input{Figures/Vsat_Logic_laws}
     \centering
-    \caption{\vpl{} equivalence laws.}%
+    \caption{\ac{vpl} equivalence laws.}%
     \label{fig:cc:eqv}
   \end{subfigure}
-\caption{Formal definition of \vpl{}.}%
+\caption{Formal definition of \ac{vpl}.}%
 \label{fig:cc}
 \end{figure}
 %
@@ -53,7 +53,7 @@ from the set of variables from \pl{}, which may be referenced in the leaves of
 a formula. We use lowercase letters to range over variables and uppercase
 letters for dimensions.
 
-The syntax of \vpl{} does not include derived logical connectives, such as
+The syntax of \ac{vpl} does not include derived logical connectives, such as
 $\rightarrow$ and $\leftrightarrow$. However, such forms can be defined
   from other primitives and are assumed throughout the paper.
 
@@ -61,22 +61,22 @@ $\rightarrow$ and $\leftrightarrow$. However, such forms can be defined
 %
 Conceptually, a variational formula represents several propositional logic
 formulas at once, which can be obtained by resolving all of the choices. For
-software product-line researchers, it is useful to think of \vpl{} as analogous
+software product-line researchers, it is useful to think of \ac{vpl} as analogous
 to \cpp{ifdef}-annotated \pl{}, where choices correspond to a
-disciplined~\citep{LKA:AOSD11} application of \cpp{ifdef} annotations.
+disciplined~\cite{LKA:AOSD11} application of \cpp{ifdef} annotations.
 %
 From a logical perspective, following the many-valued logic of
-Kleene~\citep{kleene1968introduction,Rescher1969-RESML}, the intuition behind
-\vpl{} is that a choice is a placeholder for two equally possible alternatives
+Kleene~\cite{kleene1968introduction,Rescher1969-RESML}, the intuition behind
+\ac{vpl} is that a choice is a placeholder for two equally possible alternatives
 that is deterministically resolved by reference to an external environment.
 %
-In this sense, \vpl{} deviates from other many-valued logics, such as modal
-logic~\citep{sep-logic-modal}, because a choice \emph{waits} until there is
+In this sense, \ac{vpl} deviates from other many-valued logics, such as modal
+logic~\cite{sep-logic-modal}, because a choice \emph{waits} until there is
 enough information to choose an alternative (i.e., until the formula is
 \emph{configured}).
 
 
-The \emph{configuration semantics} of \vpl{} is given in
+The \emph{configuration semantics} of \ac{vpl} is given in
 \autoref{fig:cc:cfg} and describes how choices are eliminated from a
 formula. The semantics is parameterized by a \emph{configuration}\ $C$, which is
 a partial function from dimensions to Boolean values.
@@ -100,7 +100,7 @@ formulas that can be obtained from $f$ (by configuring it with every possible
 total configuration) the \emph{variants} of $f$.
 
 
-To illustrate the semantics of \vpl{}, consider the formula
+To illustrate the semantics of \ac{vpl}, consider the formula
 $p\wedge\chc[A]{q,r}$, which has two variants: $p\wedge q$ when $C(A)=\true$
 and $p\wedge r$ when $C(A)=\false$.
 %
@@ -116,12 +116,12 @@ outer choices in the same dimension. For example, $\chc[A]{p,\chc[A]{r,s}}$ is
 equivalent to $\chc[A]{p,s}$ since the alternative $r$ cannot be reached by any
 configuration.
 %
-As the previous example illustrates, the representation of a \vpl{} formula is
+As the previous example illustrates, the representation of a \ac{vpl} formula is
 not unique; that is, the same set of variants may be encoded by different
 formulas. \autoref{fig:cc:eqv} defines a set of equivalence laws for
-\vpl{} formulas. These laws follow directly from the configuration semantics in
+\ac{vpl} formulas. These laws follow directly from the configuration semantics in
 \autoref{fig:cc:cfg} and can be used to derive semantics-preserving
-transformations of \vpl{} formulas.
+transformations of \ac{vpl} formulas.
 %
 For example, we can simplify the formula $\chc[A]{p\vee q, p\vee r}$ by first
 applying the \rn{Or} law to obtain $\chc[A]{p,p}\vee\chc[A]{q,r}$, then applying
@@ -129,7 +129,7 @@ the \rn{Idemp} law to the first argument to obtain $p\vee\chc[A]{q,r}$ in which
 the redundant $p$ has been factored out of the choice.
 %
 \paragraph{Running example}
-To demonstrate the application of \vpl{}, we encode the evolving Linux kernel
+To demonstrate the application of \ac{vpl}, we encode the evolving Linux kernel
 feature model from the background as a variational formula. Recall that
 variation in this domain arises from changes in the logical structure of the
 feature model between kernel versions. Our goal is to construct a single
@@ -203,5 +203,5 @@ of variational models in \autoref{sec:impl}.
 
 %%% Local Variables:
 %%% mode: latex
-%%% TeX-master: "../thesis"
+%%% TeX-master: "../../thesis"
 %%% End:
