@@ -24,21 +24,31 @@ contributions of each chapter:
 
   \item \autoref{chapter:vpl} (\emph{Variational Propositional Logic})
     introduces a variational logic that a variational \ac{sat} solver operates
-    upon. This section makes several important contributions:
+    upon. This section introduces the essential aspects of variation using
+    propositional logic and in the process presents the first instance of a
+    recipe to construct a \emph{variation-aware} a system using the
+    non-variational version of that system. Several variational concepts are
+    defined and formalized which are used throughout the thesis, such as
+    \emph{variant}, \emph{configuration} and \emph{variational artifact}.
+    Lastly, the section proves theorems that are central to proof of the
+    soundness of variational satisfiability solving.
+
+  \item \autoref{chapter:vsat} (\emph{Variational Satisfiability Solving}) makes
+    the central contribution of the thesis. In this chapter we define the
+    general approach and architecture of a variational \acl{sat} as a system
+    which uses a non-variational solver as a backend engine. This section
+    provides a rationale for this design. Furthermore the section makes several
+    important contributions:
     \begin{enumerate}
-    \item Introduces the essential aspects of variation using propositional
-      logic and in the process presents the first instance of a recipe to
-      construct a \emph{variation-aware} version of a system using the
-      non-variational version.
-    \item Defines and formalizes variational concepts that are used throughout
-      the thesis, such as \emph{variant}, \emph{configuration} and
-      \emph{variational artifact}.
-    \item Proves theorems that are central to the soundness of variational
-      \acl{sat}, such as the property of \emph{variation-preservation}
+    \item A denotational semantics of variational satisfiability solving. A
+      denotation of a variational \ac{sat} problem is a mapping from variational
+      propositional logic to a program in the incremental \ac{sat} domain.
+    \item A formal definition of concepts such as a \emph{variational core}
+      which are transferable to domains other than \ac{sat}.
+    \item A definition of the \emph{variational transpiler}  which may be used
+      to create other variation-aware systems. The transpiler is defined in
+      three phases that are ...
     \end{enumerate}
-
-
-  \item  \autoref{chapter:vsat} (\emph{Variational Satisfiability Solving})
   \end{enumerate}
 
 % \begin{enumerate}

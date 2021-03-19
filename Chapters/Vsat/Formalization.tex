@@ -1,0 +1,539 @@
+~\label{sec:formalization}
+
+
+In this subsection we formalize variational SAT solving by specifying the
+semantics of the \emph{accumulation} and \emph{evaluation} phases of the
+variational solver, as well as the semantics of processing the variational
+core, which we call \emph{choice removal}.
+%
+Variational SAT solving assumes the existence of an underlying incremental SAT
+solver, which we refer to as the \emph{base solver}.
+
+
+The variational solver interacts with the base solver via several primitive
+operations. In our semantics, we simulate the effects of these primitive
+operations by tracking their effects on two stores.
+%
+The \emph{accumulation store} \aStore{} tracks values cached during
+accumulation by mapping IL terms to symbolic references. The \emph{evaluation
+store} \eStore{} tracks the symbolic references that have been sent to the base
+solver during evaluation.
+
+
+% We generalize variational models to handle any type of value and discuss
+% further extensions to other background theories, such as an array theory, in
+% \autoref{sec:future-work}.
+
+
+\paragraph{Primitives}
+%
+\autoref{fig:vsmt:inf:prim} lists a minimal set of primitive operations that
+the base solver is assumed to support. These primitive operations define the
+interface between the base solver and the variational solver.
+
+
+\begin{figure}
+  \input{Figures/Vsat_Rules_PrimOps}
+  \caption{Assumed base solver primitive operations.}%
+  \label{fig:vsmt:inf:prim}
+\end{figure}
+
+
+The primitive operations can be roughly grouped into two categories:
+%
+The first four operations, consisting of the logical operations \pnot, \pand,
+and \por, plus the \pspawn\ operation, are used in the accumulation phase and
+are concerned with creating and maintaining symbolic references that may stand
+for arbitrarily complex subtrees of the original formula. These operations
+simulate caching information in the base solver.
+%
+The final two operations, \passert\ and \pmodel, are used in the evaluation
+phase and simulate pushing new assertions to the base solver and obtaining a
+satisfiability model based on the current solver state, respectively.
+
+
+It's important to note that our primitive operations are pure functions and do
+not simulate interacting with the base solver via side effects. The effect of a
+primitive operation can be determined by observing its type. For example, the
+\passert\ operation pushes new assertions to the base solver. This is reflected
+in its type, which includes an evaluation store as input and produces a new
+evaluation store (with the assertion included) as output.
+%
+Since evaluation stores are immutable, we do not need a primitive operation to
+simulate popping assertions from the base solver. Instead, we simulate this by
+directly reusing old evaluation stores.
+
+
+Many of the primitive operations operate on references to symbolic values. Such
+symbolic references may stand for arbitrarily complex subtrees of the original
+formula, built up through successive calls to the corresponding primitive
+operations.
+%
+For example, recall the example formula $p\wedge\neg q$ from
+\autoref{sec:approach}, which was replaced by the symbolic value $s_{pq}$ after
+the following sequence of \acs{smtlib} declarations.
+%
+\begin{lstlisting}[columns=flexible,keepspaces=true]
+(declare-const p Bool)
+(declare-const q Bool)
+(declare-fun $s_{pq}$ () Bool (and p (not q)))
+\end{lstlisting}
+%
+In our formalization, we would represent this same transformation of the
+formula $p\wedge\neg q$ into a symbolic reference $s_{pq}$ using the
+following sequence of primitive operations:
+
+\vspace{-2ex}
+{\footnotesize
+\begin{align*}
+\pspawn(\aStore{0}, p)       &= (\aStore{1}, s_p) \\
+\pspawn(\aStore{1}, q)       &= (\aStore{2}, s_q) \\
+\pnot(\aStore{2}, s_q)       &= (\aStore{3}, s_q') \\
+\pand(\aStore{3}, s_p, s_q') &= (\aStore{4}, s_{pq})
+\end{align*}}%
+
+\noindent
+%
+The accumulation store tracks what information is associated with each symbolic
+reference. The store must therefore be threaded through the calls to each
+primitive operation so that subsequent operations have access to existing
+definitions and can produce a new, updated store.
+%
+For example, the final store produced by the above example contains the
+following mappings from IL terms to symbolic references,
+$\aStore{4}=\set{(p,s_p),(q,s_q),(\neg s_q,s_q'),(s_p\wedge s_q',s_{pq})}$.
+
+
+When comparing the \acs{smtlib} notation to our formalization, observe that
+each use of \lstinline{declare-const} corresponds to a use of the \pspawn{}
+primitive, while the \lstinline{declare-fun} line in \acs{smtlib} may
+potentially expand into several primitive operations in our formalization.
+%
+For the evaluation primitives, the \passert{} operation corresponds to an
+\acs{smtlib} \lstinline{assert} call, while the \pmodel{} operation corresponds
+roughly to an \acs{smtlib} \lstinline{check-sat} call, which retrieves a model
+for the current set of assertions on the stack.
+%
+However, the exact semantics of \lstinline{check-sat} depends on the base
+solver in use. For example, given the plain formula $p = a \vee b \vee c$, z3
+returns only a minimal satisifiable model, such as $\{b = \tru{}\}$, providing
+no values for the other variables in the formula.
+%
+To normalize this behavior across solvers, we instead consider \pmodel{}
+equivalent to \lstinline{check-sat} followed by a \lstinline{get-value} call
+call for every variable in the query formula, yielding a complete model. For
+example, a complete model for $p$ would be $\set{a=\fls{}, b=\tru{},
+c=\fls{}}$.
+
+
+\begin{figure}
+  \input{Figures/Vsat_Rules_PrimOpsWrapped}
+  \caption{Wrapped accumulation primitive operations.}
+  \label{fig:vsmt:inf:primwrapped}
+\end{figure}
+
+
+Finally, in \autoref{fig:vsmt:inf:primwrapped} we define wrapped versions of the
+primitive operations used in accumulation. These wrapper functions first check
+to see whether a symbolic reference for the given IL term exists already in the
+accumulation store, and if so, returns it without changing the store.
+Otherwise, it invokes the corresponding primitive operation to generate and
+return the new symbolic reference and updated store.
+
+
+\paragraph{Accumulation}
+%
+The accumulation phase is formally specified in \autoref{fig:vsmt:inf:acc} as a
+relation of the form $(\aStore{},v)\accumulation(\aStore{}',v')$.
+%
+Accumulation replaces plain subterms of the formula with references to symbolic
+values, wherever possible. The replacement of subterms by symbolic references
+is achieved by the first four rules in the figure. In the \acRef\ rule, a
+variable reference is replaced by a symbolic reference by invoking the wrapped
+version of the \pspawn\ primitive, which returns the corresponding symbolic
+reference or generates a new one, if needed.
+%
+The \acNotS, \acAndS, and \acOrS\ rules all similarly replace an IL term by a
+symbolic reference by invoking the corresponding wrapped primitive operation.
+These rules all require that their subterms completely reduce to symbolic
+references, as illustrated by the premise
+$(\aStore{},v)\accumulation(\aStore{}',s)$ in the \acNotS\ rule, otherwise the
+primitive operation cannot be invoked.
+
+
+\begin{figure}
+  \input{Figures/Vsat_Rules_Accumulation}
+  \caption{Accumulation inference rules.}
+  \label{fig:vsmt:inf:acc}
+\end{figure}
+
+
+However, not all subterms can be completely reduced to symbolic references. In
+particular, variational subterms---subterms that contain one or more choices
+within them---cannot be accumulated to a symbolic reference.
+%
+The \acChc\ rule prevents accumulation under a choice.
+%
+The \acNotV, \acAndV, and \acOrV\ rules are congruence rules that recursively
+apply accumulation to subterms. Although not explicitly stated in the premises,
+it is assumed that these \rn{A-*-V} rules apply only if the corresponding
+\rn{A-*-S} rule does not apply, that is, when at least one of the subterms does
+not reduce completely to a symbolic reference.
+
+
+We have omitted rules for processing the constant values \tru\ and \fls. These
+rules correspond closely to the \acRef\ rule, but use a predefined variable
+reference for the true and false constants.
+
+
+To illustrate the semantics of accumulation, consider the plain formula
+%
+$g = a \vee (a \wedge b)$ with an initial accumulation store
+$\aStore{}=\varnothing$. The \acOrS\ rule matches the root $\vee$ connective
+with $v_1=a$ and $v_2 = a \wedge b$.
+%
+Since $v_1$ is a reference, the \acRef\ rule applies, generating a new symbolic
+reference $s_a$ and returning the store $\aStore{1}=\set{(a,s_a)}$.
+% relating the variable reference $a$ to the symbolic reference $s_a$.
+%
+Processing $v_2$ requires an application of the \acAndS\ rule with $v_1'=a$ and
+$v_2'=b$, both of which require another application of the \acRef\ rule. For
+$v_1'$, the variable $a$ is found in the store returning $s_a$, while for
+$v_2'$, a new symbolic reference $s_b$ is generated and added to the resulting
+store $\aStore{2}=\set{(a,s_a),(b,s_b)}$.
+%
+Since both the left and right sides of $v_2$ reduce to a symbolic reference,
+the \pand\ primitive is invoked, yielding a new symbolic reference $s_{ab}$ and
+the store $\aStore{3}=\set{(a,s_a),(b,s_b),(a \wedge b, s_{ab})}$.
+%
+Finally, since both the left and right sides of the original formula $g$ reduce
+to symbolic references, the \por\ primitive is invoked yielding the final
+symbolic reference $s_g$ and the final accumulation store
+\( \aStore{4} =
+  \set{
+    (a,s_a), (b,s_b),
+    (s_a \wedge s_b, s_{ab})
+    (s_a \vee s_{ab}, s_g) }
+\).
+
+
+When a formula contains choices, all of the plain subterms surrounding the
+choices are accumulated to symbolic references, but choices remain in place
+and their alternatives are not accumulated. For example, consider the
+variational formula
+%
+\( g' =
+  (a \vee (a \wedge b)) \vee
+  \chc[D]{a, a \wedge b} \wedge
+  (a \vee (a \wedge b))
+\)
+%
+which contains two instances of $g$ as subterms. The formula $g'$ accumulates
+to the variational core
+%
+\( s_g \vee \chc[D]{a, a \wedge b} \wedge s_g \) with the same final store
+$\aStore{4}$ produced when accumulating $g$ alone.
+%
+Note that the each instance of $g$ in $g'$ was reduced to the same symbolic
+reference $s_g$ and the alternatives of the choice were not reduced.
+
+
+\begin{figure}
+  \input{Figures/Vsat_Rules_Evaluation}
+  \caption{Evaluation inference rules.}
+  \label{fig:vsmt:inf:eval}
+\end{figure}
+
+
+\paragraph{Evaluation}
+%
+The evaluation phase is formally specified in \autoref{fig:vsmt:inf:eval} as a
+relation of the form
+$(\eStore{},\aStore{},v)\evaluation(\eStore{}',\aStore{}',v')$, where an
+evaluation store \eStore{} represents the base solver's state.
+%
+The \evAcc\ and \evSym\ rules are the heart of evaluation: the \evAcc\ rule
+enables accumulating subterms during evaluation, while the \evSym\ rule sends a
+fully accumulated subterm to the base solver. Evaluation cannot occur under
+choices or un-accumulated disjunctions (i.e.\ disjunctions that contain
+choices), as seen in the \evChc\ and \evOr\ rules, but can occur under
+un-accumulated conjunctions, as reflected by the three \rn{E-And*} rules. This
+will be explained in more detail below.
+
+
+When a subterm is sent to the base solver by \evSym, it is replaced by the unit
+value \unit\ and the evaluation store \eStore{} is updated accordingly.
+%
+Conceptually, the evaluation store represents the internal state of the
+underlying solver (e.g.\ z3's internal state), but we model it formally as the
+set of assertions that have been sent to the solver. For example, given the
+accumulation store $\aStore{}=\set{(a,s_a),(b,s_b),(s_a \wedge s_b, s_{ab})}$,
+the assertion $\passert(\set{},\aStore{},s_{a})$ yields $\set{s_a}$ and
+subsequent assertions add more elements to this set, for example,
+$\passert(\set{s_a},\aStore{},s_{ab})=\set{s_a,s_{ab}}$.
+%
+The assertions sent to a SAT solver are implicitly conjuncted together, which
+is why partially accumulated conjunctions may still be evaluated, but partially
+accumulated disjunctions may not. Such disjunctions are instead handled during
+choice removal using back-tracking.
+
+
+The three \rn{E-And*} rules propagate accumulation over conjunctions. In all
+three rules, the subterms are evaluated left-to-right, propagating the
+resulting stores accordingly.
+%
+The \evAndL\ rule states that if the left side of a conjunction can be fully
+evaluated to \unit, then the expression can be evaluated to the result of the
+right side; likewise, \evAndR\ states that if the right side fully evaluates,
+the result of evaluating the expression is the result of the left side. If
+neither side fully evaluates to \unit\ (i.e.\ because both contain choices or
+disjunctions), then \evAnd\ applies, which leaves the conjunction in place
+(with evaluated subterms) to be handled during choice removal.
+
+
+Consider evaluating the formula $g=(a\vee b)\wedge\chc[D]{a,c}$ with initially
+empty stores. We start by applying accumulation using the \evAcc\ rule,
+yielding the intermediate term $g'=s_{ab}\wedge\chc[D]{a,c}$ with the
+accumulation store $\aStore{}=\set{(a,s_a),(b,s_b),(s_a \vee s_b,s_{ab})}$. We
+then apply \evAndL\ to $g'$, which sends the left subterm $s_{ab}$ to the base
+solver via the \evSym\ rule, and the right side will be unevaluated via the
+\evChc\ rule.
+%
+Ultimately, evaluation yields the expression $\chc[D]{a,c}$ with accumulation
+store \aStore{} and evaluation store $\set{s_{ab}}$.
+
+
+\paragraph{Choice removal}
+%
+The main driver of variational solving is the choice removal phase, which is
+formally specificed in \autoref{fig:vsmt:inf:chc} as a relation of the form
+$(\crCtx,z,v)\choiceRemoval\vmodel{}'$.
+%
+The main role of choice removal is to relate an IL term $v$ to a variational
+model $\vmodel{}'$. However, to do this requires several pieces of context
+including a configuration $C$, an evaluation store \eStore{}, an accumulation
+store \aStore{}, an initial variational model \vmodel{}, and an evaluation
+context $z$. The two stores have been explained earlier in this subsection, and
+variational models are explained at the end of \autoref{sec:approach}. We
+explain configurations and evaluation contexts in the context of the relevant
+rules below.
+
+
+\begin{figure}
+  \input{Figures/Vsat_Rules_Choice_Removal}
+  \caption{Choice removal inference rules}%
+  \label{fig:vsmt:inf:chc}
+\end{figure}
+
+
+The \crEval\ rule states that $v$ fully evaluates to \unit, then we can get the
+current model from the base solver using the \pmodel\ primitive and update our
+variational model. We use the operation \texttt{Combine} to perform the
+variational model update operation described in \autoref{sec:approach}.
+%
+The rest of the choice removal rules are structured so that \crEval\ will be
+invoked once for every variant of the variational core so that the final output
+will be a variational model that encodes the solutions to every variant of the
+original formula.
+
+
+The next three rules concern choices and are the heart of choice removal.
+%
+These rules make use of a \emph{configuration} $C$, which maps dimensions to
+Boolean values (encoded as a set of pairs). The configuration tracks which
+dimensions have been selected and how to ensure that all choices in the same
+dimension are synchronized.
+%
+Whenever a choice \chc[D]{e_1,e_2} is encountered during choice removal, we
+check $C$ to determine what to do.
+%
+In \crChcT, if $(D,\true)\in C$, then the first alternative of the dimension
+has already been selected, so choice removal proceeds on $e_1$. Similarly, in
+\crChcF, if $(D,\false)\in C$, the right alternative has been selected, so
+choice removal proceeds on $e_2$.
+%
+In \crChc, if $D\notin\dom{C}$, then the dimension has not yet been selected,
+so we recursively apply choice removal to both $e_1$ and $e_2$, updating $C$
+accordingly in each case. Observe that we use the same accumulation store,
+evaluation store, and evaluation context for each alternative. This simulates a
+backtracking point in the solver, where we first solve $e_1$, then reset the
+state of the solver to the point where we encountered the choice and solve
+$e_2$. Only the variational model, which is threaded through the solution of
+both $e_1$ and $e_2$, is maintained to accumulate the results of solving each
+alternative.
+
+
+The final eight rules apply choice removal to the logical operations.
+%
+These rules make heavy use of an \emph{evaluation context} $z$ that keeps track
+of where we are in a partially evaluated IL term during choice removal.
+Evaluation contexts are defined as a zipper data structure~\citep{huet_1997}
+over IL terms, given by the following grammar.
+%
+\[
+  z \hquad\Coloneqq\hquad \inRoot
+  \hquad|\hquad \inNot{z}
+  \hquad|\hquad \inAndL{z}{\,v}
+  \hquad|\hquad \inAndR{s}{z}
+  \hquad|\hquad \inOrL{z}{\,v}
+  \hquad|\hquad \inOrR{s}{z}
+\]
+%
+An evaluation context $z$ is like a breadcrumb trail that enables focusing on a
+subterm within a partially evaluated IL term while also keeping track of work
+left to do.
+%
+The empty context \inRoot\ indicates the root of the term. The other cases in
+the grammar prepend a ``crumb'' to the trail. The crumb $\cdot\,\neg$ focuses
+on the subterm within a negation, $\cdot\wedge v$ focuses on the left subterm
+within a conjunction whose right subterm is $v$, and $v\wedge\cdot$ focuses on
+the right subterm of a conjunction whose left subterm has already been reduced
+to $s$. The cases for disjunction are similar to conjunction.
+
+
+As an example, consider the IL term $\neg(a\vee b) \wedge c$.
+%
+When evaluation is focused on $a$, the evaluation context will be
+$\inOrL{\inNot{\inAndL{\inRoot}{c}}}{b}$, which states that $a$ exists as the
+left child of a disjunction whose right child is $b$, which is inside a
+negation, which is the left child of a conjunction whose right child is $c$.
+The $b$ and $c$ terms captured in the context are subterms of the original term
+that must still be evaluated.
+%
+During choice removal, IL terms are evaluated according to a left-to-right,
+post-order traversal; as IL subterms are evaluated they are replaced by
+symbolic references via accumulation.
+%
+When evaluation is focused on $b$, the context will be
+$\inOrR{s_a}{\inNot{\inAndL{\inRoot}{c}}}$, where $s_a$ is the symbolic
+reference produced by accumulating the variable $a$.
+%
+When evaluation is eventually focused on $c$, the evaluation context will be
+simply $\inAndR{s_{ab}}{\inRoot}$ since the entire subtree $\neg (a \vee b)$ on
+the left side of the conjunction will have been accumulated to the symbolic
+reference $s_{ab}$.
+
+
+The \crNot, \crAnd, and \crOr\ rules define what to do when encountering a
+logical operation for the first time. In \crNot, we focus on the subterm of the
+negation, while in \crAnd\ and \crOr, we focus on the left child while saving
+the right child in the context.
+%
+The \crAndL\ and \crOrL\ rules define what to do when \emph{finished}
+processing the left child of the corresponding operation. A fully processed
+child have been accumulated to a symbolic reference $s$. At this point, we move
+the $s$ into the evaluation context and shift focus to the previously saved
+right child of the logical operation.
+%
+Finally, the \crNotIn, \crAndR, and \crOrR\ rules define what to do when
+finished processing all children of a logical operation. At this point, all
+children will have been reduced to symbolic references so we can accumulate the
+entire subterm and apply choice removal to the result. For example, in \crAndR,
+we have just finished processing the right child to $s_2$ and we previously
+reduced the left child to $s_1$, so we now accumulate $s_1\vee s_2$ to $s_3$
+and proceed from there.
+
+
+Evaluation contexts support a simple recursive approach to solving variational
+formulas by adding to the context as we move down the term and removing from
+the context as we move back up.
+%
+The extra effort over a more direct recursive strategy is necessary to support
+the backtracking pattern implemented by the \crChc\ rule. Whenever we encounter
+a choice in a new dimension, we can simply split the state of the solver to
+explore each alternative. Without evaluation contexts, this would be extremely
+difficult since choices may be deeply nested within a variational formula. We
+would have to somehow remember all of the locations in the term that we must
+backtrack to later and the state of the solver at each of those locations.
+
+
+
+% \paragraph{Example: Derivation of a Variational Core}
+% Consider the query formula \newline{}$\kf{h = (\chc[A]{k,l} \wedge a) \wedge
+%   (b \vee \chc[A]{c,\neg b})}$; derivation of the variational core $\kf{h}$
+% begins with evaluation and all stores \aStore{}, \eStore{} initialized to empty.
+% When a user inputs a \vc{} the configuration, C, is initialized
+% to it, otherwise C is initialized to empty.
+% %
+% \evAnd{} is the only applicable rule, with $\wedge$ at the root of $\kf{h}$.
+% Thus, \newline{}$v_{1} = \kf{(\chc[A]{k,l} \wedge a)}$, and $v_{2} =
+% (b \vee \chc[A]{c,\neg b})$.
+%
+% We traverse $v_{1}$ first, leading to a recursive application of \texttt{Ev-And}.
+% We denote the recursive levels with a tick mark $'$, thus $\kf{v_{1}' =
+%   \chc[A]{k,l}}$ is the recursive left child and the right child is $\kf{v_{2}'
+%   = a}$.
+% %
+% \evChc{} matches $v_{1}'$ preventing further evaluation. \TODO{evRef} applies to
+% $v_{2}'$ producing a symbolic, $s_{a}$ for $a$, which can immediately be sent to
+% the base solver with \evSym{}. Thus the result of the recursive call on $v_{1}$
+% is $\kf{\chc[A]{k,l}}$ with stores \aStore{1} = \set{(a,s_{a})}, \eStore{1}
+% = \set{s_{a}}.
+%
+% Accumulation is required to evaluate $v_{2}$. \evOr{} performs the phase change
+% by matching on the root $\vee{}$. \evOr{} produces two calls to accumulation
+% with $v_{1}' = \chc[A]{c,\neg b}$, $v_{2}' = b$ and \aStore{1}. $v_{1}'$ is a
+% choice and thus only \acChc{} applies. \acRef{} will match on $v_{2}'$ and will
+% produce $s_{b}$ with store \aStore{2} = \set{(a,s_{a}), (b,s_{b})}. Thus
+% accumulation yields $\chc[A]{c,\neg b} \vee{} s_{b}$ with \aStore{2} as the
+% result of $v_{2}$. With results for both $v_{1}$ and $v_{2}$ we have derived the
+% variational core of $\kf{h}$ as $\chc[A]{k,l} \wedge{} (s_{b} \vee{}
+% \chc[A]{c,\neg{} b})$ with stores \aStore{2} and \eStore{1}.
+%
+% \paragraph{Example: Solving the variational core}
+% Solving the variational core begins with choice removal and proceeds with
+% recursive calls to accumulation and consequently evaluation. We assume an empty
+% configuration for the remainder of the example as C = $\varnothing{}$
+% is the most general case.
+%
+% $\kf{\chc[A]{k,l}}$ is the immediate left child of the root $\wedge{}$, thus the
+% left version of \evAnd{} applies. Clearly $D \notin C$, so a
+% recursive case for each alternative, beginning with the left alternative $e_{1}$
+% is performed. Several changes occur: the assertion stack is incremented,
+% indicating future processing occurs in a \primOp{push} context; the
+% configuration mutates to account for the selection; $e_{1}$ is translated into
+% IL and replaces the choice, thereby introducing a \textit{new} plain term:
+% $k$. Thus, the recursive call for the left alternative is $k \wedge
+% (s_{b} \vee \chc[A]{c,\neg b})$ where $C_L = \{(A,
+% \true{})\}$. Similarly the right alternative is $l \wedge
+% (s_{b} \vee \chc[A]{c,\neg b})$ with $C_R = \{(A,
+% \false{})\}$.
+%
+% We walk through the processing of the left alternative in detail, the right
+% alternative follows the same procedure. Following \crAnd{} we begin accumulating
+% the left alternative with stores \aStore{} = \set{(a,s_{a}), (b,s_{b})}.
+% The only applicable rule is \TODO{acAnd} producing two recursive calls where $v_{1}
+% = k$ and $v_{2} = s_{b} \vee \chc[A]{c,\neg b}$. $v_{1}$ will yield $s_{k}$ and
+% $v_{2}$ cannot be accumulated further. Thus we'll have $s_{k} \wedge{} (s_{b}
+% \vee{} \chc[A]{c,\neg b})$ as the result of \crAnd{} after returning from an
+% accumulation phase.
+% %
+% This result is stuck as each choice removal rule only removes a choice if it is
+% the immediate child of the root node. To become unstuck we utilize the
+% aforementioned zipper to suspend the \acs{ast} and place the choice in focus,
+% other implementations may opt for different strategies, such as distributing the
+% $\vee{}$ over $\wedge{}$. In either case we assume the choice is able to be
+% operated upon.
+%
+% To finish processing the variant, the only applicable rule will be the $\vee{}$
+% version of \crAndL{}. $D \in C$ thus $\chc[A]{c,\neg{} b}$ will
+% be reified to just $\kf{c}$ yielding a recursive call to choice removal with
+% $s_{k} \wedge (s_{b} \vee{} c)$, \aStore{} =\set{(a,s_{a}), (b,s_{b}),
+%   (k,s_{k})}, \eStore{} = \set{s_{a}}, and C =
+% \set{(\kf{A}, \true{})}. \crAnd{} applies, yielding to another accumulation
+% phase. Since there are no longer any choices, the formula is plain and will be
+% accumulated to a single symbolic $s_{L}$ where \newline{}\aStore{L} =
+% \set{(a,s_{a},), (b,s_{b}), (k,s_{k}), (c,s_{c}), (s_{b} \vee{} s_{c},
+%   s_{bc}), (s_{k} \wedge{} s_{ab}, s_{L})}, \eStore{L} = \set{s_{a}}, and
+% $C = C_L$. Finally $s_{L}$ can be evaluated with
+% \crSym{} reducing the left variant to \unit{} and returning a model. With the
+% model for the \true{} variant of $\kf{A}$ the process backtracks to compute the
+% false variant eventually combining the two resulting models as the final result.
+
+
+% \color{\pubcolor}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../emse"
+%%% End:
