@@ -1,0 +1,38 @@
+\begin{mathpar}
+\inferrule*[right=\evAcc]
+  { (\aStore{},v) \accumulation (\aStore{}',v') \\
+    (\eStore{},\aStore{}',v') \evaluation (\eStore{}',\aStore{}'',v'') }
+  { (\eStore{},\aStore{},v) \evaluation (\eStore{}',\aStore{}'',v'') }
+\qquad
+\inferrule*[right=\evSym]
+  { \passert(\eStore{},\aStore{},s) = \eStore{}' }
+  { (\eStore{},\aStore{},s) \evaluation (\eStore{}',\aStore{},\unit) }
+
+\inferrule*[right=\evChc]
+  { }
+  { (\eStore{},\aStore{},\chc[D]{e_1,e_2}) \evaluation
+    (\eStore{},\aStore{},\chc[D]{e_1,e_2}) }
+\quad
+\inferrule*[right=\evOr]
+  { }
+  { (\eStore{},\aStore{}, v_1 \vee v_2) \evaluation
+    (\eStore{},\aStore{}, v_1 \vee v_2) }
+
+\inferrule*[right=\evAndL]
+  { (\eStore{},\aStore{},v_1) \evaluation (\eStore{1},\aStore{1},\unit) \\
+    (\eStore{1},\aStore{1},v_2) \evaluation (\eStore{2},\aStore{2},v_2') }
+  { (\eStore{},\aStore{}, v_1 \wedge v_2) \evaluation
+    (\eStore{2},\aStore{2},v_2') }
+
+\inferrule*[right=\evAndR]
+  { (\eStore{},\aStore{},v_1) \evaluation (\eStore{1},\aStore{1},v_1') \\
+    (\eStore{1},\aStore{1},v_2) \evaluation (\eStore{2},\aStore{2},\unit) }
+  { (\eStore{},\aStore{}, v_1 \wedge v_2) \evaluation
+    (\eStore{2},\aStore{2},v_1') }
+
+\inferrule*[right=\evAnd]
+  { (\eStore{},\aStore{},v_1) \evaluation (\eStore{1},\aStore{1},v_1') \\
+    (\eStore{1},\aStore{1},v_2) \evaluation (\eStore{2},\aStore{2},v_2') }
+  { (\eStore{},\aStore{}, v_1 \wedge v_2) \evaluation
+    (\eStore{2},\aStore{2}, v_1' \wedge v_2') }
+\end{mathpar}%

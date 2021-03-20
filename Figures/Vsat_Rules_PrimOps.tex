@@ -1,0 +1,27 @@
+\centering
+\begin{tabular}{r@{~~:~~}l@{~~\OB{\to}~~}ll}
+\pnot
+  & $(\aStore{},s)$
+  & $(\aStore{},s)$
+  & \emph{Negate a symbolic value} \\
+\pand
+  & $(\aStore{},s,s)$
+  & $(\aStore{},s)$
+  & \emph{Conjunction of symbolic values} \\
+\por
+  & $(\aStore{},s,s)$
+  & $(\aStore{},s)$
+  & \emph{Disjunction of symbolic values} \\
+\pspawn
+  & $(\aStore{},r)$
+  & $(\aStore{},s)$
+  & \emph{Create symbolic value based on a variable} \\
+\passert
+  & $(\eStore{},\aStore{},s)$
+  & $\eStore{}$
+  & \emph{Assert a symbolic value to the solver} \\
+\pmodel
+  & $(\eStore{},\aStore{})$
+  & $m$
+  & \emph{Get a model for the current solver state}
+\end{tabular}

@@ -1,0 +1,28 @@
+\newcommand{\wrappedprimspacer}{\mbox{\hspace{1.8cm}} & \\[-3ex]}
+\centering
+\begin{align*}
+\pwrap{\pspawn}(\aStore{},r) &=
+  \begin{cases}
+    \wrappedprimspacer
+    (\aStore{},s) & (r,s) \in \aStore{} \\
+    \pspawn(\aStore{},r) & \mathit{otherwise}
+  \end{cases} \\
+\pwrap{\pnot}(\aStore{},s) &=
+  \begin{cases}
+    \wrappedprimspacer
+    (\aStore{},s') & (\neg s, s') \in \aStore{} \\
+    \pnot(\aStore{},s) & \mathit{otherwise}
+  \end{cases} \\
+\pwrap{\pand}(\aStore{},s_1,s_2) &=
+  \begin{cases}
+    \wrappedprimspacer
+    (\aStore{},s_3) & (s_1 \wedge s_2, s_3) \in \aStore{} \\
+    \pand(\aStore{},s_1,s_2) & \mathit{otherwise}
+  \end{cases} \\
+\pwrap{\por}(\aStore{},s_1,s_2) &=
+  \begin{cases}
+    \wrappedprimspacer
+    (\aStore{},s_3) & (s_1 \vee s_2, s_3) \in \aStore{} \\
+    \por(\aStore{},s_1,s_2) & \mathit{otherwise}
+  \end{cases}
+\end{align*}

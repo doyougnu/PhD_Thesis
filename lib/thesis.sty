@@ -1,0 +1,234 @@
+\NeedsTeXFormat{LaTeX2e}
+
+%
+% Macros defined just for this paper
+%
+\ProvidesPackage{lib/thesis}
+
+%%%%%% Convenient commands for the paper
+\newcommand{\kf}[1]{\mathit{#1}}              %% fix kerning
+
+% inline TODOs
+\newcommand{\itodo}[1]{\{{\color{red} #1}\}}
+
+% macros for the major characters
+\newcommand{\vsat}{VSAT}
+\newcommand{\hquad}{\hspace{0.5em}}
+\newcommand{\ifdf}{\texttt{\#ifdef}}
+\newcommand{\pl}{{C\textsubscript{2}}}  %% propositional logic
+\newcommand{\recipe}{\text{variational system}}
+
+%% bool values for propositions
+\newcommand{\fls}{\texttt{F}}
+\newcommand{\tru}{\texttt{T}}
+
+%% Convenient name macros
+\newcommand{\christian}{Kästner \etal}
+\newcommand{\nieke}{{Nieke \etal}}
+\newcommand{\tc}{TypeChef}
+\newcommand{\bsybx}{BusyBox}
+\newcommand{\linux}{Linux}
+\newcommand{\auto}{\textit{auto}}
+\newcommand{\fin}{\textit{fin}}
+
+%%% Research questions to be answered
+\newcommand{\resQ}[1]{\textbf{RQ#1}}
+
+%%% CUSTOM COMMANDS
+\newcommand{\paul}[1]{\todo[color=yellow]{Paul: #1}}
+\newcommand{\eric}[1]{\todo[color=pink]{#1 -E}}
+
+\providecommand{\eg}[0]{e.g\xperiod}
+\providecommand{\ie}[0]{i.e\xperiod}
+\providecommand{\etal}[0]{et~al\xperiod}
+\providecommand{\cf}[0]{cf\xperiod}
+\providecommand{\aka}[0]{aka\xperiod}
+\providecommand{\ia}[0]{i.a\xperiod}
+\providecommand{\wrt}[0]{w.r.t\xperiod}
+
+\renewcommand*{\figureautorefname}{Fig.}
+\renewcommand*{\equationautorefname}{Eq.}
+\ifcsname sectionautorefname\endcsname
+\renewcommand*{\sectionautorefname}{Sec.}
+\fi
+\ifcsname subsectionautorefname\endcsname
+\renewcommand*{\subsectionautorefname}{Sec.}
+\fi
+\ifcsname subsubsectionautorefname\endcsname
+\renewcommand*{\subsubsectionautorefname}{Sec.}
+\fi
+\newcommand{\lstnumberautorefname}{Line}
+
+%%%%%%%%%%%%%%%%%%%% background example helpers
+\newcommand{\mkVar}[1]{\ensuremath{\kf{#1}}}
+\newcommand{\pV}{\mkVar{p}}
+\newcommand{\qV}{\mkVar{q}}
+\newcommand{\rV}{\mkVar{r}}
+\newcommand{\fV}{\mkVar{f}}
+\newcommand{\gV}{\mkVar{g}}
+\newcommand{\iV}{\mkVar{i}}
+\newcommand{\aV}{\mkVar{a}}
+\newcommand{\bV}{\mkVar{b}}
+\newcommand{\cV}{\mkVar{c}}
+\newcommand{\dV}{\mkVar{d}}
+\newcommand{\eV}{\mkVar{e}}
+\newcommand{\zV}{\mkVar{z}}
+\newcommand{\AV}{\mkVar{A}}
+\newcommand{\BV}{\mkVar{B}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% VPL Figures
+\newcommand{\dimd}{$d$}
+\newcommand{\true}[0]{\OB{\mathsf{true}}}
+\newcommand{\false}[0]{\OB{\mathsf{false}}}
+\newcommand{\unit}[0]{\ensuremath{\bullet{}}}
+\newcommand{\ap}[1]{\{#1\}}
+\newcommand{\vc}[1]{\ensuremath{\kf{vc}_{#1}}}         % fmf macro w/ subscript
+\newcommand{\vcT}{\vc{True}}                    % fmf with true subscript
+\newcommand{\vcF}{\vc{False}}
+\newcommand{\mdl}[1]{$\kf{mdl}_{#1}$}           % model macro
+\newcommand{\mdls}{$mdls$}                           % mdls helper
+\newcommand{\SatVar}{\ensuremath{\_Sat}}                        %_Sat
+\newcommand{\SatModel}{\mdl{Sat}}
+\newcommand{\Satfmf}{\vc{_{\_Sat}}}
+\newcommand{\lift}[1]{\ensuremath{#1^{\chcL{}\chcR{}}}}
+\newcommand{\nats}[0]{\ensuremath{\mathbb{N}_{0}}}
+
+%% Simple macros for Linux SPL example
+%%%% Commands for Implementation
+\newcommand{\Lx}[1]{\ensuremath{L_{#1}}}
+\newcommand{\FM}[1]{\ensuremath{\kf{FM}_{#1}}}
+\newcommand{\LNot}{\Lx{0}}
+\newcommand{\FMNot}{\FM{0}}
+\newcommand{\LOne}{\Lx{1}}
+\newcommand{\FMOne}{\FM{1}}
+\newcommand{\LTwo}{\Lx{2}}
+\newcommand{\FMTwo}{\FM{2}}
+
+% features in Linux kernel
+\newcommand{\Fmitigate}{\kf{mitigations}}
+\newcommand{\Fspectre}{\kf{spectre\_v2}}
+\newcommand{\Fnospec}{\kf{nospec\_store\_bypass\text{-}disable}}
+\newcommand{\Flone}{\kf{l1tf}}
+\newcommand{\Fpti}{\kf{pti}}
+
+\newcommand{\github}[0]{\url{https://github.com/lambda-land/VSat-Papers/tree/master/EMSE2021}}
+
+%%% macro for all combinations of two features
+\newcommand{\ViByVj}[2]{$\mathit{V_{#1}*V_{#2}}$}
+\newcommand{\ViToVj}[2]{$\mathit{V_{#1}**V_{#2}}$}
+
+%%% Arrows
+\newcommand{\iToj}[2]{$\textit{#1}{\rightarrow}\textit{#2}$}
+\newcommand{\pTop}[0]{\iToj{p}{p}}
+\newcommand{\pTov}[0]{\iToj{p}{v}}
+\newcommand{\vTop}[0]{\iToj{v}{p}}
+\newcommand{\vTov}[0]{\iToj{v}{v}}
+
+%%%%%%%%%%%%%%%%% Journal version differnces
+\newcommand{\newcolor}{blue}
+\newcommand{\pubcolor}{black}
+% swapped to black for pub, jmy 26/02/2021
+% \newcommand{\new}[1]{{\color{\newcolor}#1}}
+\newcommand{\new}[1]{{\color{\pubcolor}#1}}
+\newenvironment{newBlock}{\color{\revcolor}}{\color{\nocolor}}
+
+%%%%%%%%%%%%%%%% Sets
+\newcommand{\integers}{\ensuremath{\mathbb{Z}}}
+\newcommand{\booleans}{\ensuremath{\mathbb{B}}}
+
+%%%%%%%%%%%%%%% shorthand ops for inference rules
+\newcommand{\inequalities}{\ensuremath{\bowtie{}}}
+\newcommand{\integerFuncs}{\ensuremath{\oplus{}}}
+\newcommand{\boolFuncs}{\ensuremath{\otimes{}}}
+\newcommand{\integerUnary}{\ensuremath{\dagger{}}}
+\newcommand{\uop}[1]{\ensuremath{\kf{U}_{#1}}}
+\newcommand{\bop}[1]{\ensuremath{\kf{B}_{#1}}}
+\newcommand{\sop}{\ensuremath{\kf{S}}}
+\newcommand{\ui}{\uop{\integers{}}}
+\newcommand{\ub}{\uop{\booleans{}}}
+\newcommand{\bbb}{\bop{\booleans{}\booleans}}
+\newcommand{\bib}{\bop{\integers{}\booleans}}
+\newcommand{\bii}{\bop{\integers{}\integers}}
+
+%%%% accumulation
+\newcommand{\aStore}[1]{\ensuremath{\Delta_{#1}}}
+\newcommand{\accumulation}{\ensuremath{\mapsto{}}}
+\newcommand{\acChc}{\rn{A-Chc}}
+\newcommand{\acRef}{\rn{A-Ref}}
+\newcommand{\acNotS}{\rn{A-Not-S}}
+\newcommand{\acAndS}{\rn{A-And-S}}
+\newcommand{\acOrS}{\rn{A-Or-S}}
+\newcommand{\acNotV}{\rn{A-Not-V}}
+\newcommand{\acAndV}{\rn{A-And-V}}
+\newcommand{\acOrV}{\rn{A-Or-V}}
+
+%%%% evaluation
+\newcommand{\eStore}[1]{\ensuremath{\Gamma_{#1}}}
+\newcommand{\eaStore}{\ensuremath{\eStore,\aStore}}
+\newcommand{\evaluation}{\ensuremath{\rightarrowtail{}}}
+\newcommand{\evAcc}{\rn{E-Acc}}
+\newcommand{\evSym}{\rn{E-Sym}}
+\newcommand{\evChc}{\rn{E-Chc}}
+\newcommand{\evAndL}{\rn{E-And-L}}
+\newcommand{\evAndR}{\rn{E-And-R}}
+\newcommand{\evAnd}{\rn{E-And}}
+\newcommand{\evOr}{\rn{E-Or}}
+
+%%%% Zipper
+\newcommand{\inRoot}{\ensuremath{\top}}
+
+%% classic "inside out" zipper encoding
+% \newcommand{\inNot}[1]{\ensuremath{\neg #1}}
+% \newcommand{\inL}[3]{\ensuremath{#2 #1_{\tiny\sf L} #3}}
+% \newcommand{\inR}[3]{\ensuremath{#2 #1_{\tiny\sf R} #3}}
+
+%% breadcrumb style 1
+% \newcommand{\inL}[3]{\ensuremath{#1_{\tiny\sf L} #3 :: #2}}
+% \newcommand{\inR}[3]{\ensuremath{#2\,#1_{\tiny\sf R} :: #3}}
+% \newcommand{\inAndL}[2]{\inL{\wedge}{#1}{#2}}
+% \newcommand{\inAndR}[2]{\inR{\wedge}{#1}{#2}}
+% \newcommand{\inOrL}[2]{\inL{\vee}{#1}{#2}}
+% \newcommand{\inOrR}[2]{\inR{\vee}{#1}{#2}}
+
+%% breadcrumb style 2
+\newcommand{\inNot}[1]{\ensuremath{\neg\,\cdot :: #1}}
+\newcommand{\inAndL}[2]{\ensuremath{\cdot\wedge #2 :: #1}}
+\newcommand{\inAndR}[2]{\ensuremath{#1 \wedge\cdot :: #2}}
+\newcommand{\inOrL}[2]{\ensuremath{\cdot\vee #2 :: #1}}
+\newcommand{\inOrR}[2]{\ensuremath{#1 \vee\cdot :: #2}}
+
+%%%% Choice Removal
+\newcommand{\choiceRemoval}{\ensuremath{\Downarrow}}
+\newcommand{\crCtx}{C,\eStore{},\aStore{},\vmodel{}}
+% \newcommand{\crAny}{\choiceRemoval{*}}
+% \newcommand{\crL}{\choiceRemoval{\textsc{L}}}
+% \newcommand{\crR}{\choiceRemoval{\textsc{R}}}
+% \newcommand{\crB}{\choiceRemoval{b}}
+\newcommand{\vmodel}[1]{\ensuremath{M_{#1}}}
+\newcommand{\crEval}{\rn{C-Eval}}
+\newcommand{\crNot}{\rn{C-Not}}
+\newcommand{\crNotIn}{\rn{C-Not-In}}
+\newcommand{\crAnd}{\rn{C-And}}
+\newcommand{\crAndL}{\rn{C-And-InL}}
+\newcommand{\crAndR}{\rn{C-And-InR}}
+\newcommand{\crOr}{\rn{C-Or}}
+\newcommand{\crOrL}{\rn{C-Or-InL}}
+\newcommand{\crOrR}{\rn{C-Or-InR}}
+\newcommand{\crChc}{\rn{C-Chc}}
+\newcommand{\crChcT}{\rn{C-Chc-T}}
+\newcommand{\crChcF}{\rn{C-Chc-F}}
+
+\newcommand{\crGen}{\TODO{C-Gen}}
+\newcommand{\crSym}{\TODO{C-Sym}}
+\newcommand{\crChcAnd}{\TODO{C-Chc-And}}
+
+%%%%% primitive operations
+\newcommand{\primOp}[1]{\texttt{#1}}
+\newcommand{\pspawn}{\primOp{Var}}
+\newcommand{\pnot}{\primOp{Not}}
+\newcommand{\pand}{\primOp{And}}
+\newcommand{\por}{\primOp{Or}}
+\newcommand{\pmodel}{\primOp{GetModel}}
+\newcommand{\passert}{\primOp{Assert}}
+\newcommand{\pcombine}{\primOp{Combine}}
+\newcommand{\pwrap}[1]{\underline{#1}}
