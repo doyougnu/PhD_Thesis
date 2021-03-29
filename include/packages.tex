@@ -3,6 +3,7 @@
 \usepackage{epsfig}
 \usepackage{times}
 \usepackage{amsmath}
+\usepackage{amsthm}                  %% Theorems and definitions
 \usepackage{amssymb}                 %% for more arrows like rightarrowtail
 \usepackage{amsfonts}                %% \mathbb
 \usepackage{mathtools}               %% for coloneqq and others
@@ -77,3 +78,10 @@
   \hspace{-1.5pt}}
 
 \reversemarginpar
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Math
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
