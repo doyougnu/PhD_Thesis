@@ -11,9 +11,11 @@ couple the end-users' solution to the end-users' \emph{exact} sequence of
 SAT/SMT problems---making the solution overly specific---and require the
 end-user to write extra infrastructure to coordinate or handle the results.
 
-This dissertation argues that the aforementioned problems are caused from the
-lack of variation as a computation concept, similar to that of a \rn{while}
-loop. To demonstrate the argument, this thesis applies theory from
+This dissertation argues that the aforementioned problems result from accidental
+complexity produced by solving a problem that is \emph{variational} without the
+concept of \emph{variation}, similar to problematic use of \rn{goto} statements
+which occur without the concept of looping, and thus without \rn{while} loop
+constructs. To demonstrate the argument, this thesis applies theory from
 \emph{variational} programming to the domain of SAT/SMT solvers to create the
 first variational SAT solver.
 %
