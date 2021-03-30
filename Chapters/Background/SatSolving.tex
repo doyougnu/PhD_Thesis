@@ -1,29 +1,26 @@
 ~\label{section:sat-solving}
 
-\todo[inline]{definition of boolean satisfiability problem}
-\todo[inline]{definition of satisfying assignment}
-\todo[inline]{description of cdcl?}
-
 A satisfiability solver is a software system that solves the Boolean
 Satisfiability Problem. One of the oldest problems in computer
 science\footnote{see~\citet{BBH+09} for a complete history from the ancients,
-  through to George Boole to the modern day.}, the Boolean satisfiability
-problem is the problem of checking for a given formula in propositional logic
-has an assignment of Boolean values to variables in the formula exists, such
-that under substitution the formula evaluates to \tru{}. We formalize the
-problem and terms in the following definitions:
+  through to George Boole to the modern day.} and famously
+NP-Complete~\cite{10.1145/800157.805047}, the Boolean satisfiability problem is
+the problem of checking if a formula in propositional logic has an assignment of
+Boolean values to variables, such that under substitution the formula evaluates
+to \tru{}. We formalize the problem and terms in the following definitions:
 
 \begin{definition}[Model]
   Given a formula in propositional logic, $\kf{f}$, which contains a set of
-  Boolean variables $v$. A model, $\kf{m}$, is a set of assignments of Boolean
-  values to variables in $\kf{f}$ such that $\kf{f}$ evaluates to \tru{}, \ie{},
-  $\kf{m = \{ (v_{i} \rightarrow{} b) | v_{i} \in v, b \in \booleans} \}$.
+  Boolean variables $\kf{vs}$. A model, $\kf{m}$, is a set of assignments of
+  Boolean values to variables in $\kf{f}$ such that $\kf{f}$ evaluates to
+  \tru{}, \ie{}, $\kf{m = \{ (v \rightarrow{} b)\ |\ v \in vs, b \in
+    \booleans} \}$.
 \end{definition}
 
 \begin{definition}[Satisfiable]
   Given a formula in propositional logic, $\kf{f}$, which contains a set of
   Boolean variables $v$. If there exists an assignment of variables to Boolean
-  values such that $f$ evaluates to \tru{}, then we say $\kf{f}$ is
+  values such that $\kf{f}$ evaluates to \tru{}, then we say $\kf{f}$ is
   \emph{satisfiable}.
 \end{definition}
 
@@ -34,11 +31,9 @@ satisfiable with the model: $\{\kf{(a \rightarrow{} \tru{}), (b \rightarrow{}
 variables $\kf{a}$ and $\kf{b}$ would allow $\kf{bad}$ evaluate to \tru{}.
 
 \begin{definition}[Boolean Satisfiability Problem]
-  Given a formula in propositional logic, $\kf{f}$, determine if $\kf{f}$ is satisfiable.
+  Given a formula in propositional logic, $\kf{f}$, determine if $\kf{f}$ is
+  satisfiable.
 \end{definition}
-
-In addition to the concepts of
-
 
 
 %%% Local Variables:
