@@ -4,17 +4,41 @@
 \todo[inline]{definition of satisfying assignment}
 \todo[inline]{description of cdcl?}
 
-The boolean satisfiability problem is one of the oldest problems in computer science
-work
+A satisfiability solver is a software system that solves the Boolean
+Satisfiability Problem. One of the oldest problems in computer
+science\footnote{see~\citet{BBH+09} for a complete history from the ancients,
+  through to George Boole to the modern day.}, the Boolean satisfiability
+problem is the problem of checking for a given formula in propositional logic
+has an assignment of Boolean values to variables in the formula exists, such
+that under substitution the formula evaluates to \tru{}. We formalize the
+problem and terms in the following definitions:
 
-\begin{theorem}
-  Let $f$ be a function whose derivative exists in every point, then $f$ is
-  a continuous function.
-\end{theorem}
-
-\begin{definition}[Fibration]
-  A fibration is a mapping between two topological spaces that has the homotopy lifting property for every space $X$.
+\begin{definition}[Model]
+  Given a formula in propositional logic, $\kf{f}$, which contains a set of
+  Boolean variables $v$. A model, $\kf{m}$, is a set of assignments of Boolean
+  values to variables in $\kf{f}$ such that $\kf{f}$ evaluates to \tru{}, \ie{},
+  $\kf{m = \{ (v_{i} \rightarrow{} b) | v_{i} \in v, b \in \booleans} \}$.
 \end{definition}
+
+\begin{definition}[Satisfiable]
+  Given a formula in propositional logic, $\kf{f}$, which contains a set of
+  Boolean variables $v$. If there exists an assignment of variables to Boolean
+  values such that $f$ evaluates to \tru{}, then we say $\kf{f}$ is
+  \emph{satisfiable}.
+\end{definition}
+
+For example, we can show that the formula $\kf{good = a \wedge b \vee c}$ is
+satisfiable with the model: $\{\kf{(a \rightarrow{} \tru{}), (b \rightarrow{}
+  \tru{}), (c \rightarrow{} \fls{})}\}$. However, a formula such as $\kf{bad =
+  (a \vee b) \wedge \fls{}}$ is not satisfiable as no assignment to the
+variables $\kf{a}$ and $\kf{b}$ would allow $\kf{bad}$ evaluate to \tru{}.
+
+\begin{definition}[Boolean Satisfiability Problem]
+  Given a formula in propositional logic, $\kf{f}$, determine if $\kf{f}$ is satisfiable.
+\end{definition}
+
+In addition to the concepts of
+
 
 
 %%% Local Variables:
