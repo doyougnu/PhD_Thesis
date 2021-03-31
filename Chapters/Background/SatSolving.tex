@@ -1,39 +1,82 @@
 ~\label{section:sat-solving}
 
+This section provides assumes knowledge of propositional logic, and provides
+background to \acl{sat} and \ac{smtlib}; the standardized language for
+interacting with \ac{sat} solvers. Following the notation from the many-valued
+logic community~\cite{Rescher1969-RESML} we refer to propositional logic as
+\pl{}, which denotes a two-valued logic.
+
 A satisfiability solver is a software system that solves the Boolean
 Satisfiability Problem. One of the oldest problems in computer
 science\footnote{see~\citet{BBH+09} for a complete history from the ancients,
   through to George Boole to the modern day.} and famously
 NP-complete~\cite{10.1145/800157.805047}, the Boolean satisfiability problem is
-the problem of checking if a formula in propositional logic has an assignment of
-Boolean values to variables, such that under substitution the formula evaluates
-to \tru{}. We formalize the problem and terms in the following definitions:
+the problem of determining if a formula (sometimes called a sentence) in
+propositional logic has an assignment of Boolean values to variables, such that
+under substitution the formula evaluates to \tru{}. We formalize the problem and
+terms in the following definitions:
 
 \begin{definition}[Model]
-  Given a formula in propositional logic, $\kf{f}$, which contains a set of
-  Boolean variables $\kf{vs}$. A model, $\kf{m}$, is a set of assignments of
-  Boolean values to variables in $\kf{f}$ such that $\kf{f}$ evaluates to
-  \tru{}, \ie{}, $\kf{m = \{ (v \rightarrow{} b)\ |\ v \in vs, b \in
-    \booleans} \}$.
+  Given a formula in propositional logic: $\kf{f} \in \pl{}$, which contains a
+  set of Boolean variables $\kf{vs}$. A model, $\kf{m}$, is a set of assignments
+  of Boolean values to variables in $\kf{f}$ such that $\kf{f}$ evaluates to
+  \tru{}, \ie{}, $\kf{m = \{ (v \assign b)\ |\ v \in vs, b \in \booleans} \}$.
 \end{definition}
 
 \begin{definition}[Satisfiable]
   Given a formula in propositional logic, $\kf{f}$, which contains a set of
-  Boolean variables $v$. If there exists an assignment of variables to Boolean
+  Boolean variables $vs$. If there exists an assignment of variables to Boolean
   values such that $\kf{f}$ evaluates to \tru{}, then we say $\kf{f}$ is
   \emph{satisfiable}.
 \end{definition}
 
-For example, we can show that the formula $\kf{good = a \wedge b \vee c}$ is
-satisfiable with the model: $\{\kf{(a \rightarrow{} \tru{}), (b \rightarrow{}
-  \tru{}), (c \rightarrow{} \fls{})}\}$. However, a formula such as $\kf{bad =
-  (a \vee b) \wedge \fls{}}$ is not satisfiable as no assignment to the
-variables $\kf{a}$ and $\kf{b}$ would allow $\kf{bad}$ evaluate to \tru{}.
+For example, we can show that the formula $\kf{good = (a \wedge b) \vee c}$ is
+satisfiable with the model: $\{\kf{(a \assign{} \tru{}), (b \assign{} \tru{}),
+  (c \assign{} \fls{})}\}$, because $(\tru{} \wedge{} \tru{}) \vee{} \fls{}$
+results in \tru{}. However, a formula such as $\kf{bad = (a \vee b) \wedge
+  \fls{}}$ is not satisfiable as no assignment of \fls{} or \tru{} to the
+variables $\kf{a}$ and $\kf{b}$ would allow $\kf{bad}$ to evaluate to \tru{}.
+With the preliminaries concepts we can now define the Boolean Satisfiability
+Problem:
 
 \begin{definition}[Boolean Satisfiability Problem]
   Given a formula in propositional logic, $\kf{f}$, determine if $\kf{f}$ is
   satisfiable.
 \end{definition}
+
+While the formal definition of the Boolean Satisfiability Problem requires a
+formula in propositional logic, expressing the \ac{sat} problem in propositional
+logic can be cumbersome. Thus, modern satisfiability solvers programming
+languages to express \ac{sat} problems, communicate the problems to other people
+and dictate the problems to the solver. In recent years these programming
+languages have coalesced into a single standard via an international initiative
+called \acl{smtlib}.
+
+The \acl{smtlib}~\cite{BarFT-SMTLIB} standard formalizes a set of programming
+languages that define interactions with a \ac{sat} or \ac{smt} solver. The
+standard defines four languages, of which only two are used throughout this
+thesis: a \emph{term and formula} language; which defines a language for writing
+defining variables, functions and formulas in propositional and first-order
+logic. The \emph{command} language; which defines a programming language to
+interact with the solver. The command language is used to add or remove formula,
+query the solver for a model and other side-effectual interactions such as
+printing output.
+
+For the remainder of this section we provide informal examples intended for a
+general audience and cover only the commands and concepts required for
+subsequent sections of this thesis. For a full language specification please see
+\citet{BarFT-SMTLIB}. Consider this \ac{smtlib} program which verifies that
+conjunction is commutative:
+
+\begin{lstlisting}[columns=flexible,keepspaces=true,language=SMTLIB]
+  ;; This is a comment
+  (declare-const a Bool)
+  (declare-const b Bool)
+  (define-fun demorgan () Bool
+  (= (and a b) (not (or (not a) (not b)))))
+  (assert (not demorgan))
+  (check-sat)
+\end{lstlisting}
 
 
 %%% Local Variables:

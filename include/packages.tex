@@ -53,9 +53,19 @@
 
 
 %%%%%%%%%%%%%%%% Listings config %%%%%%%%%%%%%%%%
+\lstdefinelanguage{SMTLIB}{
+    alsoletter={\-},
+    morekeywords={push,pop,assert,check-sat,declare-const,define-fun,and,or,not},
+    morecomment=[l]{;},
+    morestring=[b]{"},
+    sensitive=false,
+}
+
 \lstset{
   frame=top,frame=bottom,
-  basicstyle=\linespread{.75}\small\normalfont\sffamily,    % the size of the fonts that are used for the code
+  basicstyle=\linespread{.99}\small\normalfont\sffamily,    % the size of the fonts that are used for the code
+  commentstyle=\color{Gray},
+  keywordstyle=\color{NavyBlue},
   stepnumber=1,                           % the step between two line-numbers. If it is 1 each line will be numbered
   numbersep=10pt,                         % how far the line-numbers are from the code
   tabsize=2,                              % tab size in blank spaces
@@ -63,14 +73,6 @@
   breaklines=true,                        % sets automatic line breaking
   captionpos=t,                           % sets the caption-position to top
   mathescape=true,
-  % stringstyle=\color{white}\ttfamily,
-  % showspaces=false,
-  % showtabs=false,
-  % xleftmargin=17pt,
-  % framexleftmargin=17pt,
-  % framexrightmargin=17pt,
-  % framexbottommargin=5pt,
-  % framextopmargin=5pt,
   showstringspaces=false,
   escapeinside={(*@}{@*)},%
   literate = {-}{-}1
