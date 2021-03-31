@@ -55,58 +55,75 @@ called \acl{smtlib}.
 The \acl{smtlib}~\cite{BarFT-SMTLIB} standard formalizes a set of programming
 languages that define interactions with a \ac{sat} or \ac{smt} solver. The
 standard defines four languages, of which only two are used throughout this
-thesis: a \emph{term and formula} language; which defines a language for writing
-defining variables, functions and formulas in propositional and first-order
-logic. The \emph{command} language; which defines a programming language to
-interact with the solver. The command language is used to add or remove formula,
-query the solver for a model and other side-effectual interactions such as
-printing output.
+thesis: a \emph{term} language; which defines a language for defining variables,
+functions and formulas in propositional and first-order logic. The
+\emph{command} language; which defines a programming language to interact with
+the solver. The command language is used to add or remove formulas, query the
+solver for a model or check for satisfiability and other side-effectual
+interactions such as printing output.
 
 For the remainder of this section we provide informal examples intended for a
 general audience and cover only the commands and concepts required for
 subsequent sections of this thesis. For a full language specification please see
 \citet{BarFT-SMTLIB}.
 
-\todo{define a listing language for smtlib}Consider this \ac{smtlib} program
+\todo{define a listing language for smtlib}Consider this \acl{smtlib} program
 which verifies that demorgans' law holds:
-
+%
 \begin{lstlisting}[columns=flexible,keepspaces=true,language=SMTLIB]
-  (declare-const a Bool) ;; variable declarations
+  (declare-const a Bool)        ;; variable declarations
   (declare-const b Bool)
   (define-fun demorgan () Bool  ;; define demorgans
-  (= (and a b) (not (or (not a) (not b)))))
-  (assert (not demorgan))       ;; add a constraint for not demorgans
-  (check-sat)                   ;; check that the constraints are satisfied
+    (= (and a b) (not (or (not a) (not b)))))
+  (assert (not demorgan))       ;; add an assertion for not demorgans
+  (check-sat)                   ;; check the satisfiability of assertions
 \end{lstlisting}
+%
+The program, and every \acl{smtlib} program, is a sequence of \emph{commands}
+(called \emph{statements} in the programming language literature) that interact
+with the solver. For example, the above program consists of five commands, two
+variable declarations, a function definition, an assertion and a command to
+check satisfiability. Each command is formulated as an
+\emph{s-expressions}~\cite{10.1145/367177.367199} to simplify parsing. For our
+purposes, one only needs to understand that commands and functions are called by
+opening parentheses; the first element after the opening parenthesis is the name
+of the command or function symbol and every other element is an argument to that
+command. Thus \lstinline{(declare-const a Bool)} is an s-expression with three
+elements that defines the \pl{} variable \lstinline{a} of \emph{sort} (called
+\emph{type} in programming language literature) \lstinline{Bool}. The first
+element, \lstinline{declare-const} is the command name, the second is the user
+defined name for the variable and the third is its sort. Similarly, the
+s-expression \lstinline{(and a b)} passes the variables \lstinline{a} and
+\lstinline{b} to the function \lstinline{and} which returns the conjunction of
+these two variables.
 
-A program in \ac{smtlib} is a sequence of \emph{commands} (called
-\emph{statements} in the programming language literature) that interact with the
-solver. For example, the above program consists of six commands. Internally a
-compliant solver such as z3~\cite{10.1007/978-3-540-78800-3_24} maintains an
-internal stack called the \emph{assertion stack} that tracks user provided
-variable and formula declarations. The elements of the assertion stack are
-called \emph{levels} and are sets of \emph{assertions}. An assertion is a
-logical formula, a declaration of a \emph{sort}, such as \lstinling{Bool}, or a
-definition of a function symbol. Thus, \lstinline{(declare-const a Bool)}
+Internally, a compliant solver such as z3~\cite{10.1007/978-3-540-78800-3_24}
+maintains an stack called the \emph{assertion stack} that tracks user provided
+variable and formula declarations and definitions. The elements of the assertion
+stack are called \emph{levels} and are sets of \emph{assertions}.
+%
+An assertion is a logical formula, a declaration of a sort, or a definition of a
+function symbol. In the example, both variable declarations and the
+\lstinline{demorgan} definition are included in the assertion set. Sets of
+assertions are placed on the stack via the \lstinline{assert} command. The
+assert command takes a formula as input\footnote{by the standard this the
+  formula is actually a \emph{well-sorted term} of type \emph{Bool}, however we
+  elide this description for simplicity}, collects all associated definitions
+and declarations and places the assertion set on the assertion stack.
 
+Notice that the example asserts \lstinline{not demorgan} rather than
+\lstinline{demorgan}. This is due to the relationship between satisfiability and
+logical validity; satisfiability attempts to find a model that solves the
+constraints of a formula, while logical validity tries to show that for any
+substitution of values into a formula the formula will evaluate to true. Thus
+where satisfiability is concerned with solving constraints, validity is
+concerned with finding a proof of a statement or formula. hence, for the example
+we query the solver to find a model where demorgans' theorem is \emph{not} true.
+If such a model exists then it is a counter-example to the theorem, if no model
+exists then we can be sure that for all values of type Bool demorgans' theorem
+will hold.
 
-The \ac{smtlib} grammar is defined to make parsing as simple and as fast
-as possible, and thus \todo{is this the right way to say this?}is defined around
-\emph{s-expressions}~\cite{10.1145/367177.367199}.
-
-
-For our purposes,
-s-expressions are linked lists of symbols. The first element of the list is a
-symbol which represents a function or binding form while the remaining symbols
-are arguments to the first.  These declarations are called
-\emph{assertions} An assertion For example, \lstinline{(and a b)} calls the
-function \lstinline{and} to conjunct two symbols, \lstinline{a} and
-\lstinline{b}, while \lstinline{(declare-const a Bool)} declares a variable
-\lstinline{a} of \emph{sort} (or \emph{type}) \lstinline{Bool}. \ac{smtlib}
-scripts are constructed out of \emph{terms}. A term is a variable symbol, a
-function symbol, a binding form, or a built in operator for annotation.
-Variables in \ac{smtlib}
-
+%
 
 %%% Local Variables:
 %%% mode: latex
