@@ -24,10 +24,10 @@ terms in the following definitions:
 \end{definition}
 
 \begin{definition}[Satisfiable]
-  Given a formula in propositional logic, $\kf{f}$, which contains a set of
-  Boolean variables $vs$. If there exists an assignment of variables to Boolean
-  values such that $\kf{f}$ evaluates to \tru{}, then we say $\kf{f}$ is
-  \emph{satisfiable}.
+  \todo{add validity}Given a formula in propositional logic, $\kf{f}$, which
+  contains a set of Boolean variables $vs$. If there exists an assignment of
+  variables to Boolean values such that $\kf{f}$ evaluates to \tru{}, then we
+  say $\kf{f}$ is \emph{satisfiable}.
 \end{definition}
 
 For example, we can show that the formula $\kf{good = (a \wedge b) \vee c}$ is
@@ -65,18 +65,31 @@ printing output.
 For the remainder of this section we provide informal examples intended for a
 general audience and cover only the commands and concepts required for
 subsequent sections of this thesis. For a full language specification please see
-\citet{BarFT-SMTLIB}. Consider this \ac{smtlib} program which verifies that
-conjunction is commutative:
+\citet{BarFT-SMTLIB}.
+
+Consider this \ac{smtlib} program which verifies that demorgans' law holds:
 
 \begin{lstlisting}[columns=flexible,keepspaces=true,language=SMTLIB]
-  ;; This is a comment
-  (declare-const a Bool)
+  (declare-const a Bool) ;; variable declarations
   (declare-const b Bool)
-  (define-fun demorgan () Bool
+  (define-fun demorgan () Bool  ;; define demorgans
   (= (and a b) (not (or (not a) (not b)))))
-  (assert (not demorgan))
-  (check-sat)
+  (assert (not demorgan))       ;; add a constraint for not demorgans
+  (check-sat)                   ;; check that the constraints are satisfied
 \end{lstlisting}
+
+The \ac{smtlib} grammar is defined to make parsing as simple and as fast as
+possible, and thus \todo{is this the right way to say this?}is defined around
+\emph{s-expressions}~\cite{10.1145/367177.367199}. For our purposes,
+s-expressions are linked lists of symbols. The first element of the list is a
+symbol which represents a function or binding form while the remaining symbols
+are arguments to the first. For example, \lstinline{(and a b)} calls the
+function \lstinline{and} to conjunct two symbols, \lstinline{a} and
+\lstinline{b}, while \lstinline{(declare-const a Bool)} declares a variable
+\lstinline{a} of \emph{sort} (or \emph{type}) \lstinline{Bool}. \ac{smtlib}
+scripts are constructed out of \emph{terms}. A term is a variable symbol, a
+function symbol, a binding form, or a built in operator for annotation.
+Variables in \ac{smtlib}
 
 
 %%% Local Variables:
