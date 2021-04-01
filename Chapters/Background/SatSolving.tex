@@ -97,7 +97,10 @@ element, \lstinline{declare-const} is the command name, the second is the user
 defined name for the variable and the third is its sort. Similarly, the
 s-expression \lstinline{(and a b)} passes the variables \lstinline{a} and
 \lstinline{b} to the function \lstinline{and} which returns the conjunction of
-these two variables.
+these two variables. Lastly, the function definition \lstinline{define-fun}
+takes four arguments: the user defined name; \lstinline{peirce-is-ex-middle}, an
+s-expression of argument sorts \lstinline{()}; which is empty in this case, a
+return sort; \lstinline{Bool} and the body of the function.
 
 Internally, a compliant solver such as z3~\cite{10.1007/978-3-540-78800-3_24}
 maintains an stack called the \emph{assertion stack} that tracks user provided
