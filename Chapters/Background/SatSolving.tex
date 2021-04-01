@@ -68,15 +68,17 @@ subsequent sections of this thesis. For a full language specification please see
 \citet{BarFT-SMTLIB}.
 
 \todo{define a listing language for smtlib}Consider this \acl{smtlib} program
-which verifies that demorgans' law holds:
+which verifies peirce's law is equivalent to the law of excluded middle for
+propositional logic:
 %
 \begin{lstlisting}[columns=flexible,keepspaces=true,language=SMTLIB]
-  (declare-const a Bool)        ;; variable declarations
-  (declare-const b Bool)
-  (define-fun demorgan () Bool  ;; define demorgans
-    (= (and a b) (not (or (not a) (not b)))))
-  (assert (not demorgan))       ;; add an assertion for not demorgans
-  (check-sat)                   ;; check the satisfiability of assertions
+(declare-const a Bool)                   ;; variable declarations
+(declare-const b Bool)
+(define-fun peirce-is-ex-middle () Bool  ;; define peirce's law
+  (= (or a (not a))
+     (=> (=> (=> a b) a) a)))
+(assert (not peirce-is-ex-middle))       ;; add assertion
+(check-sat)                              ;; check the satisfiability of assertions
 \end{lstlisting}
 %
 The program, and every \acl{smtlib} program, is a sequence of \emph{commands}
@@ -104,24 +106,29 @@ stack are called \emph{levels} and are sets of \emph{assertions}.
 %
 An assertion is a logical formula, a declaration of a sort, or a definition of a
 function symbol. In the example, both variable declarations and the
-\lstinline{demorgan} definition are included in the assertion set. Sets of
-assertions are placed on the stack via the \lstinline{assert} command. The
-assert command takes a formula as input\footnote{by the standard this the
-  formula is actually a \emph{well-sorted term} of type \emph{Bool}, however we
-  elide this description for simplicity}, collects all associated definitions
-and declarations and places the assertion set on the assertion stack.
+\lstinline{peirce-is-ex-middle} definition are included in the assertion set.
+Sets of assertions are placed on the stack via the \lstinline{assert} command.
+The assert command takes a term as input\footnote{by the standard this is a
+  \emph{well-sorted term} of type \emph{Bool}, however we elide this description
+  for simplicity}, collects all associated definitions and declarations and
+places the assertion set on the assertion stack.
 
-Notice that the example asserts \lstinline{not demorgan} rather than
-\lstinline{demorgan}. This is due to the relationship between satisfiability and
-logical validity; satisfiability attempts to find a model that solves the
-constraints of a formula, while logical validity tries to show that for any
-substitution of values into a formula the formula will evaluate to true. Thus
-where satisfiability is concerned with solving constraints, validity is
-concerned with finding a proof of a statement or formula. hence, for the example
-we query the solver to find a model where demorgans' theorem is \emph{not} true.
-If such a model exists then it is a counter-example to the theorem, if no model
-exists then we can be sure that for all values of type Bool demorgans' theorem
-will hold.
+Notice that the example asserts \lstinline{not peirce-is-ex-middle} rather than
+\lstinline{peirce-is-ex-middle}. The \lstinline{not} is required due to the
+relationship between satisfiability and logical validity; satisfiability
+attempts to find a model that solves the constraints of a formula, while logical
+validity tries to show that for any substitution of values into a formula the
+formula will evaluate to true, that is, the formula is tautological. Thus where
+satisfiability is concerned with solving constraints, validity is concerned with
+finding a proof of a statement or formula. This description only holds for
+propositional logic, other logics will have different notions of validity.
+
+For the example we query the solver to find a model where
+\lstinline{peirce-is-ex-middle} theorem is \emph{not} true. If a model exists,
+then the model is an example of the \emph{negation} of the theorem and thus a
+counter-example to the theorem. If no model exists---that is \rn{unsat} is
+returned by the solver---then the negated theorem always evaluates to \fls{} and
+thus the theorem always evaluates to \tru{} and hence is logically valid.
 
 %
 
