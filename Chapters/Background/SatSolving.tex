@@ -7,9 +7,9 @@ logic community~\cite{Rescher1969-RESML} we refer to propositional logic as
 \pl{}, which denotes a two-valued logic.
 
 A satisfiability solver is a software system that solves the Boolean
-Satisfiability Problem. One of the oldest problems in computer
-science\footnote{see~\citet{BBH+09} for a complete history from the ancients,
-  through to George Boole to the modern day.} and famously
+Satisfiability Problem~\cite{russelNorvig}. One of the oldest problems in
+computer science\footnote{see~\citet{BBH+09} for a complete history from the
+  ancients, through to George Boole to the modern day.} and famously
 NP-complete~\cite{10.1145/800157.805047}, the Boolean satisfiability problem is
 the problem of determining if a formula (sometimes called a sentence) in
 propositional logic has an assignment of Boolean values to variables, such that
@@ -23,11 +23,18 @@ terms in the following definitions:
   \tru{}, \ie{}, $\kf{m = \{ (v \assign b)\ |\ v \in vs, b \in \booleans} \}$.
 \end{definition}
 
+\begin{corollary}[Validity]
+  \todo{not sure if this is the right place}In propositional logic a formula or
+  sentence is \emph{valid} if it is true in \emph{all} possible
+  models~\cite{russelNorvig}. That is, a valid formula or sentence is also a
+  tautology.
+\end{corollary}
+
 \begin{definition}[Satisfiable]
-  \todo{add validity}Given a formula in propositional logic, $\kf{f}$, which
-  contains a set of Boolean variables $vs$. If there exists an assignment of
-  variables to Boolean values such that $\kf{f}$ evaluates to \tru{}, then we
-  say $\kf{f}$ is \emph{satisfiable}.
+  Given a formula in propositional logic, $\kf{f}$, which contains a set of
+  Boolean variables $vs$. If there exists an assignment of variables to Boolean
+  values such that $\kf{f}$ evaluates to \tru{}, then we say $\kf{f}$ is
+  \emph{satisfiable}.
 \end{definition}
 
 For example, we can show that the formula $\kf{good = (a \wedge b) \vee c}$ is
@@ -45,7 +52,7 @@ Problem:
 \end{definition}
 
 While the formal definition of the Boolean Satisfiability Problem requires a
-formula in propositional logic, expressing the \ac{sat} problem in propositional
+formula in propositional logic, expressing a \ac{sat} problem in propositional
 logic can be cumbersome. Thus, modern satisfiability solvers programming
 languages to express \ac{sat} problems, communicate the problems to other people
 and dictate the problems to the solver. In recent years these programming
@@ -72,20 +79,21 @@ which verifies peirce's law is equivalent to the law of excluded middle for
 propositional logic:
 %
 \begin{lstlisting}[columns=flexible,keepspaces=true,language=SMTLIB]
-(declare-const a Bool)                   ;; variable declarations
+(declare-const a Bool)                       ;; variable declarations
 (declare-const b Bool)
-(define-fun peirce-is-ex-middle () Bool  ;; define peirce's law
-  (= (or a (not a))
-     (=> (=> (=> a b) a) a)))
-(assert (not peirce-is-ex-middle))       ;; add assertion
-(check-sat)                              ;; check the satisfiability of assertions
+(define-fun peirce ((x Bool) (y Bool)) Bool  ;; define peirce's law
+  (= (or x (not x))
+     (=> (=> (=> x y) x) x)))
+(assert (not (peirce a b)))                  ;; add an assertion for not demorgans
+(check-sat)                                  ;; check SAT of all assertions
 \end{lstlisting}
 %
-The program, and every \acl{smtlib} program, is a sequence of \emph{commands}
-(called \emph{statements} in the programming language literature) that interact
-with the solver. For example, the above program consists of five commands, two
-variable declarations, a function definition, an assertion and a command to
-check satisfiability. Each command is formulated as an
+Comments begin with a semi-colon (\rn{;}) and end at a new line. The program,
+and every \acl{smtlib} program, is a sequence of \emph{commands} (called
+\emph{statements} in the programming language literature) that interact with the
+solver. For example, the above program consists of five commands, two variable
+declarations, a function definition, an assertion and a command to check
+satisfiability. Each command is formulated as an
 \emph{s-expressions}~\cite{10.1145/367177.367199} to simplify parsing. For our
 purposes, one only needs to understand that commands and functions are called by
 opening parentheses; the first element after the opening parenthesis is the name
@@ -99,8 +107,9 @@ s-expression \lstinline{(and a b)} passes the variables \lstinline{a} and
 \lstinline{b} to the function \lstinline{and} which returns the conjunction of
 these two variables. Lastly, the function definition \lstinline{define-fun}
 takes four arguments: the user defined name; \lstinline{peirce-is-ex-middle}, an
-s-expression of argument sorts \lstinline{()}; which is empty in this case, a
-return sort; \lstinline{Bool} and the body of the function.
+s-expression that defines argument names and their sorts;
+\lstinline{((x Bool) (y Bool))}, a return sort; \lstinline{Bool} and the body of
+the function.
 
 Internally, a compliant solver such as z3~\cite{10.1007/978-3-540-78800-3_24}
 maintains an stack called the \emph{assertion stack} that tracks user provided
@@ -116,22 +125,22 @@ The assert command takes a term as input\footnote{by the standard this is a
   for simplicity}, collects all associated definitions and declarations and
 places the assertion set on the assertion stack.
 
-Notice that the example asserts \lstinline{not peirce-is-ex-middle} rather than
+The example demonstrates a common use pattern in \ac{sat} and \ac{smt} solving.
+In the example we assert \lstinline{(not peirce-is-ex-middle)} rather than
 \lstinline{peirce-is-ex-middle}. The \lstinline{not} is required due to the
 relationship between satisfiability and logical validity; satisfiability
 attempts to find a model that solves the constraints of a formula, while logical
 validity tries to show that for any substitution of values into a formula the
-formula will evaluate to true, that is, the formula is tautological. Thus where
-satisfiability is concerned with solving constraints, validity is concerned with
-finding a proof of a statement or formula. This description only holds for
-propositional logic, other logics will have different notions of validity.
-
-For the example we query the solver to find a model where
-\lstinline{peirce-is-ex-middle} theorem is \emph{not} true. If a model exists,
-then the model is an example of the \emph{negation} of the theorem and thus a
-counter-example to the theorem. If no model exists---that is \rn{unsat} is
-returned by the solver---then the negated theorem always evaluates to \fls{} and
-thus the theorem always evaluates to \tru{} and hence is logically valid.
+formula will evaluate to true, that is, the formula's truth-value is independent
+of its variables and thus it is tautological. Conceptually, where satisfiability
+is concerned with solving constraints, validity is concerned with finding a
+proof of a statement or formula. For the example, we query the solver to find a
+model where \lstinline{peirce-is-ex-middle} theorem is \emph{not} true. If such
+a model exists, then the model is an example of the \emph{negation} of the
+theorem and thus a counter-example to the theorem. If no model exists---that is
+\rn{unsat} is returned by the solver---then the negated theorem always evaluates
+to \fls{} and thus the theorem always evaluates to \tru{} and hence is logically
+valid.
 
 %
 
