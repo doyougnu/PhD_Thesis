@@ -1,5 +1,5 @@
 ~\label{section:sat-solving}
-
+%
 This section provides assumes knowledge of propositional logic, and provides
 background to \acl{sat} and \ac{smtlib}; the standardized language for
 interacting with \ac{sat} solvers. Following the notation from the many-valued
@@ -75,16 +75,24 @@ subsequent sections of this thesis. For a full language specification please see
 \citet{BarFT-SMTLIB}.
 
 \todo{define a listing language for smtlib}Consider this \acl{smtlib} program
-which verifies peirce's law is equivalent to the law of excluded middle for
-propositional logic:
+which verifies peirce's law implies the law of excluded middle for propositional
+logic:
 %
 \begin{lstlisting}[columns=flexible,keepspaces=true,language=SMTLIB]
 (declare-const a Bool)                       ;; variable declarations
 (declare-const b Bool)
-(define-fun peirce ((x Bool) (y Bool)) Bool  ;; define peirce's law
-  (= (or x (not x))
-     (=> (=> (=> x y) x) x)))
-(assert (not (peirce a b)))                  ;; add an assertion for not demorgans
+(define-fun ex-middle ((x Bool)) Bool        ;; excluded middle: $\color{Gray}x \vee \neg x$
+  (or x
+      (not x)))
+(define-fun peirce ((x Bool) (y Bool)) Bool  ;; peirce's law: $\color{Gray}((x \rightarrow y) \rightarrow x) \rightarrow x$
+  (=>
+    (=> (=> x y)
+        x)
+    x))
+(define-fun peirce-implies-ex-middle () Bool
+  (=> (peirce a b)
+      (ex-middle a)))
+(assert (not peirce-implies-ex-middle))      ;; add assertion
 (check-sat)                                  ;; check SAT of all assertions
 \end{lstlisting}
 %
