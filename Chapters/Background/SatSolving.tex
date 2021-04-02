@@ -133,24 +133,31 @@ The assert command takes a term as input\footnote{by the standard this is a
   for simplicity}, collects all associated definitions and declarations and
 places the assertion set on the assertion stack.
 
-The example demonstrates a common use pattern in \ac{sat} and \ac{smt} solving.
-In the example we assert \lstinline{(not peirce-is-ex-middle)} rather than
-\lstinline{peirce-is-ex-middle}. The \lstinline{not} is required due to the
-relationship between satisfiability and logical validity; satisfiability
-attempts to find a model that solves the constraints of a formula, while logical
-validity tries to show that for any substitution of values into a formula the
-formula will evaluate to true, that is, the formula's truth-value is independent
-of its variables and thus it is tautological. Conceptually, where satisfiability
-is concerned with solving constraints, validity is concerned with finding a
-proof of a statement or formula. For the example, we query the solver to find a
-model where \lstinline{peirce-is-ex-middle} theorem is \emph{not} true. If such
-a model exists, then the model is an example of the \emph{negation} of the
-theorem and thus a counter-example to the theorem. If no model exists---that is
-\rn{unsat} is returned by the solver---then the negated theorem always evaluates
-to \fls{} and thus the theorem always evaluates to \tru{} and hence is logically
-valid.
+The example demonstrates a common verification pattern in \ac{sat} and \ac{smt}
+solving. In the example, we construct a constraint that asserts
+\lstinline{(not peirce-is-ex-middle)} rather than
+\lstinline{peirce-is-ex-middle} because we need to verify that peirce's law
+implies the law of excluded middle for all possible models. Had we elided the
+\lstinline{not} then the first model which satisfied the theorem would be
+returned, thus providing a \emph{single} model where the theorem holds. However,
+to prove the theorem we need to show that it holds \emph{for all} possible
+models. The \lstinline{not} negates the theorem thus asking the solver to
+discover a counter-example to the theorem. If such a model exists, then the
+solver has discovered a counter-example to the theorem. If no such model
+exists---that is \rn{unsat} is returned by the solver---then the negated theorem
+always evaluates to \fls{} and thus the theorem always evaluates to \tru{} and
+hence is logically valid.
 
-%
+Satisfiability and logical validity are closely related. Conceptually,
+satisfiability attempts to find a model that solves the constraints of a
+formula, while logical validity tries to show that the formula's truth-value is
+independent of it's variables and thus the formula is tautological. Similarly,
+where satisfiability is concerned with solving constraints, validity is
+concerned with finding a proof. Thus it is common to negate a formula to
+\emph{query} the solver to search for a counter-example, when no such model is
+found and \rn{unsat} is returned, we can be sure that the negation of a formula
+which is always \fls{} is a formula which is always \tru{}, and thus is
+logically valid.
 
 %%% Local Variables:
 %%% mode: latex
