@@ -5,14 +5,10 @@
 
 \begin{tikzpicture}[>=latex']
 
-    % Draw blocks, inputs and outputs
-
-    % \foreach \y in {1,2,3,4,5} {
-
         % blocks
         \node[block] at (2,-1) (prod) {$SAT$};
-        \node[block, name=stging, below of = prod] {$SAT$};
-        \node[block, name=devel, below of = stging] {$SAT$};
+        \node[block, name=stging, below=3.75cm of prod] {$SAT$};
+        \node[block, name=devel, below=2.0cm of stging] {$SAT$};
 
         % input nodes
         \node[left of = devel, xshift=-10pt] (input1) {\rV{}};
@@ -25,40 +21,13 @@
         \draw[->] (input1) -- (devel);
 
         % outputs
-        \draw[->] (prod.east) -- +(0.5,0);
-        \draw[->] (stging.east) -- +(0.5,0);
-        \draw[->] (devel.east) -- +(0.5,0);
+        \draw[->] (prod.east) -- +(1.0,0);
+        \draw[->] (stging.east) -- +(1.0,0);
+        \draw[->] (devel.east) -- +(1.0,0);
 
 
         % \node at (3.5,-3) (result1) {$result$};
-        \node[right of = stging, xshift=20pt] (input2) {$result_{\qV{}}$};
-        \node[right of = devel, xshift=20pt] (input2) {$result_{\rV{}}$};
-        \node[right of = prod, xshift=20pt] (input3) {$result_{\pV{}}$};
-    % }
-    % \node[block] at (2,-6) (block6) {$f_6$};
-    % \draw[->] (block6.east) -- +(0.5,0);
-
-    % % Calculate branch point coordinate
-    % \path (input1) -- coordinate (branch) (block1);
-
-    % % Define a style for shifting a coordinate upwards
-    % % Note the curly brackets around the coordinate.
-    % \tikzstyle{s}=[shift={(0mm,\radius)}]
-    % % It would be natural to use the yshift or xshift option, but that does
-    % % not seem to work when shifting coordinates.
-
-    % \draw[->] (branch) node[branch] {}{ % draw branch junction
-    %         \foreach \c in {2,3,4,5} {
-    %             % Draw semicircle junction to indicate that the lines are
-    %             % not connected. The intersection between the lines are
-    %             % calculated using the convenient -| syntax. Since we want
-    %             % the semicircle to have its center where the lines intersect,
-    %             % we have to shift the intersection coordinate using the 's'
-    %             % style to account for this.
-    %             [shift only] -- ([s]input\c -| branch) arc(90:-90:\radius)
-    %             % Note the use of the [shift only] option. It is not necessary,
-    %             % but I have used it to ensure that the semicircles have the
-    %             % same size regardless of scaling.
-    %         }
-    %     } |- (block6);
+        \node[right of = stging, xshift=38pt] (input2) {$result_{\qV{}}$};
+        \node[right of = devel, xshift=38pt] (input2) {$result_{\rV{}}$};
+        \node[right of = prod, xshift=38pt] (input3) {$result_{\pV{}}$};
 \end{tikzpicture}

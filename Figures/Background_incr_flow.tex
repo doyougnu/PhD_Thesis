@@ -10,8 +10,8 @@
     % \foreach \y in {1,2,3,4,5} {
         % blocks
         \node[block] at (2,-1) (prod) {$SAT$};
-        \node[block, name=stging, below=3.3cm of prod] {$SAT$};
-        \node[block, name=devel, below=1.3cm of stging] {$SAT$};
+        \node[block, name=stging, below=3.75cm of prod] {$SAT$};
+        \node[block, name=devel, below=2.0cm of stging] {$SAT$};
 
         % input nodes
         % \node[left of = devel, xshift=-15pt] (input1) {$development$};
@@ -20,7 +20,7 @@
 
         % inputs
         \draw[->] (input3) -- (prod);
-        \draw[->] (prod) -- node[xshift = 60pt, align=left] {%
+        \draw[->] (prod) -- node[xshift = 70pt, align=left] {%
           $ \begin{aligned}
             \texttt{pop}  &\quad \eV{}\\
             \texttt{pop}  &\quad \cV{}\\
@@ -31,7 +31,7 @@
           \end{aligned}
           $
         } (stging);
-\draw[->] (stging) -- node[xshift = 85pt, align=left] {%
+\draw[->] (stging) -- node[xshift = 95pt, align=left] {%
   $\begin{aligned}
     & \texttt{resetAssertionStack}\\
     &\texttt{push} \quad \zV{} \leftrightarrow (a \wedge b \wedge c \wedge e)
@@ -43,9 +43,9 @@
 } (devel);
 
         % outputs
-        \draw[->] (prod.east) -- +(0.5,0);
-        \draw[->] (stging.east) -- +(0.5,0);
-        \draw[->] (devel.east) -- +(0.5,0);
+        \draw[->] (prod.east) -- +(1.0,0);
+        \draw[->] (stging.east) -- +(1.0,0);
+        \draw[->] (devel.east) -- +(1.0,0);
 
 
         % \node at (3.5,-3) (result1) {$result$};
@@ -53,9 +53,9 @@
         % \node[right of = devel, xshift=15pt] (input2) {$result$};
         % \node at (3.5,-1) (input3) {$result$};
 
-        \node[right of = stging, xshift=18pt] (input2) {$result_{\qV{}}$};
-        \node[right of = devel, xshift=18pt] (input2) {$result_{\rV{}}$};
-        \node at (3.8,-1) (input3) {$result_{\pV{}}$};
+        \node[right of = stging, xshift=38pt] (input2) {$result_{\qV{}}$};
+        \node[right of = devel, xshift=38pt] (input2) {$result_{\rV{}}$};
+        \node[xshift=19pt] at (3.8,-1) (input3) {$result_{\pV{}}$};
     % }
     % \node[block] at (2,-6) (block6) {$f_6$};
     % \draw[->] (block6.east) -- +(0.5,0);
