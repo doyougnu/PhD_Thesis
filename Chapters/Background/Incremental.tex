@@ -3,43 +3,90 @@
 %
 \input{Figures/Background_bf_vs_incr}
 %
-
-Suppose, we have three related propositional formulas that we want to solve.
+%
+Suppose, we have three related propositional formulas that we desire to solve.
 %
 \begin{align*}
   p =\ a \wedge b \wedge c \wedge e && q=\ a \wedge (b \vee \neg \iV{}) \wedge c \wedge (\gV{} \rightarrow c) && r =~z \leftrightarrow (a \wedge b \wedge c \wedge e)
 \end{align*}
 %
-\pV{} is simply a conjunction of variables. In \qV{}, relative to \pV{}, we can
-see that two variables are added, \iV{}, \gV{}, one variable is removed \eV{},
-and and there are two new clauses: $(b \vee \neg \iV{})$ and $(\gV{} \rightarrow
-c)$, both of which possibly affect the values of \bV{} and \cV{}. In \rV{}, the
-variables and constraints introduced in \pV{} are further constrained to a new
-variable, \zV{}.
+\pV{} is simply a conjunction of variables. In \qV{}, relative to \pV{}, we see
+that two variables are added, \iV{}, \gV{}, \eV{} is removed, and there are two
+new clauses: $(b \vee \neg \iV{})$ and $(\gV{} \rightarrow c)$, both of which
+possibly affect the values of \bV{} and \cV{}. In \rV{}, the variables and
+constraints introduced in \pV{} are further constrained to a new variable,
+\zV{}.
 
-Suppose one wants to find a satisfying assignment for each formula. Using a
-classic \ac{sat} solver results in the procedure illustrated in
-\autoref{fig:bkg:bf}; where \ac{sat} solving is a batch process and no information
-is reused. Alternatively, a procedure using an incremental \ac{sat} solver is
-illustrated in \autoref{fig:bkg:inc}; in this scenario, all of the formulas are
-solved by single solver instance where terms are programmatically added and
-removed from the solver throughout the process. The ability to add and remove
-terms from the solvers is enabled by a data structure within the incremental
-\ac{sat} solver called an \textit{assertion stack}. The assertion stack is a stack
-of declarations, definitions, or formulas that determine the \textit{context} of
-the solver. A solver context is the union of all global variable definitions and
-everything on the assertion stack. A program may add an assertion to the stack
-via the \texttt{push} operation and remove from the top via a \texttt{pop}
-operation~\cite{10.1007/978-3-319-09284-3_16}. A call to
-\texttt{resetAssertionStack} pops everything on the stack.
+Suppose one wants to find a model for each formula. Using a non-incremental
+\ac{sat} solver results in the procedure illustrated in \autoref{fig:bkg:bf};
+where \ac{sat} solving is a batch process and no information is reused.
+Alternatively, a procedure using an incremental \ac{sat} solver is illustrated
+in \autoref{fig:bkg:inc}; in this scenario, all of the formulas are solved by
+single solver instance where terms are programmatically added or removed from
+the solver.
+
+The ability to add and remove terms is enabled by manipulating the
+\textit{assertion stack}. The previous example demonstrated a single level on
+the stack, this example demonstrates three. The incremental interface provides
+two new commands: \rn{push} to create a new variable \emph{scope} and add a
+level to the stack and \rn{pop} to remove the level. The following \acl{smtlib}
+program follows the procedure outlined in \autoref{fig:bkg:inc} and solves \pV,
+\qV{} and \rV{}:
+
+\begin{lstlisting}[columns=flexible,keepspaces=true,language=SMTLIB]
+(declare-const a Bool)         ;; variable declarations for p
+(declare-const b Bool)
+(declare-const c Bool)
+(declare-const e Bool)
+(assert a)                     ;; a is shared between p and q
+(push)                         ;; solve p
+(assert e)
+(assert c)
+(assert b)
+(check-sat)                    ;; check-sat on p
+(pop)                          ;; remove e, c, and b assertions
+(push)                         ;; solve for q
+(declare-const i Bool)         ;; new variables
+(declare-const g Bool)
+(assert (or b (not i)))        ;; new clause
+(assert c)                     ;; re-add c
+(assert (=> g c))              ;; new clause
+(check-sat)                    ;; check sat of q
+(pop)                          ;; i and g out of scope
+(reset)                        ;; reset the assertion stack
+(declare-const a Bool)         ;; variable declarations for r
+(declare-const b Bool)
+(declare-const c Bool)
+(declare-const e Bool)
+(declare-const z Bool)
+(assert (= z (and a (and b (and c (and e ))))))
+(check-sat)                    ;; check-sat on r
+\end{lstlisting}
+
+In this example we begin by defining \pV{}, we assert $a$ outside of a new scope
+so that it can be reused for \qV{}. We reuse $a$ by exploiting the conjunction
+of assertions per level on the assertion stack during a \rn{check-sat} call. Had
+we asserted \lstinline{(and a (and b (and c (and e))))} then we would not be
+able to reuse the assertion on $a$. The first \rn{push} command enters a new
+level on the assertion stack, the remaining variables are asserted and we issue
+a check-sat call. After the \rn{pop} command, all assertions and declarations
+from the previous level are removed. Thus, after we solve \qV{} the variables
+$i$ and $g$ cannot be referenced as they are no longer in scope.
 
 In an efficient process one would initially add as many \emph{shared} terms as
-possible; \pV{} in this example. Then check for satisfiability, request a model,
-and manipulate the assertion stack to reach the next problem of interest; \qV{}
-in this case. Notice that to reach the next problem, \qV{}, from \pV{}, several
-operations are required: \eV{} and \cV{} must be removed, \bV{} must be updated,
-and the new clauses must be introduced. To reach \rV{} from \qV{} all assertions
-would need to be popped to add \zV{}, then re-pushed.
+possible, such as $a$ from \pV{} and then reuse that term as many times as
+needed. Thus, an efficient process should perform only enough manipulation of
+the assertion stack as required to reach the next \ac{sat} problem of interest
+from the current one. However, notice that doing so is not entirely straight
+forward; we were only able to reuse $a$ from \pV{} in \qV{} because we defined
+\pV{} in a non-intuitive way by utilizing the internal behavior of the assertion
+stack. This situation is exacerbated by \ac{sat} problems such as \rV{} where we
+were forced by the problem structure to completely remove everything on the
+stack in order to construct \rV{}. \todo{this is motivation but seems like a
+  good time to make this point?}Thus incremental \ac{sat} solvers provide the
+primitive operations required to solve related \ac{sat} problems efficiently,
+yet writing the \acl{smtlib} program to solve the set efficiently is not
+straightforward.
 
 %%% Local Variables:
 %%% mode: latex
