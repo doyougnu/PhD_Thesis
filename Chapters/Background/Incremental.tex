@@ -21,17 +21,17 @@ Suppose one wants to find a model for each formula. Using a non-incremental
 \ac{sat} solver results in the procedure illustrated in \autoref{fig:bkg:bf};
 where \ac{sat} solving is a batch process and no information is reused.
 Alternatively, a procedure using an incremental \ac{sat} solver is illustrated
-in \autoref{fig:bkg:inc}; in this scenario, all of the formulas are solved by
-single solver instance where terms are programmatically added or removed from
-the solver.
+in \autoref{fig:bkg:inc}; in this scenario, all formulas are solved by single
+solver instance where terms are programmatically added or removed from the
+solver.
 
 The ability to add and remove terms is enabled by manipulating the
 \textit{assertion stack}. The previous example demonstrated a single level on
 the stack, this example demonstrates three. The incremental interface provides
 two new commands: \rn{push} to create a new variable \emph{scope} and add a
-level to the stack and \rn{pop} to remove the level. The following \acl{smtlib}
-program follows the procedure outlined in \autoref{fig:bkg:inc} and solves \pV,
-\qV{} and \rV{}:
+level to the stack and \rn{pop} to remove the level. The following program
+follows the procedure outlined in \autoref{fig:bkg:inc} and solves \pV, \qV{}
+and \rV{}:
 
 \begin{lstlisting}[columns=flexible,keepspaces=true,language=SMTLIB]
 (declare-const a Bool)         ;; variable declarations for p
@@ -40,18 +40,18 @@ program follows the procedure outlined in \autoref{fig:bkg:inc} and solves \pV,
 (declare-const e Bool)
 (assert a)                     ;; a is shared between p and q
 (push)                         ;; solve p
-(assert e)
-(assert c)
-(assert b)
-(check-sat)                    ;; check-sat on p
+  (assert e)
+  (assert c)
+  (assert b)
+  (check-sat)                  ;; check-sat on p
 (pop)                          ;; remove e, c, and b assertions
 (push)                         ;; solve for q
-(declare-const i Bool)         ;; new variables
-(declare-const g Bool)
-(assert (or b (not i)))        ;; new clause
-(assert c)                     ;; re-add c
-(assert (=> g c))              ;; new clause
-(check-sat)                    ;; check sat of q
+  (declare-const i Bool)       ;; new variables
+  (declare-const g Bool)
+  (assert (or b (not i)))      ;; new clause
+  (assert c)                   ;; re-add c
+  (assert (=> g c))            ;; new clause
+  (check-sat)                  ;; check sat of q
 (pop)                          ;; i and g out of scope
 (reset)                        ;; reset the assertion stack
 (declare-const a Bool)         ;; variable declarations for r
@@ -80,8 +80,8 @@ the assertion stack as required to reach the next \ac{sat} problem of interest
 from the current one. However, notice that doing so is not entirely straight
 forward; we were only able to reuse $a$ from \pV{} in \qV{} because we defined
 \pV{} in a non-intuitive way by utilizing the internal behavior of the assertion
-stack. This situation is exacerbated by \ac{sat} problems such as \rV{} where we
-were forced by the problem structure to completely remove everything on the
+stack. This situation is exacerbated by \ac{sat} problems such as \rV{} where
+due to the equivalence we were forced to completely remove everything on the
 stack in order to construct \rV{}. \todo{this is motivation but seems like a
   good time to make this point?}Thus incremental \ac{sat} solvers provide the
 primitive operations required to solve related \ac{sat} problems efficiently,
