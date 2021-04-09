@@ -1,10 +1,10 @@
 %
-To demonstrate the application of \ac{vpl}, we encode the incremental example
-from \autoref{chapter:background}. Our goal is to construct a single variational
-formula that encodes the related plain formulas \pV{}, \qV{}, \rV{}. Ideally,
-this variational formula should maximize sharing among the plain formulas in
-order to avoid redundant analyses during a variational solving. We reproduce the
-formulas below for the convenience:
+To demonstrate the application of \ac{vpl} and conclude the chapter, we encode
+the incremental example from \autoref{chapter:background}. Our goal is to
+construct a single variational formula that encodes the related plain formulas
+\pV{}, \qV{}, \rV{}. Ideally, this variational formula should maximize sharing
+among the plain formulas in order to avoid redundant analyses during a
+variational solving. We reproduce the formulas below for the convenience:
 %
 \begin{align*}
   p =\ a \wedge b \wedge c \wedge e && q=\ a \wedge (b \vee \neg \iV{}) \wedge c \wedge (\gV{} \rightarrow c) && r =~z \leftrightarrow (a \wedge b \wedge c \wedge e)
@@ -44,25 +44,45 @@ wrap the leaf in a choice with dimension \dimR. This yields the following
 variational formula.
 %
 \begin{equation*}
-  v_{pr} = \chc[\dimR]{\zV, \tru{}} \leftrightarrow a \wedge b \wedge c \wedge e
+  f_{\pV\rV} = \chc[\dimR]{\zV, \tru{}} \leftrightarrow (a \wedge b \wedge c \wedge e)
 \end{equation*}
 %
 %
 We exploit the fact that $\wedge$ forms a monoid with \tru{} to recover a
 formula equivalent to \pV{} for configurations where \dimR{} is \false.
 
-Next we combine $f$ with \qV{} to obtain a variational formula that the
-propositional formulas \pV{}, \qV{}, \rV{}. As before, every change
-in \ldots{} is wrapped in a choice in dimension \dimQ. The choice in \ldots{} is
-nested in the right alternative of a choice in \ldots{} because that change is not
-present in \ldots{}:
+Next we combine $f_{\pV\rV}$ with \qV{} to obtain a variational formula that encodes the
+propositional formulas \pV{}, \qV{}, \rV{}. There are two sub-trees that must be
+wrapped in choices. First, we must encode the difference between $b \vee \neg i$
+from \qV{} and $b$. Second, we must ensure synchronization and thus use the same
+dimension to encode the difference between $g \rightarrow c$ and $e$. Thus the
+resulting variational formula is:
 %
+\begin{equation*}
+  f = \chc[\dimR]{\zV, \tru{}} \leftrightarrow (a \wedge \chc[\dimQ]{b \vee \neg i, b} \wedge c \wedge \chc[\dimQ]{g \rightarrow c, e})
+\end{equation*}
 %
 Now that we have constructed the variational formula we need to ensure that it
-encodes all variants of interest and nothing else. In this example, this is
-relatively easy to confirm by enumerating all total configurations involving
-\ldots{} and \ldots{}. However, we'll return to the general case in the discussion
-of variational models in \autoref{chapter:vsat}.
+encodes all variants of interest and nothing else. Notice that only 2 dimensions
+are used to encode 3 variants, because \dcardinality{f} = 2 we have are 4
+possible variants and thus one extra variant. We can observe this by enumerating
+the variants and possible configurations:
+%
+\begin{align*}
+  \pV &=\ \tru{} \leftrightarrow (a \wedge b \wedge c \wedge e)                          & C = \{(\dimR, \false), (\dimQ, \false)\} \\
+  \qV &=\ \tru{} \leftrightarrow (a \wedge (b \vee \neg \iV{}) \wedge c \wedge (\gV{} \rightarrow c))   & C = \{(\dimR, \false), (\dimQ, \true)\} \\
+  \rV &=~z \leftrightarrow (a \wedge b \wedge c \wedge e)                               & C = \{(\dimR, \true), (\dimQ, \false)\} \\
+  \kf{extra} &=~z \leftrightarrow (a \wedge (b \vee \neg \iV{}) \wedge c \wedge (\gV{} \rightarrow c)) & C = \{(\dimR, \true), (\dimQ, \true)\}
+\end{align*}
+%
+
+Notice the $\kf{extra}$ variant and that \pV{} and \qV{} are only recovered
+through equivalency laws from propositional logic. While it is undesirable that
+there exists extra variants, the important constraint: $\kf{fs} = \{ v\ |\ v \in
+\{ \pV, \qV, \rV\} \}$, $fs \subseteq \variants{f}$ is satisfied. We'll return
+to the case of \todo{maybe superfluous?}extra variants in the next chapter as a
+variational \ac{sat} solver must only solve variants of interest.
+
 
 
 %%% Local Variables:
