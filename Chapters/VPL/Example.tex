@@ -1,0 +1,71 @@
+%
+To demonstrate the application of \ac{vpl}, we encode the incremental example
+from \autoref{chapter:background}. Our goal is to construct a single variational
+formula that encodes the related plain formulas \pV{}, \qV{}, \rV{}. Ideally,
+this variational formula should maximize sharing among the plain formulas in
+order to avoid redundant analyses during a variational solving. We reproduce the
+formulas below for the convenience:
+%
+\begin{align*}
+  p =\ a \wedge b \wedge c \wedge e && q=\ a \wedge (b \vee \neg \iV{}) \wedge c \wedge (\gV{} \rightarrow c) && r =~z \leftrightarrow (a \wedge b \wedge c \wedge e)
+\end{align*}
+
+%
+Every set of plain formulas can be encoded as a variational formula
+systematically by first constructing a nested choice containing all of the
+individual variables as alternatives, then factoring out shared subexpressions
+by applying the laws in \autoref{fig:cc:eqv}.
+%
+Unfortunately, the process of globally minimizing a variational formula in this
+way is hard\footnote{\label{vpl:bdd}. We hypothesize that it is equivalent to
+  BDD minimization, which is NP-complete, but the equivalence has not been
+  proved; see~\cite{Walk14onward}.} since we must apply an arbitrary number of
+laws right-to-left in order to set up a particular sequence of left-to-right
+applications that factor out commonalities.
+
+Due to the difficulty of minimization, we instead demonstrate how one can build
+such a formula \emph{incrementally}.
+%
+Our variational formula will use the dimensions \dimP, \dimQ, \dimR{} to
+represent the respective variants. Unique portions of each variant will be
+nested into the left alternative so that the unique portion is considered when
+the dimension is bound to \true in the configuration.
+
+%
+We begin by combining \pV{} and \rV{} since the differences\todo{section on
+  encoding problem}\footnote{There are many ways to assess the difference of two
+  formulas. For now the reader may consider it reducible to the Levenshtein
+  distance of two strings~\cite{Levenshtein_SPD66}. We return to this discussion
+  in \ldots{}} between the two are smaller than between other pairs of feature
+models in our example. Feature models may be combined in any order as long as
+the variants in the resulting formula correspond to their plain counterparts.
+The only change between \pV{} and \rV{} is the addition of \zV{} and thus we
+wrap the leaf in a choice with dimension \dimR. This yields the following
+variational formula.
+%
+\begin{equation*}
+  v_{pr} = \chc[\dimR]{\zV, \tru{}} \leftrightarrow a \wedge b \wedge c \wedge e
+\end{equation*}
+%
+%
+We exploit the fact that $\wedge$ forms a monoid with \tru{} to recover a
+formula equivalent to \pV{} for configurations where \dimR{} is \false.
+
+Next we combine $f$ with \qV{} to obtain a variational formula that the
+propositional formulas \pV{}, \qV{}, \rV{}. As before, every change
+in \ldots{} is wrapped in a choice in dimension \dimQ. The choice in \ldots{} is
+nested in the right alternative of a choice in \ldots{} because that change is not
+present in \ldots{}:
+%
+%
+Now that we have constructed the variational formula we need to ensure that it
+encodes all variants of interest and nothing else. In this example, this is
+relatively easy to confirm by enumerating all total configurations involving
+\ldots{} and \ldots{}. However, we'll return to the general case in the discussion
+of variational models in \autoref{chapter:vsat}.
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../thesis"
+%%% End:

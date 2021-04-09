@@ -1,0 +1,23 @@
+%
+The syntax of variational propositional logic is given in
+\autoref{fig:cc:stx}. It extends the propositional formula notation of \pl{}
+with a single new connective called a \emph{choice} from the choice calculus.
+%
+A choice $\chc[D]{f_1,f_2}$ represents either $f_1$ or $f_2$ depending on the
+Boolean value of its \emph{dimension} $D$. We call $f_1$ and $f_2$ the
+\emph{alternatives} of the choice.
+%
+Although dimensions are Boolean variables, the set of dimensions is disjoint
+from the set of variables from \pl{}, which may be referenced in the leaves of
+a formula. We use lowercase letters to range over variables and uppercase
+letters for dimensions.
+
+The syntax of \ac{vpl} does not include derived logical connectives, such as
+$\rightarrow$ and $\leftrightarrow$. However, such forms can be defined
+from other primitives and are assumed throughout the thesis.
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../thesis"
+%%% End:

@@ -1,0 +1,72 @@
+%
+Conceptually, a variational formula represents several propositional logic
+formulas at once, which can be obtained by resolving all of the choices. For
+software product-line researchers, it is useful to think of \ac{vpl} as analogous
+to \cpp{ifdef}-annotated \pl{}, where choices correspond to a
+disciplined~\cite{LKA:AOSD11} application of \cpp{ifdef} annotations.
+%
+From a logical perspective, following the many-valued logic of
+Kleene~\cite{kleene1968introduction,Rescher1969-RESML}, the intuition behind
+\ac{vpl} is that a choice is a placeholder for two equally possible alternatives
+that is deterministically resolved by reference to an external environment.
+%
+In this sense, \ac{vpl} deviates from other many-valued logics, such as modal
+logic~\cite{sep-logic-modal}, because a choice \emph{waits} until there is
+enough information in an external environment to choose an alternative (i.e.,
+until the formula is \emph{configured}).
+
+The \emph{configuration semantics} of \ac{vpl} is given in
+\autoref{fig:cc:cfg} and describes how choices are eliminated from a
+formula. The semantics is parameterized by a \emph{configuration}\ $C$, which is
+a partial function from dimensions to Boolean values.
+%
+The first four cases of the semantics simply propagate configuration down the
+formula, terminating at the leaves. The case for choices is the interesting one:
+if the dimension of the choice is defined in the configuration, then the choice
+is replaced by its left or right alternative corresponding to the associated
+value of the dimension in the configuration. If the dimension is undefined in
+the configuration, then the choice is left intact and configuration propagates
+into the choice's alternatives.
+
+If a configuration $C$ eliminates all choices in a formula $f$, we call $C$
+\emph{total} with respect to $f$. If $C$ does \emph{not} eliminate all choices
+in $f$ (i.e., a dimension used in $f$ is undefined in $C$), we call $C$
+\emph{partial} with respect to $f$.
+%
+We call a choice-free formula \emph{plain}, and call the set of all plain
+formulas that can be obtained from $f$ (by configuring it with every possible
+total configuration) the \emph{variants} of $f$.
+
+To illustrate the semantics of \ac{vpl}, consider the formula
+$p\wedge\chc[A]{q,r}$, which has two variants: $p\wedge q$ when $C(A)=\true$
+and $p\wedge r$ when $C(A)=\false$.
+%
+From the semantics, it follows that choices in the same dimension are
+\emph{synchronized} while choices in different dimensions are
+\emph{independent}. For example, $\chc[A]{p,q}\wedge\chc[B]{r,s}$ has four
+variants, while $\chc[A]{p,q}\wedge\chc[A]{r,s}$ has only two ($p\wedge r$ and
+$q\wedge s$).
+%
+It also follows from the semantics that nested choices in the same dimension
+contain redundant alternatives; that is, inner choices are \emph{dominated} by
+outer choices in the same dimension. For example, $\chc[A]{p,\chc[A]{r,s}}$ is
+equivalent to $\chc[A]{p,s}$ since the alternative $r$ cannot be reached by any
+configuration.
+%
+As the previous example illustrates, the representation of a \ac{vpl} formula is
+not unique; that is, the same set of variants may be encoded by different
+formulas. \autoref{fig:cc:eqv} defines a set of equivalence laws for
+\ac{vpl} formulas. These laws follow directly from the configuration semantics in
+\autoref{fig:cc:cfg} and can be used to derive semantics-preserving
+transformations of \ac{vpl} formulas.
+%
+For example, we can simplify the formula $\chc[A]{p\vee q, p\vee r}$ by first
+applying the \rn{Or} law to obtain $\chc[A]{p,p}\vee\chc[A]{q,r}$, then applying
+the \rn{Idemp} law to the first argument to obtain $p\vee\chc[A]{q,r}$ in which
+the redundant $p$ has been factored out of the choice.
+%
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../thesis"
+%%% End:
