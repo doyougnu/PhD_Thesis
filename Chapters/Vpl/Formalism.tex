@@ -1,15 +1,14 @@
 %
 Having defined the syntax and semantics of \ac{vpl} the rest of this chapter
-will define useful functions and properties of \ac{vpl} formulas. Lastly, we
-conclude the chapter with an example of encoding a set of \pl{} formulas to a
-single \ac{vpl} formula.
-
-We begin with useful functions to retrieve interesting aspects of \ac{vpl}
+will define useful functions and properties. We conclude the chapter with an
+example of encoding a set of \pl{} formulas to a single \ac{vpl} formula.
+%
+First define useful functions to retrieve interesting aspects of \ac{vpl}
 formulas.
 
 \begin{definition}[Dimensions]
   Given a formula $f \in \ac{vpl}$, let $\dimensions{f}$ be the set of unique
-  dimensions in the formula. Thus, $\dimensions{f} = \{ D\ |\ D \in f \}$.
+  dimensions in the formula:  $\dimensions{f} = \{ D\ |\ D \in f \}$.
 \end{definition}
 
 For example, \dimensions{\chc[A]{p,q}\wedge\chc[B]{r,s}} = $\{\kf{A,B}\}$ and
@@ -43,43 +42,26 @@ One may think of a valid configuration as a total configuration with
 \emph{nothing extra}. For example, the configuration $C = \{\kf{(A,\true),
   (B,\false),(E,\true)}\}$ is total with respect to the formula $f =
 \chc[A]{p,q}\wedge\chc[B]{r,s}$ because $C$ eliminates all choices in $f$.
-However $\kf{C}$ is not valid with respect to $f$ because $\kf{Dom(C)}\ \cap\
+However $\kf{C}$ is not valid with respect to $f$ as $\kf{Dom(C)}\ \cap\
 \kf{Dimensions(\kf{f})\ = \{\kf{E}\}}$, and thus in this case $C$ contains one
 extra binding for $E$, than needed with respect to $f$.
 
-\begin{definition}[Variant]
-  Let $f$ be a variant of a formula $e$ iff there exists some
-  valid, total configuration $C$ such that $\sem[C]{e} = f$.
-\end{definition}
-
-Because variants are defined only with total configurations, all variants cannot
-contain choices and are hence called \textit{plain}:
-
-\begin{definition}[Plain formula]
-  For any formula $e \in\ \ac{vpl}$, let $e$ be plain iff $\kf{Dimensions(e)}
-  = \varnothing$
-\end{definition}
+With these functions and definitions we can prove useful lemmas and theorems:
 %
-\begin{lemma}[Variants are plain]
-  By \autoref{thm:cclToPl} and the fact that variants are found via total
-  configurations
-\end{lemma}
+\begin{theorem}[\ac{vpl} reducible to \pl{}]
+  \label{thm:vpltopl}
+  For any configuration $C$ and any formula $f \in \ac{vpl}$, if $C$ is total
+  with respect to $f$, then $\sem[C]{f} \in \pl{}$
+\end{theorem}
 %
-% \begin{theorem}[\ccl{} reducible to \pl{}]
-%   \label{thm:cclToPl}
-%   For any configuration $C$ and any formula $e$, if $C$ is
-%   valid and total with respect to $e$, then $\sem[C]{e} \in \pl{}$
-% \end{theorem}
-%
-% \begin{proof}
-%   This follows directly from the semantics of configuration in
-%   Figure~\ref{fig:bkg:cc:cfg}, and Definition~\ref{tot:conf}. The proof is done
-%   by structural induction and case analysis; because we have a total
-%   configuration, and the configuration semantic function is a total function,
-%   every choice and its' configured alternatives, will be recursively reified for
-%   $e$. Then by the definition of \ccl{} a formula which lacks choices is by
-%   definition in \pl{}.
-% \end{proof}
+\begin{proof}
+  This follows directly from the semantics of configuration in
+  \autoref{fig:cc:cfg}, and the definition of a total configuration. The proof
+  is done by structural induction and case analysis; because $C$ is total and
+  the configuration semantic function is a total function, every choice and its'
+  alternatives is recursively reified for $f$. Then by the definition of
+  \ac{vpl} a formula which lacks choices is $\in \pl{}$.
+\end{proof}
 
 %%% Local Variables:
 %%% mode: latex
