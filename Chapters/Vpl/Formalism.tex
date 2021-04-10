@@ -1,35 +1,52 @@
-\begin{definition}[Choice]
-  A Choice \chc[D]{\e{1},\e{2}} is a binary connective that denotes a local
-  point of variation between two possible \textit{alternatives}; \e{1}, and
-  \e{2}, with a single Boolean variable, $D$, called a \textit{dimension}.
-\end{definition}
-
-\begin{definition}[Dimension]
-  A Dimension is a Boolean variable that represents a choice and is used to
-  determine an alternative during configuration. For some formula $f$, let
-  $\kf{Dimensions(f)}$ denote the dimensions present in a \ac{vpl} formula.
-\end{definition}
-
-\begin{definition}[Alternative]
-  An alternative is a projection from a choice to one of the two possible
-  \ac{vpl} formulas that the choice simultaneously represents.
-\end{definition}
-
-\begin{definition}[Valid Configuration]
-  We say configuration $C$ is valid with respect to some formula $f$ iff
-  $\kf{Dom(C)}\ \cap\ \kf{Dimensions(\kf{f})\ \neq \varnothing}$.
-\end{definition}
-
-\begin{definition}[Total Configuration]
-    \label{tot:conf}
-    For any valid configuration $C$, with respect to formula $\kf{f}$, let
-    $C$ be total iff $\kf{Dimensions(f) \subseteq Dom(C)}$.
-\end{definition}
 %
-\begin{corollary}[Partial Configuration]
-  For any valid configuration $C$ with respect to formula $f$, let $C$ be
-  partial iff $C$ is not total.
-\end{corollary}
+Having defined the syntax and semantics of \ac{vpl} the rest of this chapter
+will define useful functions and properties of \ac{vpl} formulas. Lastly, we
+conclude the chapter with an example of encoding a set of \pl{} formulas to a
+single \ac{vpl} formula.
+
+We begin with useful functions to retrieve interesting aspects of \ac{vpl}
+formulas.
+
+\begin{definition}[Dimensions]
+  Given a formula $f \in \ac{vpl}$, let $\dimensions{f}$ be the set of unique
+  dimensions in the formula. Thus, $\dimensions{f} = \{ D\ |\ D \in f \}$.
+\end{definition}
+
+For example, \dimensions{\chc[A]{p,q}\wedge\chc[B]{r,s}} = $\{\kf{A,B}\}$ and
+\dimensions{\chc[A]{p,q}\wedge\chc[A]{r,s}} = $\{\kf{A}\}$.
+%
+Similarly we define a notion of \emph{cardinality} over \ac{vpl} formulas.
+%
+\begin{definition}[Dimension-cardinality]
+  The dimension-cardinality or d-cardinality of a formula $f \in \ac{vpl}$ is
+  the cardinality of the set of unique dimensions in a formula. We use the
+  following notation as shorthand: $\dcardinality{f} = |{\dimensions{f}}|$.
+\end{definition}
+
+Similarly to $\kf{Dimensions}$ another useful function is $\kf{Variants}$:
+
+\begin{definition}[Variants]
+  Given a formula $f \in \ac{vpl}$, let $\variants{f}$ be the set of all
+  possible \emph{plain variants} of $f$. Thus, $\variants{f} = \{\ v\ |\ \exists C.\
+  v = \sem[C]{f},\ v \in \pl{} \,\}$
+\end{definition}
+
+Using $\kf{Dimensions}$ we can now define a more precise property on
+configurations.
+%
+\begin{definition}[Valid Configuration]
+  We say a configuration $C$ is valid with respect to some formula $f \in
+  \ac{vpl}$ iff $\kf{Dom(C)}\ \cap\ \kf{Dimensions(\kf{f})\ \neq \varnothing}$.
+\end{definition}
+
+One may think of a valid configuration as a total configuration with
+\emph{nothing extra}. For example, the configuration $C = \{\kf{(A,\true),
+  (B,\false),(E,\true)}\}$ is total with respect to the formula $f =
+\chc[A]{p,q}\wedge\chc[B]{r,s}$ because $C$ eliminates all choices in $f$.
+However $\kf{C}$ is not valid with respect to $f$ because $\kf{Dom(C)}\ \cap\
+\kf{Dimensions(\kf{f})\ = \{\kf{E}\}}$, and thus in this case $C$ contains one
+extra binding for $E$, than needed with respect to $f$.
+
 \begin{definition}[Variant]
   Let $f$ be a variant of a formula $e$ iff there exists some
   valid, total configuration $C$ such that $\sem[C]{e} = f$.
@@ -47,7 +64,22 @@ contain choices and are hence called \textit{plain}:
   By \autoref{thm:cclToPl} and the fact that variants are found via total
   configurations
 \end{lemma}
-
+%
+% \begin{theorem}[\ccl{} reducible to \pl{}]
+%   \label{thm:cclToPl}
+%   For any configuration $C$ and any formula $e$, if $C$ is
+%   valid and total with respect to $e$, then $\sem[C]{e} \in \pl{}$
+% \end{theorem}
+%
+% \begin{proof}
+%   This follows directly from the semantics of configuration in
+%   Figure~\ref{fig:bkg:cc:cfg}, and Definition~\ref{tot:conf}. The proof is done
+%   by structural induction and case analysis; because we have a total
+%   configuration, and the configuration semantic function is a total function,
+%   every choice and its' configured alternatives, will be recursively reified for
+%   $e$. Then by the definition of \ccl{} a formula which lacks choices is by
+%   definition in \pl{}.
+% \end{proof}
 
 %%% Local Variables:
 %%% mode: latex
