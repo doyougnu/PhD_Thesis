@@ -1,52 +1,52 @@
 \begin{definition}[Choice]
-  A Choice \chcPP[D]{\e{1}}{\e{2}}, is a binary connective that denotes a point
-  of locally scoped variation between two possible \textit{alternatives}; \e{1},
-  and \e{2}, with a single Boolean variable, $D$, called a \textit{dimension}.
+  A Choice \chc[D]{\e{1},\e{2}} is a binary connective that denotes a local
+  point of variation between two possible \textit{alternatives}; \e{1}, and
+  \e{2}, with a single Boolean variable, $D$, called a \textit{dimension}.
 \end{definition}
 
 \begin{definition}[Dimension]
   A Dimension is a Boolean variable that represents a choice and is used to
   determine an alternative during configuration. For some formula $f$, let
-  $\kernfix{Dimensions(f)}$ denote the dimensions present in a \ccl{} formula.
+  $\kf{Dimensions(f)}$ denote the dimensions present in a \ac{vpl} formula.
 \end{definition}
 
 \begin{definition}[Alternative]
-  An alternative is a projection from a choice to one of the two possible \ccl{}
-  formulas that the choice simultaneously represents.
+  An alternative is a projection from a choice to one of the two possible
+  \ac{vpl} formulas that the choice simultaneously represents.
 \end{definition}
 
 \begin{definition}[Valid Configuration]
   We say configuration $C$ is valid with respect to some formula $f$ iff
-  $\kernfix{Dom(C)}\ \cap\ \kernfix{Dimensions(\kernfix{f})\ \neq \varnothing}$.
+  $\kf{Dom(C)}\ \cap\ \kf{Dimensions(\kf{f})\ \neq \varnothing}$.
 \end{definition}
 
 \begin{definition}[Total Configuration]
     \label{tot:conf}
-    For any valid configuration $C$, with respect to formula $\kernfix{f}$, let
-    $C$ be total iff $\kernfix{Dimensions(f) \subseteq Dom(C)}$.
-  \end{definition}
-  %
-  \begin{corollary}[Partial Configuration]
-    For any valid configuration $C$ with respect to formula $f$, let $C$ be
-    partial iff $C$ is not total.
-  \end{corollary}
-  \begin{definition}[Variant]
-    Let $f$ be a variant of a formula $e$ iff there exists some
-    valid, total configuration $C$ such that $\sem[C]{e} = f$.
-  \end{definition}
+    For any valid configuration $C$, with respect to formula $\kf{f}$, let
+    $C$ be total iff $\kf{Dimensions(f) \subseteq Dom(C)}$.
+\end{definition}
+%
+\begin{corollary}[Partial Configuration]
+  For any valid configuration $C$ with respect to formula $f$, let $C$ be
+  partial iff $C$ is not total.
+\end{corollary}
+\begin{definition}[Variant]
+  Let $f$ be a variant of a formula $e$ iff there exists some
+  valid, total configuration $C$ such that $\sem[C]{e} = f$.
+\end{definition}
 
-  Because variants are defined only with total configurations, all variants cannot
-  contain choices and are hence called \textit{plain}:
+Because variants are defined only with total configurations, all variants cannot
+contain choices and are hence called \textit{plain}:
 
-  \begin{definition}[Plain formula]
-    For any formula $e \in\ \ccl{}$, let $e$ be plain iff $\kernfix{Dimensions(e)}
-    = \varnothing$
-  \end{definition}
-  %
-  % \begin{lemma}[Variants are plain]
-  %   By Theorem~\ref{thm:cclToPl} and the fact that variants are found via total
-  %   configurations
-  % \end{lemma}
+\begin{definition}[Plain formula]
+  For any formula $e \in\ \ac{vpl}$, let $e$ be plain iff $\kf{Dimensions(e)}
+  = \varnothing$
+\end{definition}
+%
+\begin{lemma}[Variants are plain]
+  By \autoref{thm:cclToPl} and the fact that variants are found via total
+  configurations
+\end{lemma}
 
 
 %%% Local Variables:

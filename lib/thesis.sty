@@ -36,7 +36,6 @@
 \newcommand{\resQ}[1]{\textbf{RQ#1}}
 
 %%% CUSTOM COMMANDS
-\newcommand{\paul}[1]{\todo[color=yellow]{Paul: #1}}
 \newcommand{\eric}[1]{\todo[color=pink]{#1 -E}}
 
 \providecommand{\eg}[0]{e.g\xperiod}
@@ -97,15 +96,6 @@
 \newcommand{\lift}[1]{\ensuremath{#1^{\chcL{}\chcR{}}}}
 \newcommand{\nats}[0]{\ensuremath{\mathbb{N}_{0}}}
 
-% features in Linux kernel
-\newcommand{\Fmitigate}{\kf{mitigations}}
-\newcommand{\Fspectre}{\kf{spectre\_v2}}
-\newcommand{\Fnospec}{\kf{nospec\_store\_bypass\text{-}disable}}
-\newcommand{\Flone}{\kf{l1tf}}
-\newcommand{\Fpti}{\kf{pti}}
-
-\newcommand{\github}[0]{\url{https://github.com/lambda-land/VSat-Papers/tree/master/EMSE2021}}
-
 %%% macro for all combinations of two features
 \newcommand{\ViByVj}[2]{$\mathit{V_{#1}*V_{#2}}$}
 \newcommand{\ViToVj}[2]{$\mathit{V_{#1}**V_{#2}}$}
@@ -144,6 +134,7 @@
 \newcommand{\bii}{\bop{\integers{}\integers}}
 
 %%%% accumulation
+\newcommand{\e}[1]{\ensuremath{e_{#1}}}
 \newcommand{\aStore}[1]{\ensuremath{\Delta_{#1}}}
 \newcommand{\accumulation}{\ensuremath{\mapsto{}}}
 \newcommand{\acChc}{\rn{A-Chc}}
