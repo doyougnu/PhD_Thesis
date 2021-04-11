@@ -1,4 +1,4 @@
-\tikzstyle{block}    = [draw,fill=white!20,node distance = 1.5cm,align=center]
+\tikzstyle{block}    = [draw,fill=white!20,node distance = 3.5cm,align=center]
 \tikzstyle{inEdge}   = [fill=white, text width=1cm]
 \tikzstyle{overEdge} = [midway,above]
 \tikzstyle{input}    = [fill=white!20,node distance = 2.2cm,align=center, text width=1cm]
@@ -11,8 +11,8 @@
 
   % The loop
   \node[block]  (solve) {Reification\\Engine};
-  \node[block, below right=of solve] (vmodel) {VModel\\Constructor};
-  \node[block, below=1.05cm of solve] (vcore) {Reduction\\Engine};
+  \node[block, below right=2.05cm and 3.125cm of solve] (vmodel) {VModel\\Constructor};
+  \node[block, below=2.05cm of solve] (vcore) {Reduction\\Engine};
   \node[block, right=of solve] (base) {Base\\Solver};
 
   % input nodes
@@ -30,7 +30,7 @@
 
   %% outputs
   (vmodel) edge[->] node[overEdge] {} (output)
-  (base)   edge[->,sloped] node[overEdge,right,rotate=-90,xshift=0.8em]
+  (base)   edge[->,sloped] node[overEdge,left,rotate=89,xshift=3.0cm]
   {$\kf{plain~models}$} (vmodel)
   (base)   edge[->,sloped,bend right=10] node[overEdge,right,rotate=-90] {} (vmodel)
   (base)   edge[->,sloped,bend right=20] node[overEdge,right,rotate=-90] {} (vmodel)
@@ -38,10 +38,10 @@
   (base)   edge[->,sloped,bend left=20] node[overEdge,right,rotate=-90] {} (vmodel)
 
   %% Loop
-  (solve) edge[->,sloped, bend left=25] node[overEdge,right,text width=1.5cm,rotate=90] {$s$, $v_{1} \vee v_{2}$, $v_{1} \wedge v_{2}$} (vcore)
+  (solve) edge[->,sloped, bend left=25] node[overEdge,right,text width=5.5cm,rotate=90] {$s$, $v_{1} \vee v_{2}$, $v_{1} \wedge v_{2}$} (vcore)
   (vcore) edge[->,sloped, bend left=25] node[overEdge,left,rotate=-90] {$\kf{VCore}$, $\unit{}$} (solve)
-  (solve) edge[->,in=100,out=160,loop, min distance=10mm] node[overEdge,xshift=-2em,yshift=0.2em] {$v \wedge \sem[C]{\chc[D]{e_{1}, e_{2}}}$} (solve)
-  (solve) edge[dashed,->,in=70,out=15,loop, min distance=10mm] node[overEdge,xshift=4.75em,yshift=0.2em,text width = 4.5cm] {$v \wedge \sem[C\ \cup\ \{(D, \tru{})\}]{\chc[D]{e_{1}, e_{2}}}$, $v \wedge \sem[C\ \cup\ \{(D, \fls{})\}]{\chc[D]{e_{1}, e_{2}}}$} (solve)
+  (solve) edge[->,in=100,out=160,loop, min distance=20mm] node[overEdge,xshift=-2em,yshift=0.2em] {$v \wedge \sem[C]{\chc[D]{e_{1}, e_{2}}}$} (solve)
+  (solve) edge[dashed,->,in=70,out=15,loop, min distance=20mm] node[overEdge,xshift=4.75em,yshift=0.2em,text width = 5.5cm] {$v \wedge \sem[C\ \cup\ \{(D, \true)\}]{\chc[D]{e_{1}, e_{2}}}$, $v \wedge \sem[C\ \cup\ \{(D, \false)\}]{\chc[D]{e_{1}, e_{2}}}$} (solve)
 
   %% Loop escape
   (solve) edge[->] node[overEdge] {} (base)

@@ -1,10 +1,12 @@
 ~\label{chapter:vsat}
 
-In this section, we present our algorithm for variational satisfiability
-solving. \autoref{sec:approach} provides an overview of the algorithm and
-introduces the notion of \emph{variational models} as solutions to variational
-satisfiability problems. \autoref{sec:formalization} provides the formal
-specification.
+This chapter presents the variational satisfiability solving algorithm.
+\autoref{sec:approach} provides an overview of the algorithm and introduces the
+notion of \emph{variational models} as solutions to variational satisfiability
+problems. \autoref{sec:vsat:formalization} provides the formal specification.
+\todo{add proofs for confluence and variation preseration}We conclude the
+chapter by proving that the variational solving algorithm is confluent and
+variation preservation.
 
 
 \section{General Approach}
@@ -12,31 +14,30 @@ specification.
 
 \begin{figure}
   \centering
-  % \begin{subfigure}[t]{0.5\textwidth}
     \input{Figures/Vsat_Impl_Solve_Overview}
     \caption{System overview of the variational solver.}%
     \label{impl:overview}
-  % \end{subfigure}
 \end{figure}
 
-We solve \ac{vpl} formulas recursively, decoupling the handling of plain
-terms from the handling of variational terms.
+\ac{vpl} formulas are solved recursively; decoupling the handling of plain terms
+from the handling of variational terms.
 %
-The intuition behind our algorithm is to first process as many plain terms as
+The intuition behind the algorithm is to first process as many plain terms as
 possible (e.g.\ by pushing those terms to the underlying solver) while skipping
-choices, yielding a \emph{variational core} that represents only the
-variational parts of the original formula. We then alternate between
-configuring choices in the variational core and processing the new plain terms
-produced by configuration until the entire term has been consumed.
+choices, yielding a \emph{variational core} that represents only the variational
+parts of the original formula. We then alternate between configuring choices in
+the variational core and processing the new plain terms produced by
+configuration until the entire term has been consumed.
 %
-Each time the entire term is consumed corresponds to one variant of the
-original \ac{vpl} formula since all of its choices will have been configured in a
-particular way. At which point, we query the underlying solver to obtain a
-model for that variant, then backtrack to solve another variant by configuring
-the choices differently. The models for each variant are combined into a single
-\emph{variational model} that captures the result of solving all variants of
-the original \ac{vpl} formula.
-
+A variant in of the original \ac{vpl} formula is found every time the entire
+term is consumed, since all choices will have been configured. Once a variant
+has been found the algorithm queries the underlying solver to obtain a model,
+then backtracks to solve a different variant by configuring the same choices
+differently. The models for each variant are combined into a single
+\emph{variational model} that captures the result of solving all variants of the
+original \ac{vpl} formula. Crucially building a variational model is
+associative, and thus the order the variants' models are found is not important
+to the correctness of the final model.
 
 We present an overview of the variational solver as a state diagram in
 \autoref{impl:overview} that operates on the input's abstract syntax tree.
@@ -315,6 +316,7 @@ unaltered. Variables such as $f_{n}$, whose \vc{} remains \fls{}, are called
 \textit{constant}.
 
 \section{Formalization}
+~\label{sec:vsat:formalization}
 \input{Chapters/Vsat/Formalization}
 
 %%% Local Variables:
