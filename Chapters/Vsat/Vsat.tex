@@ -55,9 +55,10 @@ The \emph{reification engine} configures choices in a variational core. The
 Finally, the \emph{variational model constructor} synthesizes a single
 variational model from the set of plain models returned by the base solver.
 
-The solver takes a \ac{vpl} formula called a \emph{query formula} and an optional
-input called a \emph{variation context} (\vc{}). A \vc{} is a propositional
-formula of dimensions that restricts the solver to a subset of variants.
+The solver takes a \ac{vpl} formula called a \emph{query formula} and an
+optional input called a \emph{variation context} (\vc{}). A \vc{} is a
+propositional formula of dimensions that restricts the solver to a subset of
+variants, thus prevents computation on extra variants.
 %
 The variational solver translates the query formula to a formula in an
 intermediate language (IL) that the reduction and reification engines operate
@@ -83,8 +84,8 @@ solver will be represented by the unit value \unit{}.
 Note that choices contain unprocessed expressions ($e$) as alternatives.
 
 
-\paragraph{Derivation of a Variational Core}
-\label{ssec:impl:accum}
+\section{Derivation of a Variational Core}
+\label{sec:impl:accum}
 
 A variational core is an IL formula that captures the variational structure of
 a query formula. Plain terms will either be placed on the assertion stack or
@@ -101,12 +102,11 @@ references, and choices.
 \end{figure}
 
 
-The variational core for a \ac{vpl} formula is computed by a reduction
-engine illustrated in \autoref{impl:vcore}. The reduction engine has two
-states: \emph{evaluation}, which communicates to the base solver to process
-plain terms, and \emph{accumulation}, which is called by evaluation to create
-symbolic references.
-
+The variational core for a \ac{vpl} formula is computed by a reduction engine
+illustrated in \autoref{impl:vcore}. The reduction engine has two states:
+\emph{evaluation}, which communicates to the base solver to process plain terms,
+and \emph{accumulation}, which is called by evaluation to create symbolic
+references and reduce plain formulas.
 
 
 To illustrate how the reduction engine computes a variational core, consider the
@@ -212,7 +212,7 @@ holes $\Diamond$. For example, the variational core of $f$ would be encoded as:
 Each hole is filled by configuring a choice and may require multiple
 statements to process the alternative.
 
-\paragraph{Solving the Variational Core}
+\section{Solving the Variational Core}
 
 The reduction engine performs the work at each recursive step whereas the
 reification engine defines transitions between the recursive steps by
