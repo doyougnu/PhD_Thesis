@@ -1,7 +1,5 @@
-~\label{section:formalization}
-
-
-In this subsection we formalize variational SAT solving by specifying the
+%
+In this section we formalize variational SAT solving by specifying the
 semantics of the \emph{accumulation} and \emph{evaluation} phases of the
 variational solver, as well as the semantics of processing the variational
 core, which we call \emph{choice removal}.
@@ -19,13 +17,7 @@ accumulation by mapping IL terms to symbolic references. The \emph{evaluation
 store} \eStore{} tracks the symbolic references that have been sent to the base
 solver during evaluation.
 
-
-% We generalize variational models to handle any type of value and discuss
-% further extensions to other background theories, such as an array theory, in
-% \autoref{sec:future-work}.
-
-
-\paragraph{Primitives}
+\subsection{Primitives}
 %
 \autoref{fig:vsmt:inf:prim} lists a minimal set of primitive operations that
 the base solver is assumed to support. These primitive operations define the
@@ -73,7 +65,7 @@ For example, recall the example formula $p\wedge\neg q$ from
 \autoref{sec:approach}, which was replaced by the symbolic value $s_{pq}$ after
 the following sequence of \acs{smtlib} declarations.
 %
-\begin{lstlisting}[columns=flexible,keepspaces=true]
+\begin{lstlisting}[columns=flexible,keepspaces=true,language=SMTLIB]
 (declare-const p Bool)
 (declare-const q Bool)
 (declare-fun $s_{pq}$ () Bool (and p (not q)))
@@ -141,7 +133,7 @@ Otherwise, it invokes the corresponding primitive operation to generate and
 return the new symbolic reference and updated store.
 
 
-\paragraph{Accumulation}
+\subsection{Accumulation}
 %
 The accumulation phase is formally specified in \autoref{fig:vsmt:inf:acc} as a
 relation of the form $(\aStore{},v)\accumulation(\aStore{}',v')$.
@@ -245,7 +237,7 @@ reference $s_g$ and the alternatives of the choice were not reduced.
 \end{figure}
 
 
-\paragraph{Evaluation}
+\subsection{Evaluation}
 %
 The evaluation phase is formally specified in \autoref{fig:vsmt:inf:eval} as a
 relation of the form
@@ -303,7 +295,7 @@ Ultimately, evaluation yields the expression $\chc[D]{a,c}$ with accumulation
 store \aStore{} and evaluation store $\set{s_{ab}}$.
 
 
-\paragraph{Choice removal}
+\subsection{Choice removal}
 %
 The main driver of variational solving is the choice removal phase, which is
 formally specificed in \autoref{fig:vsmt:inf:chc} as a relation of the form
@@ -445,93 +437,6 @@ explore each alternative. Without evaluation contexts, this would be extremely
 difficult since choices may be deeply nested within a variational formula. We
 would have to somehow remember all of the locations in the term that we must
 backtrack to later and the state of the solver at each of those locations.
-
-
-
-% \paragraph{Example: Derivation of a Variational Core}
-% Consider the query formula \newline{}$\kf{h = (\chc[A]{k,l} \wedge a) \wedge
-%   (b \vee \chc[A]{c,\neg b})}$; derivation of the variational core $\kf{h}$
-% begins with evaluation and all stores \aStore{}, \eStore{} initialized to empty.
-% When a user inputs a \vc{} the configuration, C, is initialized
-% to it, otherwise C is initialized to empty.
-% %
-% \evAnd{} is the only applicable rule, with $\wedge$ at the root of $\kf{h}$.
-% Thus, \newline{}$v_{1} = \kf{(\chc[A]{k,l} \wedge a)}$, and $v_{2} =
-% (b \vee \chc[A]{c,\neg b})$.
-%
-% We traverse $v_{1}$ first, leading to a recursive application of \texttt{Ev-And}.
-% We denote the recursive levels with a tick mark $'$, thus $\kf{v_{1}' =
-%   \chc[A]{k,l}}$ is the recursive left child and the right child is $\kf{v_{2}'
-%   = a}$.
-% %
-% \evChc{} matches $v_{1}'$ preventing further evaluation. \TODO{evRef} applies to
-% $v_{2}'$ producing a symbolic, $s_{a}$ for $a$, which can immediately be sent to
-% the base solver with \evSym{}. Thus the result of the recursive call on $v_{1}$
-% is $\kf{\chc[A]{k,l}}$ with stores \aStore{1} = \set{(a,s_{a})}, \eStore{1}
-% = \set{s_{a}}.
-%
-% Accumulation is required to evaluate $v_{2}$. \evOr{} performs the phase change
-% by matching on the root $\vee{}$. \evOr{} produces two calls to accumulation
-% with $v_{1}' = \chc[A]{c,\neg b}$, $v_{2}' = b$ and \aStore{1}. $v_{1}'$ is a
-% choice and thus only \acChc{} applies. \acRef{} will match on $v_{2}'$ and will
-% produce $s_{b}$ with store \aStore{2} = \set{(a,s_{a}), (b,s_{b})}. Thus
-% accumulation yields $\chc[A]{c,\neg b} \vee{} s_{b}$ with \aStore{2} as the
-% result of $v_{2}$. With results for both $v_{1}$ and $v_{2}$ we have derived the
-% variational core of $\kf{h}$ as $\chc[A]{k,l} \wedge{} (s_{b} \vee{}
-% \chc[A]{c,\neg{} b})$ with stores \aStore{2} and \eStore{1}.
-%
-% \paragraph{Example: Solving the variational core}
-% Solving the variational core begins with choice removal and proceeds with
-% recursive calls to accumulation and consequently evaluation. We assume an empty
-% configuration for the remainder of the example as C = $\varnothing{}$
-% is the most general case.
-%
-% $\kf{\chc[A]{k,l}}$ is the immediate left child of the root $\wedge{}$, thus the
-% left version of \evAnd{} applies. Clearly $D \notin C$, so a
-% recursive case for each alternative, beginning with the left alternative $e_{1}$
-% is performed. Several changes occur: the assertion stack is incremented,
-% indicating future processing occurs in a \primOp{push} context; the
-% configuration mutates to account for the selection; $e_{1}$ is translated into
-% IL and replaces the choice, thereby introducing a \textit{new} plain term:
-% $k$. Thus, the recursive call for the left alternative is $k \wedge
-% (s_{b} \vee \chc[A]{c,\neg b})$ where $C_L = \{(A,
-% \true{})\}$. Similarly the right alternative is $l \wedge
-% (s_{b} \vee \chc[A]{c,\neg b})$ with $C_R = \{(A,
-% \false{})\}$.
-%
-% We walk through the processing of the left alternative in detail, the right
-% alternative follows the same procedure. Following \crAnd{} we begin accumulating
-% the left alternative with stores \aStore{} = \set{(a,s_{a}), (b,s_{b})}.
-% The only applicable rule is \TODO{acAnd} producing two recursive calls where $v_{1}
-% = k$ and $v_{2} = s_{b} \vee \chc[A]{c,\neg b}$. $v_{1}$ will yield $s_{k}$ and
-% $v_{2}$ cannot be accumulated further. Thus we'll have $s_{k} \wedge{} (s_{b}
-% \vee{} \chc[A]{c,\neg b})$ as the result of \crAnd{} after returning from an
-% accumulation phase.
-% %
-% This result is stuck as each choice removal rule only removes a choice if it is
-% the immediate child of the root node. To become unstuck we utilize the
-% aforementioned zipper to suspend the \acs{ast} and place the choice in focus,
-% other implementations may opt for different strategies, such as distributing the
-% $\vee{}$ over $\wedge{}$. In either case we assume the choice is able to be
-% operated upon.
-%
-% To finish processing the variant, the only applicable rule will be the $\vee{}$
-% version of \crAndL{}. $D \in C$ thus $\chc[A]{c,\neg{} b}$ will
-% be reified to just $\kf{c}$ yielding a recursive call to choice removal with
-% $s_{k} \wedge (s_{b} \vee{} c)$, \aStore{} =\set{(a,s_{a}), (b,s_{b}),
-%   (k,s_{k})}, \eStore{} = \set{s_{a}}, and C =
-% \set{(\kf{A}, \true{})}. \crAnd{} applies, yielding to another accumulation
-% phase. Since there are no longer any choices, the formula is plain and will be
-% accumulated to a single symbolic $s_{L}$ where \newline{}\aStore{L} =
-% \set{(a,s_{a},), (b,s_{b}), (k,s_{k}), (c,s_{c}), (s_{b} \vee{} s_{c},
-%   s_{bc}), (s_{k} \wedge{} s_{ab}, s_{L})}, \eStore{L} = \set{s_{a}}, and
-% $C = C_L$. Finally $s_{L}$ can be evaluated with
-% \crSym{} reducing the left variant to \unit{} and returning a model. With the
-% model for the \true{} variant of $\kf{A}$ the process backtracks to compute the
-% false variant eventually combining the two resulting models as the final result.
-
-
-% \color{\pubcolor}
 
 %%% Local Variables:
 %%% mode: latex

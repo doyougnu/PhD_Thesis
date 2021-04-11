@@ -85,7 +85,7 @@ Note that choices contain unprocessed expressions ($e$) as alternatives.
 
 
 \section{Derivation of a Variational Core}
-\label{sec:impl:accum}
+\label{section:vsat:vcore}
 
 A variational core is an IL formula that captures the variational structure of
 a query formula. Plain terms will either be placed on the assertion stack or
@@ -182,15 +182,14 @@ immediately evaluated to be evaluated later.
 Symbolic references are variables in the reduction engine's memory that
 represent a set of statements in the base solver.%
 %
-\footnote{In this section, we use SMTLIB2 snippets to represent operations
-performed on the base solver. While we target SMTLIB2, conforming to the
-standard is not a requirement. Any solver that exposes an incremental API as
-defined by minisat~\cite{10.1007/978-3-319-09284-3_16} can be used to implement
-variational satisfiability solving.}
+\footnote{Note that while we use \acl{smtlib} as an implementation target, any
+  solver that exposes an incremental API as defined by
+  minisat~\cite{10.1007/978-3-319-09284-3_16} can be used to implement
+  variational satisfiability solving.}
 %
 For example, $s_{pq}$ represents three declarations in the base solver:
 %
-\begin{lstlisting}[columns=flexible,keepspaces=true]
+\begin{lstlisting}[columns=flexible,keepspaces=true,language=SMTLIB]
 (declare-const p Bool)
 (declare-const q Bool)
 (declare-fun $s_{pq}$ () Bool (and p (not q)))
@@ -199,7 +198,7 @@ For example, $s_{pq}$ represents three declarations in the base solver:
 Similarly a variational core is a sequence of statements in the base solver with
 holes $\Diamond$. For example, the variational core of $f$ would be encoded as:
 %
-\begin{lstlisting}[columns=flexible,keepspaces=true]
+\begin{lstlisting}[columns=flexible,keepspaces=true,language=SMTLIB]
 (assert (and a b))                 ;; add $a \wedge b$ to the assertion stack
 (declare-const $\Diamond$)                   ;; choice A
   (*@\lstvdots@*)                                 ;; potentially many declarations and assertions
@@ -216,32 +215,33 @@ statements to process the alternative.
 
 The reduction engine performs the work at each recursive step whereas the
 reification engine defines transitions between the recursive steps by
-manipulating the configuration. In \autoref{sec:vlogic}, we formalized
-a configuration as a function $D\to\mathbb{B}$, which we encode in the solver
+manipulating the configuration. In \autoref{chapter:vpl}, we formalized
+a configuration as a function $D\to\booleans{}$, which we encode in the solver
 as a set of tuples $\{\kf{D \times \mathbb{B}}\}$.
 %
-\autoref{impl:overview} shows two self-loops for the reification engine
-corresponding to the reification of choices. The edges from the reification
-engine to the reduction engine are transitions taken after a choice is removed,
-where new plain terms have been introduced and thus a new core is derived. If
-the user supplied a variation context, then it is used to construct an initial
-configuration. Finally, a model is retrieved from the base solver when the
-reduction engine returns \unit{}, indicating that a variant has been reached.
+\autoref{impl:overview} shows two loops for the reification engine corresponding
+to the reification of choices. The edges from the reification engine to the
+reduction engine are transitions taken after a choice is removed, where new
+plain terms have been introduced and thus a new core is derived. If the user
+supplied a variation context, then it is used to check that the binding of a
+Boolean value to a dimension is valid in the variation context. For example,
+$\vc{} = \neg A$ would prevent any configurations where $\kf{(A,\true)} \in C$.
+Finally, a model is retrieved from the base solver when the reduction engine
+returns \unit{}, indicating that a variant has been reached.
 
-We show the edges of the reification engine relating to the $\wedge$
-connective; the edges for the $\vee$ connective are similar.
-The left edge is taken when a choice is observed in
-the variational core: $v \wedge \sem[C]{\chc[D]{e_{1}, e_{2}}}$ and $D \in C$.
-This edge reduces choices with dimension $D$ to an alternative, which is then
-translated to IL. The right edge is dashed to indicate assertion stack
-manipulation and is taken when $D \notin C$. For this edge, the configuration
-is mutated for both alternatives: $C \cup \{(D, \tru{})\}$ and $C \cup \{(D,
-\fls{})\}$, and the recursive call is wrapped with a \texttt{push} and
-\texttt{pop} command. To the base solver, this branching appears as a linear
-sequence of assertion stack manipulations that performs backtracking behavior.
-For example, the representation of $\kf{f}$ is:
+We show the edges of the reification engine relating to the $\wedge$ connective;
+the edges for the $\vee$ connective are similar. The left edge is taken when a
+choice is observed in the variational core: $v \wedge \sem[C]{\chc[D]{e_{1},
+    e_{2}}}$ and $D \in C$. This edge reduces choices with dimension $D$ to an
+alternative, which is then translated to IL. The right edge is dashed to
+indicate assertion stack manipulation and is taken when $D \notin C$. For this
+edge, the configuration is mutated for both alternatives: $C \cup \{(D,
+\true)\}$ and $C \cup \{(D, \false)\}$, and the recursive call is wrapped with a
+\rn{push} and \rn{pop} command. To the base solver, this branching appears as a
+linear sequence of assertion stack manipulations that performs backtracking
+behavior. For example, the representation of $\kf{f}$ is:
 %
-\begin{lstlisting}[columns=flexible,keepspaces=true]
+\begin{lstlisting}[columns=flexible,keepspaces=true,language=SMTLIB]
   (*@\lstvdots@*)         ;; declarations and assertions from variational core
 (push 1)   ;; a configuration on B has occurred
   (*@\lstvdots@*)         ;; new declarations for left alternative
@@ -255,68 +255,78 @@ For example, the representation of $\kf{f}$ is:
 Where the hole $\Diamond$, will be filled with a newly defined variable
 $s_{D_{T}}$ that represents the left alternative's formula.
 
-\paragraph{Variational Models}%
-\label{ssec:vmodels}
-%
-Plain models map variables to Boolean values; variational models map variables
-to variation contexts that record the variants where the variable was assigned
-\tru{}. We denote the variation context for a variable $r$ as \vc{r}, and
-maintain a special variable called \SatVar{} to track which configurations are
-satisfiable.
 
-\begin{figure}
+\section{Variational Models}%
+\label{section:vmodels}
+%
+Classic \ac{sat} models map variables to Boolean values; variational models map
+variables to variation contexts that record the variants where the variable was
+assigned \tru{}. The variational context for a variable $r$ is denoted as
+\vc{r}, and a variational model reserves a special variable called \SatVar{} to
+track the configurations that were found satisfiable.
+%
+\begin{figure}[h]
+  \centering
   \input{Figures/Vsat_Impl_plain_models}
-  \vspace{-2ex}
-  \caption{Possible plain models for variants of \TODO{do}\ldots{}.}%
+  \caption{Possible plain models for variants of $\kf{f}$.}%
   \label{fig:models:plain}
 \end{figure}
-
-\begin{figure}
+\begin{figure}[h]
+  \centering
   \input{Figures/Vsat_Impl_variational_model}
-  \caption{Variational model of the plain models in \autoref{fig:models:plain}.}%
+  \caption{Variational model corresponding to the plain models in
+    \autoref{fig:models:plain}.}%
   \label{fig:models:var}
 \end{figure}
-
-
-For example, consider the query formula \TODO{plug}\ldots{} from the
-Linux example in \autoref{sec:bkgrnd}.
-If each variant is satisfiable, there are three models, as illustrated in
-\autoref{fig:models:plain}. The corresponding variational model is shown in
+%
+As an example, consider an altered version of the query formula from the
+previous section $f = ((\aV{} \wedge \neg \bV{}) \wedge \chc[A]{\aV{}
+  \rightarrow \neg \pV{}, \cV{}}) \wedge ((\pV{} \wedge \neg \qV{}) \vee
+\chc[B]{\qV{}, \pV{}})$. We can easily see that one variant, with configuration
+$\{(\AV{},\tru{}), (\BV{},\fls{})\}$ is unsatisfiable. If the remaining variants
+are satisfiable, then three models would result, as illustrated in
+\autoref{fig:models:plain}; with the corresponding variational model shown in
 \autoref{fig:models:var}.
-The variation context for \SatVar{}, \Satfmf{}, consists of three
-disjuncted terms, \todo{remove references the linux example}one
-% for each satisfiable variant. A satisfiable assignment of the query
-% formula can be found by calling \ac{sat} on \Satfmf{}. Assuming the model $C_{FT} =
-% \{(\LOne{}, \fls{}), (\LTwo{}, \tru{})\}$ is returned, substitution on
-% \vc{f_{i}} yields $f_{i}$'s value in $C_{FT}$:
+
+We see that \Satvc{} consists of three disjuncted terms, one for each
+satisfiable variant. Variational models are flexible; a satisfiable assignment
+of the query formula can be found by calling \ac{sat} on \Satvc{}. Assuming the
+model $C_{FT} = \{(\AV{}, \fls{}), (\BV{}, \tru{})\}$ is returned, one can find
+a variable's value through substitution with the configuration; for example,
+substituting the returned model on \vc{c} yields:
 %
 \begin{align*}
-  % f_{i} \rightarrow\ & (\neg \LOne{} \wedge \LTwo{}) & \text{\vc{} for $f_{i}$} \\
-  % f_{i} \rightarrow\ & (\neg \fls{} \wedge \tru{}) & \text{Substitute \fls{} for \LOne{}, \tru{} for \LTwo{}} \\
-  % f_{i} \rightarrow\ & \tru{} & \text{Result}
+  \cV{} \rightarrow\ & (\neg \AV{} \wedge \neg \BV{}) \vee (\neg \AV{} \wedge \BV{}) & \text{\vc{} for \cV{}} \\
+  \cV{} \rightarrow\ & (\neg \fls{} \wedge \neg \tru{}) \vee (\neg \fls{} \wedge \tru{}) & \text{Substitute \fls{} for \AV{}, \tru{} for \BV{}} \\
+  \cV{} \rightarrow\ & \tru{} & \text{Result}
 \end{align*}%
 %
-Additionally, we can compute all variants where a variable $f_j$ is
-satisfiable by solving $\kf{SAT(\vc{f_j})}$
+Furthermore, finding variants where a variable such as \cV{} is satisfiable is
+reduced to $\kf{SAT(\vc{\cV{}})}$
 
 Variational models are constructed incrementally by merging each new plain model
 returned by the solver into the variational model. A merge requires the current
-configuration, the plain model, and the current \vc{} of a variable. Variables are
+configuration, the plain model, and current \vc{} of a variable. Variables are
 initialized to \fls{}. For each variable $i$ in the model, if $i$'s assignment
 is \tru{} in the plain model, then the configuration is translated to a
 variation context and disjuncted with \vc{i}. For example, to merge the
 $C_{FT}$'s plain model to the variational model in \autoref{fig:models:var},
-$C_{FT}$'s configuration is converted to \todo{fix}%$\neg \LOne{} \wedge \LTwo{}$. This
-clause is disjuncted with the current \vc{} for in the variational model
-for all of the variables assigned \tru{} in the plain model: \vc{0},
-\vc{i}, and \vc{\mathit{mitigations}}, even if they are new (e.g.,
-$\kf{mitigations}$). Variables assigned \fls{} are skipped, thus \vc{n} remains
-\fls{}. In the next model $C_{TT}$, $f_{i}$ is \fls{} so \vc{i} remains
-unaltered. Variables such as $f_{n}$, whose \vc{} remains \fls{}, are called
-\textit{constant}.
+$C_{FT}$'s configuration is converted to $\neg \AV{} \wedge \BV{}$. This clause
+is disjuncted for variables assigned \tru{} in the plain model: \vc{\aV{}},
+\vc{\cV{}}, and \vc{\pV{}}, even if they are new (e.g., \cV{}). Variables
+assigned \fls{} are skipped, thus \vc{\qV{}} remains \fls{}. For example, in the
+next model $C_{TT}$, \cV{} is \fls{} thus \vc{\cV{}} remains unaltered, while
+\vc{\qV{}} flips to \tru{} hence \vc{\qV{}} records $\AV{} \wedge \BV{}$.
+Variables such as \bV{}, whose \vc{}'s stay \fls{} are called \textit{constant}.
 
+
+Variational models are constructed in \ac{dnf}, and form a monoid with $\vee$ as
+the semigroup operation, and \fls{} as the unit value. We note this for
+mathematically inclined readers and those looking to implement their own
+variational solver because it has important ramifications for the asynchronous
+version of variational satisfiability solvers.
+%
 \section{Formalization}
-~\label{sec:vsat:formalization}
 \input{Chapters/Vsat/Formalization}
 
 %%% Local Variables:
