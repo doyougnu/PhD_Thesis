@@ -229,13 +229,11 @@ $\aStore{4}$ produced when accumulating $g$ alone.
 Note that the each instance of $g$ in $g'$ was reduced to the same symbolic
 reference $s_g$ and the alternatives of the choice were not reduced.
 
-
 \begin{figure}
   \input{Figures/Vsat_Rules_Evaluation}
-  \caption{Evaluation inference rules.}
+  \caption{Evaluation inference rules.}%
   \label{fig:vsmt:inf:eval}
 \end{figure}
-
 
 \subsection{Evaluation}
 %
@@ -424,7 +422,6 @@ entire subterm and apply choice removal to the result. For example, in \crAndR,
 we have just finished processing the right child to $s_2$ and we previously
 reduced the left child to $s_1$, so we now accumulate $s_1\vee s_2$ to $s_3$
 and proceed from there.
-
 
 Evaluation contexts support a simple recursive approach to solving variational
 formulas by adding to the context as we move down the term and removing from
