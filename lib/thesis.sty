@@ -161,18 +161,6 @@
 %%%% Zipper
 \newcommand{\inRoot}{\ensuremath{\top}}
 
-%% classic "inside out" zipper encoding
-% \newcommand{\inNot}[1]{\ensuremath{\neg #1}}
-% \newcommand{\inL}[3]{\ensuremath{#2 #1_{\tiny\sf L} #3}}
-% \newcommand{\inR}[3]{\ensuremath{#2 #1_{\tiny\sf R} #3}}
-
-%% breadcrumb style 1
-% \newcommand{\inL}[3]{\ensuremath{#1_{\tiny\sf L} #3 :: #2}}
-% \newcommand{\inR}[3]{\ensuremath{#2\,#1_{\tiny\sf R} :: #3}}
-% \newcommand{\inAndL}[2]{\inL{\wedge}{#1}{#2}}
-% \newcommand{\inAndR}[2]{\inR{\wedge}{#1}{#2}}
-% \newcommand{\inOrL}[2]{\inL{\vee}{#1}{#2}}
-% \newcommand{\inOrR}[2]{\inR{\vee}{#1}{#2}}
 
 %% breadcrumb style 2
 \newcommand{\inNot}[1]{\ensuremath{\neg\,\cdot :: #1}}
@@ -183,11 +171,8 @@
 
 %%%% Choice Removal
 \newcommand{\choiceRemoval}{\ensuremath{\Downarrow}}
-\newcommand{\crCtx}{C,\eStore{},\aStore{},\vmodel{}}
-% \newcommand{\crAny}{\choiceRemoval{*}}
-% \newcommand{\crL}{\choiceRemoval{\textsc{L}}}
-% \newcommand{\crR}{\choiceRemoval{\textsc{R}}}
-% \newcommand{\crB}{\choiceRemoval{b}}
+\newcommand{\configuration}{\ensuremath{\kf{C}}}
+\newcommand{\crCtx}{\configuration{},\eStore{},\aStore{},\vmodel{}}
 \newcommand{\vmodel}[1]{\ensuremath{M_{#1}}}
 \newcommand{\crEval}{\rn{C-Eval}}
 \newcommand{\crNot}{\rn{C-Not}}

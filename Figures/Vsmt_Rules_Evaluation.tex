@@ -13,15 +13,15 @@
 \\
 
 \inferrule*[Right=Ev-Model]
-{ \texttt{GetModel}(\aeStore{}) = m }
+{ \texttt{GetModel}(\aStore{}, \eStore{}) = m }
 %%% --------------------------------------------------------------
-{ (\aeStore{}, \unit{}) \evaluation{} m }
+{ (\aStore{}, \eStore{}, \unit{}) \evaluation{} m }
 \\
 
 \inferrule*[Right=Ev-Chc]
 { }
 %%% --------------------------------------------------------------
-{(\aeStore{}, \chc[D]{e_{1},e_{2}}) \evaluation{} (\aeStore{}, \chc[D]{e_{1},e_{2}})}
+{(\aStore{}, \eStore{}, \chc[D]{e_{1},e_{2}}) \evaluation{} (\aStore{}, \eStore{}, \chc[D]{e_{1},e_{2}})}
 \end{mathpar}
 
 \begin{mathpar}

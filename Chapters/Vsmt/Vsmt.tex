@@ -9,9 +9,9 @@ further extensions to other background theories, such as an array theory.
 \ac{smt} solvers generalize \ac{sat} solvers through the use of \emph{background
   theories} that allow the solver to reason about values and constructs outside
 the Boolean domain. The SMTLIB2 standard defines seven such background theories:
-\texttt{Core} (Boolean theory), \texttt{ArraysEx}, \texttt{FixedSizeBitVectors},
-\texttt{FloatingPoint}, \texttt{Ints}, \texttt{Reals}, and \texttt{Real\_Ints}.
-In this chapter, we use integer arithmetic (\texttt{Ints}) as an example
+\rn{Core} (Boolean theory), \rn{ArraysEx}, \rn{FixedSizeBitVectors},
+\rn{FloatingPoint}, \rn{Ints}, \rn{Reals}, and \rn{Real\_Ints}.
+In this chapter, we use integer arithmetic (\rn{Ints}) as an example
 \ac{smt} extension for variational \ac{smt} solving, we conclude the section by
 adding array theory which presents unique challenges.
 % %
@@ -80,389 +80,358 @@ $\sem[A_{\fls{}}]{g} = (2 + j \geq 2) \vee (a \wedge d)$.
   \label{fig:vsmt:inf:eval}
 \end{figure}
 %
-\begin{figure}
-  \input{Figures/Vsmt_Rules_Choice_Removal}
-  \caption{Choice removal inference rules}%
-  \label{fig:vsmt:inf:chc}
+% \begin{figure}
+  % \input{Figures/Vsmt_Rules_Choice_Removal}
+  % \caption{Choice removal inference rules}%
+  % \label{fig:vsmt:inf:chc}
+% \end{figure}
+
+
+\section{Semantics}
+%
+\autoref{fig:vsmt:inf:prim} shows a set of primitive operations that the base
+solver is assumed to support. We use the nonterminals in the grammar as
+metavariables to range over operations. The naming scheme of the metavariables
+is to use \uop{}, \bop{}, and \sop{} to indicate unary, binary, and solver
+functions in the base solver domain, and use subscripts to indicate the
+argument type and (in the case of binary operations) result type of the
+operations they range over.
+%
+For example, integer inequality is ranged over by \bib{}, indicating that
+inequality is a binary function whose arguments are of type \integers{} and
+whose result is of type \booleans{}.
+% When a result is the same type as the arguments we elide the result
+% subscript, such as in Boolean and Integer negation, and
+%
+We do not show subscripts for \sop{} as these operations are run for their side
+effects in the base solver.
+%
+\itodo{not sure if this is a good strategy, we would have to show models and a
+unit value for side effects if we didn't elide these though}.
+
+\itodo{also not sure about the unary symbol, but I think making the
+  variational level all symbols and using text for base solver level is a good
+  idea, open to suggestions here}
+%
+\eric{Can we define these directly in the grammar in Fig.~6? I think this is
+confusing and overwhelming in its current form.}
+%
+Similarly we define metavariables for these
+functions in the variational \ac{smt} domain. We use \inequalities{} to
+represent binary relations over integers, \integerFuncs{} to represent
+arithmetic binary functions such as addition, \integerUnary{} for unary
+arithmetic functions, and \boolFuncs{} to represent binary logical connectives.
+Thus a term such as $\kf{(i < j) \wedge a}$ is represented as
+$\kf{\bbb{}(\bib{}(i,j),a)}$ in the base solver domain, and $(i \inequalities{}
+j) \boolFuncs{} a$ in the variational \ac{smt} solver domain.
+
+\subsection{Accumulation}
+%
+With primitive operations and metavariables defined we specify accumulation in
+\autoref{fig:vsmt:inf:acc}. Since the metavariable $\kf{s}$ has two meanings:
+sub-trees of \rn{IL} in the variational \ac{smt} domain and sequences of
+clauses in the base solver, we treat it as overloaded.
+%
+\eric{I only see one definition of $s$ (in Sec.~4). Can we refactor to avoid
+this problem?}
+%
+An implementation of the rules would require a store which maps symbolics at
+the variational level to terms or sequences at the base solver level.
+
+Accumulation is represented as a binary relation with \accumulation{}. The rules
+follow a simple pattern: \rn{Ac-Chc} skips any choices, \rn{Ac-Gen} and
+\rn{Ac-Geni} provide a method to inject references into the symbolic domain,
+\rn{Ac-Ref} and \rn{Ac-Refi} cache references to ensure the same
+reference is mapped to the same symbolic, and the rest of the rules provide
+operations on symbolic terms, \eg{}, \rn{Ac-SBinB}, or are congruence rules
+such as \rn{Ac-BinI}. We elide rules which process formulas composed of
+constants such $\kf{(\tru{} \wedge \fls{})}$ or $(1 + 2 + 3)$. In cases such as
+$1 + 2 < \kf{i}$, constants are reduced and treated as references, thus this
+formula becomes $3 < \kf{i}$ and is accumulated to $s_{3} < \kf{i}$.
+
+Accumulation maintains a store, \aStore{}, to track and cache symbolic terms.
+For example, given formula such as: $g = a \wedge (a \wedge b)$, \rn{Ac-Gen}
+will spawn only two new references, one for $\kf{a}$ and one for $\kf{b}$, and
+\rn{Ac-Ref} ensures the same symbolic will represent the $a$ reference. This
+will produce $g = s_{a} \wedge (s_{a} \wedge s_{b})$, because we $g$ contains
+two boolean connective \rn{Ac-BinB} will be called twice beginning with the
+inner conjunction. \rn{Ac-BinB} will combine $s_{a}$ and $s_{b}$ into a new
+symbolic $s_{ab}$, update the store to \aStore{}'. The new store will include
+entries for both references \textit{and} symbolic references, thus, in this
+example \aStore{}' contains $\kf{a} \rightarrow s_{a}$, $\kf{b} \rightarrow
+s_{b}$, and $\kf{s_{ab}} \rightarrow (s_{a} \wedge s_{b})$. Finally
+\rn{Ac-BinB} will repeat the last procedure on the outermost conjunction
+adding a new entry to the symbolic store.
+
+
+\subsection{Evaluation}
+%
+Evaluation is defined in \autoref{fig:vsmt:inf:eval} as a relation of the form
+(\aStore{}, \eStore{}, v) \evaluation{} (\aStore{}, \eStore{}, v), where
+\eStore{} represents the base solver state. The rules \rn{EV-TM} and
+\rn{Ev-Sym} push new clauses to the base solver using the primitive assert
+operation. \rn{Ev-Model} calls for a plain model from the base solver,
+only once a variant is fully reduced to \unit{}. \rn{Ev-Chc} skips
+choices, \rn{Ev-UL} and \rn{Ev-UR} implement left and right unit,
+reducing conjunctions where one side has been processed by the base solver. Of
+special note is the difference between the \rn{Ev-AccB} and
+\rn{Ev-And} rules. While \rn{Ev-And} is a straightforward congruence
+rule, \rn{Ev-AccB} instead processes its arguments using accumulation
+(\accumulation{}). Disjunctions are a source of back-tracking in variational
+solving, and thus the solver cannot evaluate the left-hand side without
+evaluating the right, both of which may contain choices, hence evaluation must
+switch to accumulation, as we informally described in the previous subsection.
+This problem is repeated for inequalities as well. \rn{Ev-AccIB} switches
+to accumulation as one side of an inequality cannot be processed without
+knowledge of the adjacent side. Thus, evaluation contains no rules for
+arithmetic.
+
+\subsection{Choice removal}
+Choice removal is defined in \autoref{fig:vsmt:inf:chc} as a relation between
+the evaluation/accumulation stores (\aStore{}, \eStore{}), the configuration
+(\configuration{}), and terms in IL\@. Furthermore, we track the current
+variational model as part of the 4-tuple. The vast majority of rules are either
+commutative versions of the presented rules; such as \rn{CR-RB} which is
+\rn{CR-LB} but with a choice as the left child of \boolFuncs{}, or the same
+rules over different operators, such as \rn{CR-LIB} which is \rn{CR-LB}
+only for \inequalities{}; thus we only present a subset.
+
+The interesting rules are \rn{Gen} and \rn{Sym} which use evaluation to
+query for a plain model, and construct a new variational model through the
+\rn{Combine} function. \rn{CR-LB} ensure the property of
+synchronization; when a choice is observed as the right child of a boolean
+operator, and the dimension has a value in the configuration (in this case
+\true{}), then the proper alternative (in this case the left alternative) of the
+choice is retrieved. \rn{CR-IB-ChcR} removes choices when the choice is not
+present in the configuration. We present the version of \rn{CR-IB-ChcR} for
+\inequalities{}; the same rule exists for \boolFuncs{}, \integerFuncs{}, and for
+choices as the left children of \inequalities{}. The assertion stack counter,
+$\kf{i}$, is incremented indicating that all recursive processing occurs in a
+new \rn{push}/\rn{pop} context. Each configuration is updated to process
+both alternatives, \true{} for the left and \false{} for the right alternative.
+Both alternatives eventually conclude to a \unit{} and thus a variational model,
+which are combined to a final result.
+
+The remaining rules are congruence rules that recursively call accumulation
+after a choice has been found, and new terms are introduced as the result of a
+replacing a choice with an alternative. Careful readers will recognize that the
+provided rules can easily become stuck. For example, given the formula $a \vee{}
+(b \leq{} \chc[D]{p,q})$ the rules cannot further reduce the formula due to the
+disjunction and inequality, and the choice cannot be accumulated. What is
+required is to find the choice while storing the \emph{context} around the
+choice. We leave this as an implementation detail, the prototype variational
+solvers utilize a Huet zipper~\cite{huet_1997} data structure to capture this
+context\footnote{that the Huet zipper has been successful implies delimited
+  continuations~\itodo{cite} may be an alternative and efficient method to
+  capture the context}, searches the variational core until a choice is in the
+focus position, and then applies a choice removal rule such as
+\rn{Cr-IB-ChcR} or \rn{Cr-LB}.
+
+\section{Derivation of a Variational Core}
+Consider the query formula $\kf{h = ((1 + 2 < (i - \chc[A]{k,l})) \wedge a)
+  \wedge (\chc[A]{c,\neg b} \vee b)}$; derivation of the variational core
+$\kf{h}$ begins with evaluation and all stores \aStore{}, \eStore{} initialized
+to empty. When a sure inputs a \vc{} the configuration, \configuration{}, is
+initialized to it, otherwise \configuration{} is initialized to empty.
+
+\rn{Ev-And} is the only applicable rule, matching \boolFuncs{} with $\wedge$
+at the root of $\kf{h}$. Thus, $v_{1} = \kf{((1 + 2 < (i -
+  \chc[A]{k,l})) \wedge a)}$, and $v_{2} = (\chc[A]{c,\neg b} \vee b)$. We
+traverse $v_{1}$ first, leading to a recursive application of \rn{Ev-And}.
+We denote the recursive levels with a tick mark $'$, thus \newline{} $\kf{v_{1}' = (1 + 2 <
+  (i - \chc[A]{k,l}))}$ is the recursive left child and the right child is
+$\kf{v_{2}' = a}$.
+
+\rn{Ev-AccIB} matches \inequalities{}with the $<$ at the root of $v_{1}'$ and
+switches to accumulation. $v_{2}'$ is a terminal, will match \rn{Ev-Tm}, be
+sent to the base solver, and replaced with \unit{}. \rn{Ev-Tm} updates
+\eStore{}, recording the interaction and yields $(\eStore{v_{2}'},\aStore{},
+\unit{})$, where $\eStore{v_{2}'} = \{\kf{a}\} \cup \eStore{}$ as the result for
+$v_{2}'$.
+
+Accumulation on $v_{1}'$ matches \inequalities{} to $<$, applying
+\rn{Ev-AccIB} yields two recursive cases: $v_{1}'' = 1 + 2$; and $v_{2}'' =
+\kf{i - \chc[A]{k,l}}$. \itodo{v1'' will be turned into a constant but we don't
+  show rules for constants because they aren't interesting, should we? We could
+  also transform Ac-Ref and Ac-Refi to work on t and $t_{i}$. Thoughts?}.
+%
+$v_{1}''$ will be preprocessed to the value 3, and accumulated to a symbolic with
+\rn{Ac-Refi} yielding $(\aStore{v_{1}''}, s_{3})$ where $\aStore{v_{1}''} =
+\{(3, \kf{s_{3}})\} \cup \aStore{}$. $v_{2}''$ is the interesting case.
+\rn{Ac-BinI} will match $-$ at the root node, $\kf{i}$ will be accumulated
+to $\kf{s_{i}}$ with \rn{Ac-Refi} and the choice is skipped with
+\rn{Ac-Chc}. Hence we have $(\aStore{v_{2}''}, s_{i} - \chc[A]{k,l}$), where
+$\aStore{v_{2''}} = (\{\kf{i, s_{i}}\} \cup \aStore{v_{1}''})$ as the result for
+$v_{2}''$. Note that the stores, \aStore{}, \eStore{}, are threaded through from the left
+child to the right child and thus can only monotonically increase until the
+query formula is processed.
+
+With results for $v_{1}''$, $v_{2}''$, and $v_{2}'$ the recursive calls can finally
+resolve. $v_{1}'$ yields $(\aStore{v_{1}'}, \kf{s_{3}} < s_{i} - \chc[A]{k,l})$,
+where \aStore{v_{1}'} $= \{(\kf{i}, s_{i}), (3, s_{3})\}$, $v_{2}'$'s result
+only manipulated \eStore{} and thus $v_{1}$'s result is $(\eStore{v_{2}'},
+\aStore{v_{1}'}, (\kf{s_{3}} < s_{i} - \chc[A]{k,l}) \wedge \unit{})$, which can
+be further reduced by \rn{Ev-UR} to \newline{} $(\eStore{v_{2}'},
+\aStore{v_{1}'}, (\kf{s_{3}} < s_{i} - \chc[A]{k,l}))$.
+
+This process is repeated for $v_{2} = (\chc[A]{c,\neg b} \vee b)$ with the final
+stores from processing $v_{1}$. The only rule that matches $\vee$ is
+\rn{Ev-AccB}, thus $v_{2}$ is processed in accumulation. Accumulation
+matches on the disjunction and applies \rn{Acc-BinB} with $v_{1}' =
+\chc[A]{c,\neg b}$ and $v_{2}' = \kf{b}$. The choice, by \rn{Ac-Chc}, is
+skipped over; $\kf{b}$, by \rn{Ac-Gen} will be converted to a symbolic
+$s_{b}$ yielding $(\eStore{v_{2}}, \aStore{v_{2}}, \chc[A]{c,\neg b} \vee
+s_{b})$, where $(\aStore{v_{2}} = \{(\kf{b}, \kf{s_{b}})\} \cup
+\aStore{v_{1}'})$, and $\eStore{v_{2}} = \{\kf{a}\}$ as the result for $v_{2}$.
+With both $v_{1}$ and $v_{2}$ processed the variational core for $\kf{h}$ is
+found to be $\kf{h_{core}} = (s_{3} < (s_{i} - \chc[A]{k,l})) \wedge
+(\chc[A]{c,\neg b} \vee s_{b})$ with stores $\eStore{h_{core}} = \{(a)\}$,
+$\aStore{h_{core}} = \{\kf{(b,s_{b}), (i,s{i}), (3,s_{3})}\}$.%
+
+\paragraph{Solving the variational core}
+Solving the variational core begins with choice removal and proceeds with
+recursive calls to evaluation and consequently accumulation. We assume an empty
+configuration for the remainder of the example because the \vc{} case is a
+sub-case. The computation rules which remove choices, such as \rn{Cr-LB},
+and \rn{Cr-IB-ChcR}, require a choice in the child node of a binary
+relation, however $h_{core}$'s immediate child nodes are binary relations
+themselves, $<$ on the left, and $\vee{}$ on the right. We use a zipper to
+manipulate the core such that a choice is in position for removal, while the
+remainder of the core is held in a context, a variational \ac{sat} solving may
+instead choose to migrate choices according to Boolean equivalency laws.
+
+Assuming $\kf{\chc[A]{k,l}}$ is found to be the focus, then the left version of
+\rn{Cr-IB-ChcR}, \rn{Cr-IB-ChcL} would apply. Clearly $D \notin
+\configuration{}$, thus a recursive case for each alternative, beginning with
+the left alternative $e_{1}$, is performed. Several changes occur: the assertion
+stack is incremented; indicating a push for the next call to evaluation, the
+configuration mutates to account for the selection, and $e_{1}$ is translated
+into IL and replaces the choice, thereby introducing a \textit{new} plain term:
+$\kf{l}$. Thus, the recursive call for the left alternative is $(s_{3} < (s_{i}
+- k)) \wedge (\chc[A]{c,\neg b} \vee s_{b})$ where $\configuration{\kf{L}} =
+\{(\kf{A}, \true{})\}$, and $\kf{i_{\kf{L}} = 1}$. Similarly the right
+alternative is $(s_{3} < (s_{i} - l)) \wedge (\chc[A]{c,\neg b} \vee s_{b})$
+with $\configuration{\kf{R}} = \{(\kf{A}, \false{})\}$, and $\kf{i_{R} = 1}$.
+
+With the choice removed the rules are no longer stuck. \rn{Cr-BinB} will
+apply to both alternatives because their root node, $\wedge$ matches
+\boolFuncs{}. We walk through the processing of the left alternative in detail,
+the right alternative follows the same procedure. \rn{Cr-BinB} produces two
+calls to accumulation with $v_{1} = (s_{3} < (s_{i} - k))$, and $v_{2} =
+\chc[A]{c,\neg b} \vee s_{b}$, $v_{2}$ is still stuck and will thus be returned,
+$v_{1}$ is no longer stuck will be fully reduced to a symbolic term.
+
+Accumulation will apply \rn{Ac-BinIB} with $v_{1}' = s_{3}$ and $v_{2}' = s_{i}
+- k$. $v_{1}'$ is already accumulated and will be returned, \rn{Ac-BinI}
+will be applied to $v_{2}'$, will translate $\kf{k}$ to a symbolic $s_{k}$ via
+\rn{Ac-GenI}, and update \aStore{h_{core}} to $\aStore{h_{L}} = \{(k, s_{k})
+\cup \aStore{h_{core}}\}$. Thus we have $v_{2}'$ accumulated to $v_{2}' = s_{i}
+- s_{k}$ which allows an application of the computation rule \rn{Ac-SBinI}
+to produce a single symbolic, $v_{2}' = s_{i-k}$ with $\aStore{h_{L}} =
+\kf{\{(s_{i} - s_{k}, s_{i-k}), (k,s_{k})\} \cup \aStore{h_{core}}}$. The
+recursion continues to unwind with the result of \rn{Ac-BinIB} as $v_{1}' =
+s_{3} < s_{i-k}$, the rule \rn{Ac-SBinIB} can be applied yielding the result
+for $v_{1}$ as $v_{1} = s_{s_{3}<s_{i-k}}$ with store $\aStore{h_{L}} =
+\kf{\{(s_{3} < s_{i-k}, s_{s_{3}<s_{i-k}}), (s_{i} - s_{k}, s_{i-k}),
+  (k,s_{k})\} \cup \aStore{h_{core}}}$.
+
+With $v_{1}$ accumulated we have a new variational core $s_{s_{3}<s_{i-k}} \wedge
+(\chc[A]{c, \neg b} \vee s_{b})$, only this time, depending on the alternative,
+\configuration{} has enough information to configure $\kf{A}$. Again, we must
+find a choice in the focus in order to proceed, once \chc[A]{c, \neg b} is in
+focus \rn{Cr-RB} (the right version of \rn{Cr-LB}) will be applied.
+$\kf{A} \in \configuration{L}$ and so the left alternative $\kf{c}$ will replace
+the choice for $s_{s_{3}<s_{i-k}} \wedge (c \vee s_{b})$. This formula will
+switch into accumulation due to \rn{Cr-BinB} and be processed to a single
+symbolic similarly to $s_{s_{3}<s_{i-k}}$. Once the symbolic has been created,
+the \rn{Sym} rule calls evaluation which performs the assertion stack
+manipulation, writes the symbolic to the base solver. A model is generated with
+the \rn{Gen} rule and combined with an empty variational model. With the
+model for the \true{} variant of $\kf{A}$ the process backtracks to compute the
+false variant.
+
+% %
+\section{Variational \ac{smt} models}
+% %
+\begin{figure}[h]
+    \centering
+    \input{Figures/Vsmt_Plain_models}%
+    \caption{Possible plain models for variants of $\kf{f}$. \itodo{correct these}}%
+    \label{fig:vsmt:models:plain}
+\end{figure}
+% %
+To support \ac{smt} theories, variational models must be abstract enough to
+handle values other than Booleans. Functionally, variational \ac{smt} models
+must satisfy several constraints: the variational \ac{smt} model must be more
+memory efficient than storing all models returned by the solver naively. The
+variational model must allow users to find satisfying values for a variant. The
+model must allow users to find all variants a variable has a particular value or
+range of values.
+
+Furthermore, several useful properties of variational models should be
+maintained: The model is non-variational; thus the user does not need to
+understand the choice calculus to understand their results. The model produces
+results that can be fed into a plain \ac{sat} solver (or \ac{smt} solver in the
+extension). The model can be built incrementally and without regard to the
+ordering of results, because it forms a commutative monoid under $\vee$.
+
+To maintain these properties and satisfy the functional requirements, our
+strategy for variational \ac{smt} models is to create a mapping of variables to
+\ac{smt} expressions. By virtue of this strategy, variables are disallowed from
+changing types across the set of variants and hence disallowed from changing
+type as the result of a choice. For any variable in the model, we assume the
+type returned by the base solver is correct, and store the satisfying value in a
+linked list constructed \emph{if-statements}\footnote{Also called a
+  church-encoded list}. Specifically, we utilize the function $ite : \mathbb{B}
+\rightarrow T \rightarrow T$ from the SMTLIB2 standard to construct the list.
+All variables are initialized as undefined (\emph{Und}) until a value is
+returned from the base solver for a variant. To ensure the correct value of a
+variable corresponds to the appropriate variant, we translate the configuration
+which determines the variant to a variation context, and place the appropriate
+value in the \emph{then} branch. For example, a possible entry for $\kf{j}$ in
+the variational model of $\kf{g}$ would be $j \rightarrow (\kf{ite}\ \kf{A}\ 1\
+(\kf{ite}\ \neg\kf{A}\ 0\ \kf{Und}))$.
+
+\autoref{fig:vsmt:models:plain} show possible plain models for $\kf{f}$ with the
+corresponding variational \ac{smt} model display in
+\autoref{fig:vsmt:models:var}. We've added line breaks to emphasize the branches
+the $\kf{then}$ and $\kf{else}$ branches of the $\kf{ite}$ SMTLIB2 primitive.
+
+\begin{figure}[h]
+  \centering
+  \input{Figures/Vsmt_Variational_Model}
+  \caption{Variational model corresponding to the plain models in
+    \autoref{fig:vsmt:models:plain}.}%
+  \label{fig:vsmt:models:var}
 \end{figure}
 
+This formulation maintains the functional requirements of the model. We maintain
+a special variable $\_Sat$ to track the variants that were found satisfiable. In
+this case all variants are satisfiable and thus we have four clauses over
+dimensions in disjunctive normal form. If a user has a configuration then they
+only need to perform substitution to determine the value of a variable under
+that configuration. For example, if the user were interested in the value of
+\iV{} in the $\{(\AV{}, \tru{}), (\BV{}, \tru{})\}$ variant they would
+substitute the configuration into \vc{\iV{}} and recover 0 from the first
+$\kf{ite}$ case. To find the variants at which a variable has a value, a user
+may employ a \ac{smt} solver, add \vc{\iV{}} as a constraint, and query for a
+model.
 
-% \paragraph{Semantics}
-% %
-% \autoref{fig:vsmt:inf:prim} shows a set of primitive operations that the base
-% solver is assumed to support. We use the nonterminals in the grammar as
-% metavariables to range over operations. The naming scheme of the metavariables
-% is to use \uop{}, \bop{}, and \sop{} to indicate unary, binary, and solver
-% functions in the base solver domain, and use subscripts to indicate the
-% argument type and (in the case of binary operations) result type of the
-% operations they range over.
-% %
-% For example, integer inequality is ranged over by \bib{}, indicating that
-% inequality is a binary function whose arguments are of type \integers{} and
-% whose result is of type \booleans{}.
-% % When a result is the same type as the arguments we elide the result
-% % subscript, such as in Boolean and Integer negation, and
-% %
-% We do not show subscripts for \sop{} as these operations are run for their side
-% effects in the base solver.
-% %
-% \itodo{not sure if this is a good strategy, we would have to show models and a
-% unit value for side effects if we didn't elide these though}.
-
-% \itodo{also not sure about the unary symbol, but I think making the
-%   variational level all symbols and using text for base solver level is a good
-%   idea, open to suggestions here}
-% %
-% \eric{Can we define these directly in the grammar in Fig.~6? I think this is
-% confusing and overwhelming in its current form.}
-% %
-% Similarly we define metavariables for these
-% functions in the variational \ac{smt} domain. We use \inequalities{} to
-% represent binary relations over integers, \integerFuncs{} to represent
-% arithmetic binary functions such as addition, \integerUnary{} for unary
-% arithmetic functions, and \boolFuncs{} to represent binary logical connectives.
-% Thus a term such as $\kf{(i < j) \wedge a}$ is represented as
-% $\kf{\bbb{}(\bib{}(i,j),a)}$ in the base solver domain, and $(i \inequalities{}
-% j) \boolFuncs{} a$ in the variational \ac{smt} solver domain.
-
-
-% \NOTE{The previous mini-section is called \emph{Semantics}, but it just
-% introduces a set of primitive operations and some syntax for referring to
-% them.}
-
-
-% \NOTE{The rules in Figure~\ref{fig:vsmt:inf:acc} are passing the store to the
-% primitive operations. Why this is makes sense when you read the explanation of
-% the store, but the syntax is inconsistent with the explanation of how the
-% metavariables are used in the previous paragraph.}
-
-% \paragraph{Accumulation}
-% %
-% With primitive operations and metavariables defined we specify accumulation in
-% \autoref{fig:vsmt:inf:acc}. Since the metavariable $\kf{s}$ has two meanings:
-% sub-trees of \texttt{IL} in the variational \ac{smt} domain and sequences of
-% clauses in the base solver, we treat it as overloaded.
-% %
-% \eric{I only see one definition of $s$ (in Sec.~4). Can we refactor to avoid
-% this problem?}
-% %
-% An implementation of the rules would require a store which maps symbolics at
-% the variational level to terms or sequences at the base solver level.
-
-% Accumulation is represented as a binary relation with \accumulation{}. The rules
-% follow a simple pattern: \texttt{Ac-Chc} skips any choices, \texttt{Ac-Gen} and
-% \texttt{Ac-Geni} provide a method to inject references into the symbolic domain,
-% \texttt{Ac-Ref} and \texttt{Ac-Refi} cache references to ensure the same
-% reference is mapped to the same symbolic, and the rest of the rules provide
-% operations on symbolic terms, \eg{}, \texttt{Ac-SBinB}, or are congruence rules
-% such as \texttt{Ac-BinI}. We elide rules which process formulas composed of
-% constants such $\kf{(\tru{} \wedge \fls{})}$ or $(1 + 2 + 3)$. In cases such as
-% $1 + 2 < \kf{i}$, constants are reduced and treated as references, thus this
-% formula becomes $3 < \kf{i}$ and is accumulated to $s_{3} < \kf{i}$.
-
-% Accumulation maintains a store, \aStore{}, to track and cache symbolic terms.
-% For example, given formula such as: $g = a \wedge (a \wedge b)$, \texttt{Ac-Gen}
-% will spawn only two new references, one for $\kf{a}$ and one for $\kf{b}$, and
-% \texttt{Ac-Ref} ensures the same symbolic will represent the $a$ reference. This
-% will produce $g = s_{a} \wedge (s_{a} \wedge s_{b})$, because we $g$ contains
-% two boolean connective \texttt{Ac-BinB} will be called twice beginning with the
-% inner conjunction. \texttt{Ac-BinB} will combine $s_{a}$ and $s_{b}$ into a new
-% symbolic $s_{ab}$, update the store to \aStore{}'. The new store will include
-% entries for both references \textit{and} symbolic references, thus, in this
-% example \aStore{}' contains $\kf{a} \rightarrow s_{a}$, $\kf{b} \rightarrow
-% s_{b}$, and $\kf{s_{ab}} \rightarrow (s_{a} \wedge s_{b})$. Finally
-% \texttt{Ac-BinB} will repeat the last procedure on the outermost conjunction
-% adding a new entry to the symbolic store.
-
-
-% \NOTE{\autoref{fig:vsmt:inf:eval} is mixing up the syntax of the IL and the
-% operations of the base solver. For example, several of the rules have
-% conditions like $\otimes=\mathtt{And}$, but $\mathtt{And}$ is not part of the
-% syntax of the IL. Also, in cases like this, we should just use the
-% corresponding operation directly in the conclusion of the rule rather than
-% expressing it as a side condition.}
-
-
-% \NOTE{Given $\aeStore{}=(\aStore{},\eStore{})$, the structure of the judgment
-% is inconsistent since the tuple is often shown ``in-lined'' in the parent
-% tuple. I suspect it'd be simpler to just not introduce $\aeStore{}$ at all, but
-% if it is used, then when both $\aStore{}$ and $\eStore{}$ are needed, they
-% should be shown as a tuple.}
-
-% \paragraph{Evaluation}
-% %
-% Evaluation is defined in \autoref{fig:vsmt:inf:eval} as a relation of the form
-% (\aeStore{}, v) \evaluation{} (\aeStore{}, v), where \aeStore{} = (\eStore{},
-% \aStore{}) and \eStore{} represents the base solver state. The rules
-% \texttt{EV-TM} and \texttt{Ev-Sym} push new clauses to the base solver using the
-% primitive assert operation. \texttt{Ev-Model} calls for a plain model from the
-% base solver, only once a variant is fully reduced to \unit{}. \texttt{Ev-Chc}
-% skips choices, \texttt{Ev-UL} and \texttt{Ev-UR} implement left and right unit,
-% reducing conjunctions where one side has been processed by the base solver. Of
-% special note is the difference between the \texttt{Ev-AccB} and \texttt{Ev-And}
-% rules. While \texttt{Ev-And} is a straightforward congruence rule,
-% \texttt{Ev-AccB} instead processes its arguments using accumulation
-% (\accumulation{}). Disjunctions are a source of back-tracking in variational
-% solving, and thus the solver cannot evaluate the left-hand side without
-% evaluating the right, both of which may contain choices, hence evaluation must
-% switch to accumulation, as we informally described in the previous subsection.
-% This problem is repeated for inequalities as well. \texttt{Ev-AccIB} switches to
-% accumulation as one side of an inequality cannot be processed without knowledge
-% of the adjacent side. Thus, evaluation contains no rules for arithmetic.
-
-% \itodo{part of me wants to say: with these rules if we input a CNF formula then
-%   we'll get the incremental pattern that is desirable as stated in the
-%   background...not sure if this is the place though.}
-
-% \NOTE{Is the forgotten $\aStore{1}$ correct in the bottom three rules of
-% Figure~\ref{fig:vsmt:inf:chc}?}
-
-% \paragraph{Choice removal}
-% Choice removal is defined in \autoref{fig:vsmt:inf:chc} as a relation between
-% the evaluation/accumulation stores (\aeStore{}), the configuration
-% (\configuration{}), and terms in IL\@. Furthermore, we track the current
-% variational model as part of the 4-tuple. The vast majority of rules are either
-% commutative versions of the presented rules; such as \texttt{CR-RB} which is
-% \texttt{CR-LB} but with a choice as the left child of \boolFuncs{}, or the same
-% rules over different operators, such as \texttt{CR-LIB} which is \texttt{CR-LB}
-% only for \inequalities{}; thus we only present a subset.
-
-% The interesting rules are \texttt{Gen} and \texttt{Sym} which use evaluation to
-% query for a plain model, and construct a new variational model through the
-% \texttt{Combine} function. \texttt{CR-LB} ensure the property of
-% synchronization; when a choice is observed as the right child of a boolean
-% operator, and the dimension has a value in the configuration (in this case
-% \true{}), then the proper alternative (in this case the left alternative) of the
-% choice is retrieved. \texttt{CR-IB-ChcR} removes choices when the choice is not
-% present in the configuration. We present the version of \texttt{CR-IB-ChcR} for
-% \inequalities{}; the same rule exists for \boolFuncs{}, \integerFuncs{}, and for
-% choices as the left children of \inequalities{}. The assertion stack counter,
-% $\kf{i}$, is incremented indicating that all recursive processing occurs in a
-% new \texttt{push}/\texttt{pop} context. Each configuration is updated to process
-% both alternatives, \true{} for the left and \false{} for the right alternative.
-% Both alternatives eventually conclude to a \unit{} and thus a variational model,
-% which are combined to a final result.
-
-% The remaining rules are congruence rules that recursively call accumulation
-% after a choice has been found, and new terms are introduced as the result of a
-% replacing a choice with an alternative. Careful readers will recognize that the
-% provided rules can easily become stuck. For example, given the formula $a \vee{}
-% (b \leq{} \chc[D]{p,q})$ the rules cannot further reduce the formula due to the
-% disjunction and inequality, and the choice cannot be accumulated. What is
-% required is to find the choice while storing the \emph{context} around the
-% choice. We leave this as an implementation detail, the prototype variational
-% solvers utilize a Huet zipper~\cite{huet_1997} data structure to capture this
-% context\footnote{that the Huet zipper has been successful implies delimited
-%   continuations~\itodo{cite} may be an alternative and efficient method to
-%   capture the context}, searches the variational core until a choice is in the
-% focus position, and then applies a choice removal rule such as
-% \texttt{Cr-IB-ChcR} or \texttt{Cr-LB}.
-
-% \paragraph{Derivation of a Variational Core}
-% Consider the query formula $\kf{h = ((1 + 2 < (i - \chc[A]{k,l})) \wedge a)
-%   \wedge (\chc[A]{c,\neg b} \vee b)}$; derivation of the variational core
-% $\kf{h}$ begins with evaluation and all stores \aStore{}, \eStore{} initialized
-% to empty. When a sure inputs a \vc{} the configuration, \configuration{}, is
-% initialized to it, otherwise \configuration{} is initialized to empty.
-
-% \texttt{Ev-And} is the only applicable rule, matching \boolFuncs{} with $\wedge$
-% at the root of $\kf{h}$. Thus, $v_{1} = \kf{((1 + 2 < (i -
-%   \chc[A]{k,l})) \wedge a)}$, and $v_{2} = (\chc[A]{c,\neg b} \vee b)$. We
-% traverse $v_{1}$ first, leading to a recursive application of \texttt{Ev-And}.
-% We denote the recursive levels with a tick mark $'$, thus \newline{} $\kf{v_{1}' = (1 + 2 <
-%   (i - \chc[A]{k,l}))}$ is the recursive left child and the right child is
-% $\kf{v_{2}' = a}$.
-
-% \texttt{Ev-AccIB} matches \inequalities{}with the $<$ at the root of $v_{1}'$ and
-% switches to accumulation. $v_{2}'$ is a terminal, will match \texttt{Ev-Tm}, be
-% sent to the base solver, and replaced with \unit{}. \texttt{Ev-Tm} updates
-% \eStore{}, recording the interaction and yields $(\eStore{v_{2}'},\aStore{},
-% \unit{})$, where $\eStore{v_{2}'} = \{\kf{a}\} \cup \eStore{}$ as the result for
-% $v_{2}'$.
-
-% Accumulation on $v_{1}'$ matches \inequalities{} to $<$, applying
-% \texttt{Ev-AccIB} yields two recursive cases: $v_{1}'' = 1 + 2$; and $v_{2}'' =
-% \kf{i - \chc[A]{k,l}}$. \itodo{v1'' will be turned into a constant but we don't
-%   show rules for constants because they aren't interesting, should we? We could
-%   also transform Ac-Ref and Ac-Refi to work on t and $t_{i}$. Thoughts?}.
-% %
-% $v_{1}''$ will be preprocessed to the value 3, and accumulated to a symbolic with
-% \texttt{Ac-Refi} yielding $(\aStore{v_{1}''}, s_{3})$ where $\aStore{v_{1}''} =
-% \{(3, \kf{s_{3}})\} \cup \aStore{}$. $v_{2}''$ is the interesting case.
-% \texttt{Ac-BinI} will match $-$ at the root node, $\kf{i}$ will be accumulated
-% to $\kf{s_{i}}$ with \texttt{Ac-Refi} and the choice is skipped with
-% \texttt{Ac-Chc}. Hence we have $(\aStore{v_{2}''}, s_{i} - \chc[A]{k,l}$), where
-% $\aStore{v_{2''}} = (\{\kf{i, s_{i}}\} \cup \aStore{v_{1}''})$ as the result for
-% $v_{2}''$. Note that the stores, \aeStore{}, are threaded through from the left
-% child to the right child and thus can only monotonically increase until the
-% query formula is processed.
-
-% With results for $v_{1}''$, $v_{2}''$, and $v_{2}'$ the recursive calls can finally
-% resolve. $v_{1}'$ yields $(\aStore{v_{1}'}, \kf{s_{3}} < s_{i} - \chc[A]{k,l})$,
-% where \aStore{v_{1}'} $= \{(\kf{i}, s_{i}), (3, s_{3})\}$, $v_{2}'$'s result
-% only manipulated \eStore{} and thus $v_{1}$'s result is $(\eStore{v_{2}'},
-% \aStore{v_{1}'}, (\kf{s_{3}} < s_{i} - \chc[A]{k,l}) \wedge \unit{})$, which can
-% be further reduced by \texttt{Ev-UR} to \newline{} $(\eStore{v_{2}'},
-% \aStore{v_{1}'}, (\kf{s_{3}} < s_{i} - \chc[A]{k,l}))$.
-
-% This process is repeated for $v_{2} = (\chc[A]{c,\neg b} \vee b)$ with the final
-% stores from processing $v_{1}$. The only rule that matches $\vee$ is
-% \texttt{Ev-AccB}, thus $v_{2}$ is processed in accumulation. Accumulation
-% matches on the disjunction and applies \texttt{Acc-BinB} with $v_{1}' =
-% \chc[A]{c,\neg b}$ and $v_{2}' = \kf{b}$. The choice, by \texttt{Ac-Chc}, is
-% skipped over; $\kf{b}$, by \texttt{Ac-Gen} will be converted to a symbolic
-% $s_{b}$ yielding $(\eStore{v_{2}}, \aStore{v_{2}}, \chc[A]{c,\neg b} \vee
-% s_{b})$, where $(\aStore{v_{2}} = \{(\kf{b}, \kf{s_{b}})\} \cup
-% \aStore{v_{1}'})$, and $\eStore{v_{2}} = \{\kf{a}\}$ as the result for $v_{2}$.
-% With both $v_{1}$ and $v_{2}$ processed the variational core for $\kf{h}$ is
-% found to be $\kf{h_{core}} = (s_{3} < (s_{i} - \chc[A]{k,l})) \wedge
-% (\chc[A]{c,\neg b} \vee s_{b})$ with stores $\eStore{h_{core}} = \{(a)\}$,
-% $\aStore{h_{core}} = \{\kf{(b,s_{b}), (i,s{i}), (3,s_{3})}\}$.%
-
-% \paragraph{Solving the variational core}
-% Solving the variational core begins with choice removal and proceeds with
-% recursive calls to evaluation and consequently accumulation. We assume an empty
-% configuration for the remainder of the example because the \vc{} case is a
-% sub-case. The computation rules which remove choices, such as \texttt{Cr-LB},
-% and \texttt{Cr-IB-ChcR}, require a choice in the child node of a binary
-% relation, however $h_{core}$'s immediate child nodes are binary relations
-% themselves, $<$ on the left, and $\vee{}$ on the right. We use a zipper to
-% manipulate the core such that a choice is in position for removal, while the
-% remainder of the core is held in a context, a variational \sat{} solving may
-% instead choose to migrate choices according to Boolean equivalency laws.
-
-% Assuming $\kf{\chc[A]{k,l}}$ is found to be the focus, then the left version of
-% \texttt{Cr-IB-ChcR}, \texttt{Cr-IB-ChcL} would apply. Clearly $D \notin
-% \configuration{}$, thus a recursive case for each alternative, beginning with
-% the left alternative $e_{1}$, is performed. Several changes occur: the assertion
-% stack is incremented; indicating a push for the next call to evaluation, the
-% configuration mutates to account for the selection, and $e_{1}$ is translated
-% into IL and replaces the choice, thereby introducing a \textit{new} plain term:
-% $\kf{l}$. Thus, the recursive call for the left alternative is $(s_{3} < (s_{i}
-% - k)) \wedge (\chc[A]{c,\neg b} \vee s_{b})$ where $\configuration{\kf{L}} =
-% \{(\kf{A}, \true{})\}$, and $\kf{i_{\kf{L}} = 1}$. Similarly the right
-% alternative is $(s_{3} < (s_{i} - l)) \wedge (\chc[A]{c,\neg b} \vee s_{b})$
-% with $\configuration{\kf{R}} = \{(\kf{A}, \false{})\}$, and $\kf{i_{R} = 1}$.
-
-% With the choice removed the rules are no longer stuck. \texttt{Cr-BinB} will
-% apply to both alternatives because their root node, $\wedge$ matches
-% \boolFuncs{}. We walk through the processing of the left alternative in detail,
-% the right alternative follows the same procedure. \texttt{Cr-BinB} produces two
-% calls to accumulation with $v_{1} = (s_{3} < (s_{i} - k))$, and $v_{2} =
-% \chc[A]{c,\neg b} \vee s_{b}$, $v_{2}$ is still stuck and will thus be returned,
-% $v_{1}$ is no longer stuck will be fully reduced to a symbolic term.
-
-% Accumulation will apply \texttt{Ac-BinIB} with $v_{1}' = s_{3}$ and $v_{2}' = s_{i}
-% - k$. $v_{1}'$ is already accumulated and will be returned, \texttt{Ac-BinI}
-% will be applied to $v_{2}'$, will translate $\kf{k}$ to a symbolic $s_{k}$ via
-% \texttt{Ac-GenI}, and update \aStore{h_{core}} to $\aStore{h_{L}} = \{(k, s_{k})
-% \cup \aStore{h_{core}}\}$. Thus we have $v_{2}'$ accumulated to $v_{2}' = s_{i}
-% - s_{k}$ which allows an application of the computation rule \texttt{Ac-SBinI}
-% to produce a single symbolic, $v_{2}' = s_{i-k}$ with $\aStore{h_{L}} =
-% \kf{\{(s_{i} - s_{k}, s_{i-k}), (k,s_{k})\} \cup \aStore{h_{core}}}$. The
-% recursion continues to unwind with the result of \texttt{Ac-BinIB} as $v_{1}' =
-% s_{3} < s_{i-k}$, the rule \texttt{Ac-SBinIB} can be applied yielding the result
-% for $v_{1}$ as $v_{1} = s_{s_{3}<s_{i-k}}$ with store $\aStore{h_{L}} =
-% \kf{\{(s_{3} < s_{i-k}, s_{s_{3}<s_{i-k}}), (s_{i} - s_{k}, s_{i-k}),
-%   (k,s_{k})\} \cup \aStore{h_{core}}}$.
-
-% With $v_{1}$ accumulated we have a new variational core $s_{s_{3}<s_{i-k}} \wedge
-% (\chc[A]{c, \neg b} \vee s_{b})$, only this time, depending on the alternative,
-% \configuration{} has enough information to configure $\kf{A}$. Again, we must
-% find a choice in the focus in order to proceed, once \chc[A]{c, \neg b} is in
-% focus \texttt{Cr-RB} (the right version of \texttt{Cr-LB}) will be applied.
-% $\kf{A} \in \configuration{L}$ and so the left alternative $\kf{c}$ will replace
-% the choice for $s_{s_{3}<s_{i-k}} \wedge (c \vee s_{b})$. This formula will
-% switch into accumulation due to \texttt{Cr-BinB} and be processed to a single
-% symbolic similarly to $s_{s_{3}<s_{i-k}}$. Once the symbolic has been created,
-% the \texttt{Sym} rule calls evaluation which performs the assertion stack
-% manipulation, writes the symbolic to the base solver. A model is generated with
-% the \texttt{Gen} rule and combined with an empty variational model. With the
-% model for the \true{} variant of $\kf{A}$ the process backtracks to compute the
-% false variant.
-
-% %
-% \paragraph{Variational \ac{smt} models}
-% %
-% \begin{figure}[h]
-%     \centering
-%     \input{Figures/Vsmt_Plain_models}
-%     \caption{Possible plain models for variants of $\kf{f}$. \itodo{correct these}}%
-%     \label{fig:vsmt:models:plain}
-% \end{figure}
-% %
-% To support \ac{smt} theories, variational models must be abstract enough to
-% handle values other than Booleans. Functionally, variational \ac{smt} models
-% must satisfy several constraints: the variational \ac{smt} model must be more
-% memory efficient than storing all models returned by the solver naively. The
-% variational model must allow users to find satisfying values for a variant. The
-% model must allow users to find all variants a variable has a particular value or
-% range of values.
-
-% Furthermore, several useful properties of variational models should be
-% maintained: The model is non-variational; thus the user does not need to
-% understand the choice calculus to understand their results. The model produces
-% results that can be fed into a plain \ac{sat} solver (or \ac{smt} solver in the
-% extension). The model can be built incrementally and without regard to the
-% ordering of results, because it forms a commutative monoid under $\vee$.
-
-% To maintain these properties and satisfy the functional requirements, our
-% strategy for variational \ac{smt} models is to create a mapping of variables to
-% \ac{smt} expressions. By virtue of this strategy, variables are disallowed from
-% changing types across the set of variants and hence disallowed from changing
-% type as the result of a choice. For any variable in the model, we assume the
-% type returned by the base solver is correct, and store the satisfying value in a
-% linked list constructed \emph{if-statements}\footnote{Also called a
-%   church-encoded list}. Specifically, we utilize the function $ite : \mathbb{B}
-% \rightarrow T \rightarrow T$ from the SMTLIB2 standard to construct the list.
-% All variables are initialized as undefined (\emph{Und}) until a value is
-% returned from the base solver for a variant. To ensure the correct value of a
-% variable corresponds to the appropriate variant, we translate the configuration
-% which determines the variant to a variation context, and place the appropriate
-% value in the \emph{then} branch. For example, a possible entry for $\kf{j}$ in
-% the variational model of $\kf{g}$ would be $j \rightarrow (\kf{ite}\ \kf{A}\ 1\
-% (\kf{ite}\ \neg\kf{A}\ 0\ \kf{Und}))$.
-
-% \autoref{fig:vsmt:models:plain} show possible plain models for $\kf{f}$ with the
-% corresponding variational \ac{smt} model display in
-% \autoref{fig:vsmt:models:var}. We've added line breaks to emphasize the branches
-% the $\kf{then}$ and $\kf{else}$ branches of the $\kf{ite}$ SMTLIB2 primitive.
-
-% \begin{figure}[h]
-%   \centering
-%   \input{Figures/Vsmt_Variational_Model}
-%   \caption{Variational model corresponding to the plain models in
-%     \autoref{fig:vsmt:models:plain}.}%
-%   \label{fig:vsmt:models:var}
-% \end{figure}
-
-% This formulation maintains the functional requirements of the model. We maintain
-% a special variable $\_Sat$ to track the variants that were found satisfiable. In
-% this case all variants are satisfiable and thus we have four clauses over
-% dimensions in disjunctive normal form. If a user has a configuration then they
-% only need to perform substitution to determine the value of a variable under
-% that configuration. For example, if the user were interested in the value of
-% \iV{} in the $\{(\AV{}, \tru{}), (\BV{}, \tru{})\}$ variant they would
-% substitute the configuration into \vc{\iV{}} and recover 0 from the first
-% $\kf{ite}$ case. To find the variants at which a variable has a value, a user
-% may employ a \ac{smt} solver, add \vc{\iV{}} as a constraint, and query for a
-% model.
-
-% This maintains the desirable properties of variational \ac{sat} models while
-% allowing any type specified in the SMTLIB2 standard. The variational \ac{smt}
-% model does not require knowledge of choice calculus or variation, it is still
-% monoidal---although not a commutative monoid---and can be built in any order as
-% long as there are no duplicate variants; a scenario that is impossible by the
-% property of synchronization on choices. However, variational \ac{sat} models
-% clearly compressed results by preventing duplicate values with constant
-% variables, the variational \ac{smt} model allows for duplicate values, if those
-% values are parameterized by disjoint variants. For example, both \iV{} and \cV{}
-% contain duplicate values, but only one: \iV{} is easy to check in $O(1)$ time as
-% the duplicates are sequential in \vc{\iV{}} and can thus be checked during model
-% construction. Such a case would be easily avoided in an implementation by
-% tracking the values a variable has been assigned in all variants. However, we
-% desire to keep variational models as simple as possible and therefore only
-% present the minimum required machinery.
+This maintains the desirable properties of variational \ac{sat} models while
+allowing any type specified in the SMTLIB2 standard. The variational \ac{smt}
+model does not require knowledge of choice calculus or variation, it is still
+monoidal---although not a commutative monoid---and can be built in any order as
+long as there are no duplicate variants; a scenario that is impossible by the
+property of synchronization on choices. However, variational \ac{sat} models
+clearly compressed results by preventing duplicate values with constant
+variables, the variational \ac{smt} model allows for duplicate values, if those
+values are parameterized by disjoint variants. For example, both \iV{} and \cV{}
+contain duplicate values, but only one: \iV{} is easy to check in $O(1)$ time as
+the duplicates are sequential in \vc{\iV{}} and can thus be checked during model
+construction. Such a case would be easily avoided in an implementation by
+tracking the values a variable has been assigned in all variants. However, we
+desire to keep variational models as simple as possible and therefore only
+present the minimum required machinery.
 
 
 %%% Local Variables:
