@@ -1,0 +1,37 @@
+~\label{section:vsmt:accumulation}
+%
+With primitive operations and metavariables defined we specify accumulation in
+\autoref{fig:vsmt:inf:acc}. Since the metavariable $\kf{s}$ has two meanings:
+sub-trees of \rn{IL} in the variational \ac{smt} domain and sequences of
+clauses in the base solver, we treat it as overloaded.
+%
+\eric{I only see one definition of $s$ (in Sec.~4). Can we refactor to avoid
+this problem?}
+%
+An implementation of the rules would require a store which maps symbolics at
+the variational level to terms or sequences at the base solver level.
+
+Accumulation is represented as a binary relation with \accumulation{}. The rules
+follow a simple pattern: \rn{Ac-Chc} skips any choices, \rn{Ac-Gen} and
+\rn{Ac-Geni} provide a method to inject references into the symbolic domain,
+\rn{Ac-Ref} and \rn{Ac-Refi} cache references to ensure the same
+reference is mapped to the same symbolic, and the rest of the rules provide
+operations on symbolic terms, \eg{}, \rn{Ac-SBinB}, or are congruence rules
+such as \rn{Ac-BinI}. We elide rules which process formulas composed of
+constants such $\kf{(\tru{} \wedge \fls{})}$ or $(1 + 2 + 3)$. In cases such as
+$1 + 2 < \kf{i}$, constants are reduced and treated as references, thus this
+formula becomes $3 < \kf{i}$ and is accumulated to $s_{3} < \kf{i}$.
+
+Accumulation maintains a store, \aStore{}, to track and cache symbolic terms.
+For example, given formula such as: $g = a \wedge (a \wedge b)$, \rn{Ac-Gen}
+will spawn only two new references, one for $\kf{a}$ and one for $\kf{b}$, and
+\rn{Ac-Ref} ensures the same symbolic will represent the $a$ reference. This
+will produce $g = s_{a} \wedge (s_{a} \wedge s_{b})$, because we $g$ contains
+two boolean connective \rn{Ac-BinB} will be called twice beginning with the
+inner conjunction. \rn{Ac-BinB} will combine $s_{a}$ and $s_{b}$ into a new
+symbolic $s_{ab}$, update the store to \aStore{}'. The new store will include
+entries for both references \textit{and} symbolic references, thus, in this
+example \aStore{}' contains $\kf{a} \rightarrow s_{a}$, $\kf{b} \rightarrow
+s_{b}$, and $\kf{s_{ab}} \rightarrow (s_{a} \wedge s_{b})$. Finally
+\rn{Ac-BinB} will repeat the last procedure on the outermost conjunction
+adding a new entry to the symbolic store.

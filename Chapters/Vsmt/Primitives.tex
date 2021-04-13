@@ -1,0 +1,51 @@
+~\label{section:vsmt:primitives}
+%
+\autoref{fig:arith:stx} defines the syntax of the integer arithmetic extension,
+which consists of integer variables, integer literals, a set of standard
+operators, and choices.
+%
+The sets of Boolean and arithmetic variables are disjoint, thus an expression
+such as $(\kf{s < 10) \wedge (s \vee p})$, where $s$ occurs as both an integer
+and Boolean variable is disallowed.
+%
+The syntax of the language prevents type errors and expressions that do not
+yield Boolean values. For example, $\chc[D]{1,2} \wedge p$ is syntactically
+invalid.
+%
+Thus, the language is purposefully limited to arithmetic expressions that
+have an inequality at the root of the expression, such as: $\kf{g} =
+(\chc[A]{1, 2} + j \geq 2) \vee a \wedge \chc[A]{c, d}$.
+%
+Choices in the same dimension are synchronized across Boolean and arithmetic
+sub-expressions, for example, the expression
+%
+$\kf{g} = (\chc[A]{1, 2} + j \geq 2) \vee (a \wedge \chc[A]{c,d})$
+% %
+represents two variants:
+%
+$\sem[A_{\tru{}}]{g} = (1 + j \geq 2) \vee (a \wedge c)$ and
+$\sem[A_{\fls{}}]{g} = (2 + j \geq 2) \vee (a \wedge d)$.
+
+\begin{figure}
+  \input{Figures/Vsmt_Rules_PrimOps}
+  \caption{Assumed base solver primitive operations}%
+  \label{fig:vsmt:inf:prim}
+\end{figure}
+%
+\begin{figure}
+  \input{Figures/Vsmt_Rules_Accumulation}
+  \caption{Accumulation inference rules}%
+  \label{fig:vsmt:inf:acc}
+\end{figure}
+%
+\begin{figure}
+  \input{Figures/Vsmt_Rules_Evaluation}
+  \caption{Evaluation inference rules}%
+  \label{fig:vsmt:inf:eval}
+\end{figure}
+%
+% \begin{figure}
+  % \input{Figures/Vsmt_Rules_Choice_Removal}
+  % \caption{Choice removal inference rules}%
+  % \label{fig:vsmt:inf:chc}
+% \end{figure}

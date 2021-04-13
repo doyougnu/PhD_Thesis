@@ -1,0 +1,81 @@
+~\label{section:vsmt:models}
+% %
+\begin{figure}[h]
+    \centering
+    \input{Figures/Vsmt_Plain_models}%
+    \caption{Possible plain models for variants of $\kf{f}$.}%
+    \label{fig:vsmt:models:plain}
+\end{figure}
+% %
+To support \ac{smt} theories, variational models must be abstract enough to
+handle values other than Booleans. Functionally, variational \ac{smt} models
+must satisfy several constraints: the variational \ac{smt} model must be more
+memory efficient than storing all models returned by the solver naively. The
+variational model must allow users to find satisfying values for a variant. The
+model must allow users to find all variants a variable has a particular value or
+range of values.
+
+Furthermore, several useful properties of variational models should be
+maintained: The model is non-variational; thus the user does not need to
+understand the choice calculus to understand their results. The model produces
+results that can be fed into a plain \ac{sat} solver (or \ac{smt} solver in the
+extension). The model can be built incrementally and without regard to the
+ordering of results, because it forms a commutative monoid under $\vee$.
+
+To maintain these properties and satisfy the functional requirements, our
+strategy for variational \ac{smt} models is to create a mapping of variables to
+\ac{smt} expressions. By virtue of this strategy, variables are disallowed from
+changing types across the set of variants and hence disallowed from changing
+type as the result of a choice. For any variable in the model, we assume the
+type returned by the base solver is correct, and store the satisfying value in a
+linked list constructed \emph{if-statements}\footnote{Also called a
+  church-encoded list}. Specifically, we utilize the function $ite : \mathbb{B}
+\rightarrow T \rightarrow T$ from the SMTLIB2 standard to construct the list.
+All variables are initialized as undefined (\emph{Und}) until a value is
+returned from the base solver for a variant. To ensure the correct value of a
+variable corresponds to the appropriate variant, we translate the configuration
+which determines the variant to a variation context, and place the appropriate
+value in the \emph{then} branch. For example, a possible entry for $\kf{j}$ in
+the variational model of $\kf{g}$ would be $j \rightarrow (\kf{ite}\ \kf{A}\ 1\
+(\kf{ite}\ \neg\kf{A}\ 0\ \kf{Und}))$.
+
+\autoref{fig:vsmt:models:plain} show possible plain models for $\kf{f}$ with the
+corresponding variational \ac{smt} model display in
+\autoref{fig:vsmt:models:var}. We've added line breaks to emphasize the branches
+the $\kf{then}$ and $\kf{else}$ branches of the $\kf{ite}$ SMTLIB2 primitive.
+
+\begin{figure}[h]
+  \centering
+  \input{Figures/Vsmt_Variational_Model}
+  \caption{Variational model corresponding to the plain models in
+    \autoref{fig:vsmt:models:plain}.}%
+  \label{fig:vsmt:models:var}
+\end{figure}
+
+This formulation maintains the functional requirements of the model. We maintain
+a special variable $\_Sat$ to track the variants that were found satisfiable. In
+this case all variants are satisfiable and thus we have four clauses over
+dimensions in disjunctive normal form. If a user has a configuration then they
+only need to perform substitution to determine the value of a variable under
+that configuration. For example, if the user were interested in the value of
+\iV{} in the $\{(\AV{}, \tru{}), (\BV{}, \tru{})\}$ variant they would
+substitute the configuration into \vc{\iV{}} and recover 0 from the first
+$\kf{ite}$ case. To find the variants at which a variable has a value, a user
+may employ a \ac{smt} solver, add \vc{\iV{}} as a constraint, and query for a
+model.
+
+This maintains the desirable properties of variational \ac{sat} models while
+allowing any type specified in the SMTLIB2 standard. The variational \ac{smt}
+model does not require knowledge of choice calculus or variation, it is still
+monoidal---although not a commutative monoid---and can be built in any order as
+long as there are no duplicate variants; a scenario that is impossible by the
+property of synchronization on choices. However, variational \ac{sat} models
+clearly compressed results by preventing duplicate values with constant
+variables, the variational \ac{smt} model allows for duplicate values, if those
+values are parameterized by disjoint variants. For example, both \iV{} and \cV{}
+contain duplicate values, but only one: \iV{} is easy to check in $O(1)$ time as
+the duplicates are sequential in \vc{\iV{}} and can thus be checked during model
+construction. Such a case would be easily avoided in an implementation by
+tracking the values a variable has been assigned in all variants. However, we
+desire to keep variational models as simple as possible and therefore only
+present the minimum required machinery.

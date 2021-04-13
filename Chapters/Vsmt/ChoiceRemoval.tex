@@ -1,0 +1,41 @@
+~\label{section:vsmt:choice-removal}
+%
+Choice removal is defined in \autoref{fig:vsmt:inf:chc} as a relation between
+the evaluation/accumulation stores (\aStore{}, \eStore{}), the configuration
+(\configuration{}), and terms in IL\@. Furthermore, we track the current
+variational model as part of the 4-tuple. The vast majority of rules are either
+commutative versions of the presented rules; such as \rn{CR-RB} which is
+\rn{CR-LB} but with a choice as the left child of \boolFuncs{}, or the same
+rules over different operators, such as \rn{CR-LIB} which is \rn{CR-LB}
+only for \inequalities{}; thus we only present a subset.
+
+The interesting rules are \rn{Gen} and \rn{Sym} which use evaluation to
+query for a plain model, and construct a new variational model through the
+\rn{Combine} function. \rn{CR-LB} ensure the property of
+synchronization; when a choice is observed as the right child of a boolean
+operator, and the dimension has a value in the configuration (in this case
+\true{}), then the proper alternative (in this case the left alternative) of the
+choice is retrieved. \rn{CR-IB-ChcR} removes choices when the choice is not
+present in the configuration. We present the version of \rn{CR-IB-ChcR} for
+\inequalities{}; the same rule exists for \boolFuncs{}, \integerFuncs{}, and for
+choices as the left children of \inequalities{}. The assertion stack counter,
+$\kf{i}$, is incremented indicating that all recursive processing occurs in a
+new \rn{push}/\rn{pop} context. Each configuration is updated to process
+both alternatives, \true{} for the left and \false{} for the right alternative.
+Both alternatives eventually conclude to a \unit{} and thus a variational model,
+which are combined to a final result.
+
+The remaining rules are congruence rules that recursively call accumulation
+after a choice has been found, and new terms are introduced as the result of a
+replacing a choice with an alternative. Careful readers will recognize that the
+provided rules can easily become stuck. For example, given the formula $a \vee{}
+(b \leq{} \chc[D]{p,q})$ the rules cannot further reduce the formula due to the
+disjunction and inequality, and the choice cannot be accumulated. What is
+required is to find the choice while storing the \emph{context} around the
+choice. We leave this as an implementation detail, the prototype variational
+solvers utilize a Huet zipper~\cite{huet_1997} data structure to capture this
+context\footnote{that the Huet zipper has been successful implies delimited
+  continuations~\itodo{cite} may be an alternative and efficient method to
+  capture the context}, searches the variational core until a choice is in the
+focus position, and then applies a choice removal rule such as
+\rn{Cr-IB-ChcR} or \rn{Cr-LB}.

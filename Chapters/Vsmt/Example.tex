@@ -1,0 +1,123 @@
+~\label{section:vsmt:example}
+%
+Consider the query formula $\kf{h = ((1 + 2 < (i - \chc[A]{k,l})) \wedge a)
+  \wedge (\chc[A]{c,\neg b} \vee b)}$; derivation of the variational core
+$\kf{h}$ begins with evaluation and all stores \aStore{}, \eStore{} initialized
+to empty. When a sure inputs a \vc{} the configuration, \configuration{}, is
+initialized to it, otherwise \configuration{} is initialized to empty.
+
+\rn{Ev-And} is the only applicable rule, matching \boolFuncs{} with $\wedge$
+at the root of $\kf{h}$. Thus, $v_{1} = \kf{((1 + 2 < (i -
+  \chc[A]{k,l})) \wedge a)}$, and $v_{2} = (\chc[A]{c,\neg b} \vee b)$. We
+traverse $v_{1}$ first, leading to a recursive application of \rn{Ev-And}.
+We denote the recursive levels with a tick mark $'$, thus \newline{} $\kf{v_{1}' = (1 + 2 <
+  (i - \chc[A]{k,l}))}$ is the recursive left child and the right child is
+$\kf{v_{2}' = a}$.
+
+\rn{Ev-AccIB} matches \inequalities{}with the $<$ at the root of $v_{1}'$ and
+switches to accumulation. $v_{2}'$ is a terminal, will match \rn{Ev-Tm}, be
+sent to the base solver, and replaced with \unit{}. \rn{Ev-Tm} updates
+\eStore{}, recording the interaction and yields $(\eStore{v_{2}'},\aStore{},
+\unit{})$, where $\eStore{v_{2}'} = \{\kf{a}\} \cup \eStore{}$ as the result for
+$v_{2}'$.
+
+Accumulation on $v_{1}'$ matches \inequalities{} to $<$, applying
+\rn{Ev-AccIB} yields two recursive cases: $v_{1}'' = 1 + 2$; and $v_{2}'' =
+\kf{i - \chc[A]{k,l}}$. \itodo{v1'' will be turned into a constant but we don't
+  show rules for constants because they aren't interesting, should we? We could
+  also transform Ac-Ref and Ac-Refi to work on t and $t_{i}$. Thoughts?}.
+%
+$v_{1}''$ will be preprocessed to the value 3, and accumulated to a symbolic with
+\rn{Ac-Refi} yielding $(\aStore{v_{1}''}, s_{3})$ where $\aStore{v_{1}''} =
+\{(3, \kf{s_{3}})\} \cup \aStore{}$. $v_{2}''$ is the interesting case.
+\rn{Ac-BinI} will match $-$ at the root node, $\kf{i}$ will be accumulated
+to $\kf{s_{i}}$ with \rn{Ac-Refi} and the choice is skipped with
+\rn{Ac-Chc}. Hence we have $(\aStore{v_{2}''}, s_{i} - \chc[A]{k,l}$), where
+$\aStore{v_{2''}} = (\{\kf{i, s_{i}}\} \cup \aStore{v_{1}''})$ as the result for
+$v_{2}''$. Note that the stores, \aStore{}, \eStore{}, are threaded through from the left
+child to the right child and thus can only monotonically increase until the
+query formula is processed.
+
+With results for $v_{1}''$, $v_{2}''$, and $v_{2}'$ the recursive calls can finally
+resolve. $v_{1}'$ yields $(\aStore{v_{1}'}, \kf{s_{3}} < s_{i} - \chc[A]{k,l})$,
+where \aStore{v_{1}'} $= \{(\kf{i}, s_{i}), (3, s_{3})\}$, $v_{2}'$'s result
+only manipulated \eStore{} and thus $v_{1}$'s result is $(\eStore{v_{2}'},
+\aStore{v_{1}'}, (\kf{s_{3}} < s_{i} - \chc[A]{k,l}) \wedge \unit{})$, which can
+be further reduced by \rn{Ev-UR} to \newline{} $(\eStore{v_{2}'},
+\aStore{v_{1}'}, (\kf{s_{3}} < s_{i} - \chc[A]{k,l}))$.
+
+This process is repeated for $v_{2} = (\chc[A]{c,\neg b} \vee b)$ with the final
+stores from processing $v_{1}$. The only rule that matches $\vee$ is
+\rn{Ev-AccB}, thus $v_{2}$ is processed in accumulation. Accumulation
+matches on the disjunction and applies \rn{Acc-BinB} with $v_{1}' =
+\chc[A]{c,\neg b}$ and $v_{2}' = \kf{b}$. The choice, by \rn{Ac-Chc}, is
+skipped over; $\kf{b}$, by \rn{Ac-Gen} will be converted to a symbolic
+$s_{b}$ yielding $(\eStore{v_{2}}, \aStore{v_{2}}, \chc[A]{c,\neg b} \vee
+s_{b})$, where $(\aStore{v_{2}} = \{(\kf{b}, \kf{s_{b}})\} \cup
+\aStore{v_{1}'})$, and $\eStore{v_{2}} = \{\kf{a}\}$ as the result for $v_{2}$.
+With both $v_{1}$ and $v_{2}$ processed the variational core for $\kf{h}$ is
+found to be $\kf{h_{core}} = (s_{3} < (s_{i} - \chc[A]{k,l})) \wedge
+(\chc[A]{c,\neg b} \vee s_{b})$ with stores $\eStore{h_{core}} = \{(a)\}$,
+$\aStore{h_{core}} = \{\kf{(b,s_{b}), (i,s{i}), (3,s_{3})}\}$.%
+
+\paragraph{Solving the variational core}
+Solving the variational core begins with choice removal and proceeds with
+recursive calls to evaluation and consequently accumulation. We assume an empty
+configuration for the remainder of the example because the \vc{} case is a
+sub-case. The computation rules which remove choices, such as \rn{Cr-LB},
+and \rn{Cr-IB-ChcR}, require a choice in the child node of a binary
+relation, however $h_{core}$'s immediate child nodes are binary relations
+themselves, $<$ on the left, and $\vee{}$ on the right. We use a zipper to
+manipulate the core such that a choice is in position for removal, while the
+remainder of the core is held in a context, a variational \ac{sat} solving may
+instead choose to migrate choices according to Boolean equivalency laws.
+
+Assuming $\kf{\chc[A]{k,l}}$ is found to be the focus, then the left version of
+\rn{Cr-IB-ChcR}, \rn{Cr-IB-ChcL} would apply. Clearly $D \notin
+\configuration{}$, thus a recursive case for each alternative, beginning with
+the left alternative $e_{1}$, is performed. Several changes occur: the assertion
+stack is incremented; indicating a push for the next call to evaluation, the
+configuration mutates to account for the selection, and $e_{1}$ is translated
+into IL and replaces the choice, thereby introducing a \textit{new} plain term:
+$\kf{l}$. Thus, the recursive call for the left alternative is $(s_{3} < (s_{i}
+- k)) \wedge (\chc[A]{c,\neg b} \vee s_{b})$ where $\configuration{\kf{L}} =
+\{(\kf{A}, \true{})\}$, and $\kf{i_{\kf{L}} = 1}$. Similarly the right
+alternative is $(s_{3} < (s_{i} - l)) \wedge (\chc[A]{c,\neg b} \vee s_{b})$
+with $\configuration{\kf{R}} = \{(\kf{A}, \false{})\}$, and $\kf{i_{R} = 1}$.
+
+With the choice removed the rules are no longer stuck. \rn{Cr-BinB} will
+apply to both alternatives because their root node, $\wedge$ matches
+\boolFuncs{}. We walk through the processing of the left alternative in detail,
+the right alternative follows the same procedure. \rn{Cr-BinB} produces two
+calls to accumulation with $v_{1} = (s_{3} < (s_{i} - k))$, and $v_{2} =
+\chc[A]{c,\neg b} \vee s_{b}$, $v_{2}$ is still stuck and will thus be returned,
+$v_{1}$ is no longer stuck will be fully reduced to a symbolic term.
+
+Accumulation will apply \rn{Ac-BinIB} with $v_{1}' = s_{3}$ and $v_{2}' = s_{i}
+- k$. $v_{1}'$ is already accumulated and will be returned, \rn{Ac-BinI}
+will be applied to $v_{2}'$, will translate $\kf{k}$ to a symbolic $s_{k}$ via
+\rn{Ac-GenI}, and update \aStore{h_{core}} to $\aStore{h_{L}} = \{(k, s_{k})
+\cup \aStore{h_{core}}\}$. Thus we have $v_{2}'$ accumulated to $v_{2}' = s_{i}
+- s_{k}$ which allows an application of the computation rule \rn{Ac-SBinI}
+to produce a single symbolic, $v_{2}' = s_{i-k}$ with $\aStore{h_{L}} =
+\kf{\{(s_{i} - s_{k}, s_{i-k}), (k,s_{k})\} \cup \aStore{h_{core}}}$. The
+recursion continues to unwind with the result of \rn{Ac-BinIB} as $v_{1}' =
+s_{3} < s_{i-k}$, the rule \rn{Ac-SBinIB} can be applied yielding the result
+for $v_{1}$ as $v_{1} = s_{s_{3}<s_{i-k}}$ with store $\aStore{h_{L}} =
+\kf{\{(s_{3} < s_{i-k}, s_{s_{3}<s_{i-k}}), (s_{i} - s_{k}, s_{i-k}),
+  (k,s_{k})\} \cup \aStore{h_{core}}}$.
+
+With $v_{1}$ accumulated we have a new variational core $s_{s_{3}<s_{i-k}} \wedge
+(\chc[A]{c, \neg b} \vee s_{b})$, only this time, depending on the alternative,
+\configuration{} has enough information to configure $\kf{A}$. Again, we must
+find a choice in the focus in order to proceed, once \chc[A]{c, \neg b} is in
+focus \rn{Cr-RB} (the right version of \rn{Cr-LB}) will be applied.
+$\kf{A} \in \configuration{L}$ and so the left alternative $\kf{c}$ will replace
+the choice for $s_{s_{3}<s_{i-k}} \wedge (c \vee s_{b})$. This formula will
+switch into accumulation due to \rn{Cr-BinB} and be processed to a single
+symbolic similarly to $s_{s_{3}<s_{i-k}}$. Once the symbolic has been created,
+the \rn{Sym} rule calls evaluation which performs the assertion stack
+manipulation, writes the symbolic to the base solver. A model is generated with
+the \rn{Gen} rule and combined with an empty variational model. With the
+model for the \true{} variant of $\kf{A}$ the process backtracks to compute the
+false variant.
