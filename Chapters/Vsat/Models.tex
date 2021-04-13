@@ -1,0 +1,73 @@
+\label{section:vsat:models}
+%
+Classic \ac{sat} models map variables to Boolean values; variational models map
+variables to variation contexts that record the variants where the variable was
+assigned \tru{}. The variational context for a variable $r$ is denoted as
+\vc{r}, and a variational model reserves a special variable called \SatVar{} to
+track the configurations that were found satisfiable.
+%
+\begin{figure}[h]
+  \centering
+  \input{Figures/Vsat_Impl_plain_models}
+  \caption{Possible plain models for variants of $\kf{f}$.}%
+  \label{fig:models:plain}
+\end{figure}
+\begin{figure}[h]
+  \centering
+  \input{Figures/Vsat_Impl_variational_model}
+  \caption{Variational model corresponding to the plain models in
+    \autoref{fig:models:plain}.}%
+  \label{fig:models:var}
+\end{figure}
+%
+As an example, consider an altered version of the query formula from the
+previous section $f = ((\aV{} \wedge \neg \bV{}) \wedge \chc[A]{\aV{}
+  \rightarrow \neg \pV{}, \cV{}}) \wedge ((\pV{} \wedge \neg \qV{}) \vee
+\chc[B]{\qV{}, \pV{}})$. We can easily see that one variant, with configuration
+$\{(\AV{},\tru{}), (\BV{},\fls{})\}$ is unsatisfiable. If the remaining variants
+are satisfiable, then three models would result, as illustrated in
+\autoref{fig:models:plain}; with the corresponding variational model shown in
+\autoref{fig:models:var}.
+
+We see that \Satvc{} consists of three disjuncted terms, one for each
+satisfiable variant. Variational models are flexible; a satisfiable assignment
+of the query formula can be found by calling \ac{sat} on \Satvc{}. Assuming the
+model $C_{FT} = \{(\AV{}, \fls{}), (\BV{}, \tru{})\}$ is returned, one can find
+a variable's value through substitution with the configuration; for example,
+substituting the returned model on \vc{c} yields:
+%
+\begin{align*}
+  \cV{} \rightarrow\ & (\neg \AV{} \wedge \neg \BV{}) \vee (\neg \AV{} \wedge \BV{}) & \text{\vc{} for \cV{}} \\
+  \cV{} \rightarrow\ & (\neg \fls{} \wedge \neg \tru{}) \vee (\neg \fls{} \wedge \tru{}) & \text{Substitute \fls{} for \AV{}, \tru{} for \BV{}} \\
+  \cV{} \rightarrow\ & \tru{} & \text{Result}
+\end{align*}%
+%
+Furthermore, finding variants where a variable such as \cV{} is satisfiable is
+reduced to $\kf{SAT(\vc{\cV{}})}$
+
+Variational models are constructed incrementally by merging each new plain model
+returned by the solver into the variational model. A merge requires the current
+configuration, the plain model, and current \vc{} of a variable. Variables are
+initialized to \fls{}. For each variable $i$ in the model, if $i$'s assignment
+is \tru{} in the plain model, then the configuration is translated to a
+variation context and disjuncted with \vc{i}. For example, to merge the
+$C_{FT}$'s plain model to the variational model in \autoref{fig:models:var},
+$C_{FT}$'s configuration is converted to $\neg \AV{} \wedge \BV{}$. This clause
+is disjuncted for variables assigned \tru{} in the plain model: \vc{\aV{}},
+\vc{\cV{}}, and \vc{\pV{}}, even if they are new (e.g., \cV{}). Variables
+assigned \fls{} are skipped, thus \vc{\qV{}} remains \fls{}. For example, in the
+next model $C_{TT}$, \cV{} is \fls{} thus \vc{\cV{}} remains unaltered, while
+\vc{\qV{}} flips to \tru{} hence \vc{\qV{}} records $\AV{} \wedge \BV{}$.
+Variables such as \bV{}, whose \vc{}'s stay \fls{} are called \textit{constant}.
+
+Variational models are constructed in \ac{dnf}, and form a monoid with $\vee$ as
+the semigroup operation, and \fls{} as the unit value. We note this for
+mathematically inclined readers and those looking to implement their own
+variational solver because it has important ramifications for the asynchronous
+version of variational satisfiability solvers.
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../thesis"
+%%% End:

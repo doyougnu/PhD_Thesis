@@ -1,0 +1,48 @@
+~\label{section:vsat:solving}
+%
+The reduction engine performs the work at each recursive step whereas the
+reification engine defines transitions between the recursive steps by
+manipulating the configuration. In \autoref{chapter:vpl}, we formalized
+a configuration as a function $D\to\booleans{}$, which we encode in the solver
+as a set of tuples $\{\kf{D \times \mathbb{B}}\}$.
+%
+\autoref{impl:overview} shows two loops for the reification engine corresponding
+to the reification of choices. The edges from the reification engine to the
+reduction engine are transitions taken after a choice is removed, where new
+plain terms have been introduced and thus a new core is derived. If the user
+supplied a variation context, then it is used to check that the binding of a
+Boolean value to a dimension is valid in the variation context. For example,
+$\vc{} = \neg A$ would prevent any configurations where $\kf{(A,\true)} \in C$.
+Finally, a model is retrieved from the base solver when the reduction engine
+returns \unit{}, indicating that a variant has been reached.
+
+We show the edges of the reification engine relating to the $\wedge$ connective;
+the edges for the $\vee$ connective are similar. The left edge is taken when a
+choice is observed in the variational core: $v \wedge \sem[C]{\chc[D]{e_{1},
+    e_{2}}}$ and $D \in C$. This edge reduces choices with dimension $D$ to an
+alternative, which is then translated to IL. The right edge is dashed to
+indicate assertion stack manipulation and is taken when $D \notin C$. For this
+edge, the configuration is mutated for both alternatives: $C \cup \{(D,
+\true)\}$ and $C \cup \{(D, \false)\}$, and the recursive call is wrapped with a
+\rn{push} and \rn{pop} command. To the base solver, this branching appears as a
+linear sequence of assertion stack manipulations that performs backtracking
+behavior. For example, the representation of $\kf{f}$ is:
+%
+\begin{lstlisting}[columns=flexible,keepspaces=true,language=SMTLIB]
+  (*@\lstvdots@*)         ;; declarations and assertions from variational core
+(push 1)   ;; a configuration on B has occurred
+  (*@\lstvdots@*)         ;; new declarations for left alternative
+(declare-fun $s$ () Bool (or $s_{pq}$ $\Diamond[\Diamond \rightarrow s_{B_{T}}]$))  ;; fill
+(assert $s$)
+  (*@\lstvdots@*)         ;; recursive processing
+(pop 1)    ;; return for the right alternative
+(push 1)   ;; repeat for right alternative
+\end{lstlisting}
+%
+Where the hole $\Diamond$, will be filled with a newly defined variable
+$s_{D_{T}}$ that represents the left alternative's formula.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../thesis"
+%%% End:

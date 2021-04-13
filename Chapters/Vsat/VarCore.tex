@@ -1,0 +1,130 @@
+~\label{section:vsat:vcore}
+%
+A variational core is an IL formula that captures the variational structure of
+a query formula. Plain terms will either be placed on the assertion stack or
+will be symbolically reduced, leaving only logical connectives, symbolic
+references, and choices.
+
+\begin{figure}
+  \centering
+  % \begin{subfigure}[t]{0.5\textwidth}
+    \input{Figures/Vsat_Impl_VCore_Overview}
+    \caption{Overview of the reduction engine.}%
+    \label{impl:vcore}
+  % \end{subfigure}
+\end{figure}
+
+
+The variational core for a \ac{vpl} formula is computed by a reduction engine
+illustrated in \autoref{impl:vcore}. The reduction engine has two states:
+\emph{evaluation}, which communicates to the base solver to process plain terms,
+and \emph{accumulation}, which is called by evaluation to create symbolic
+references and reduce plain formulas.
+
+
+To illustrate how the reduction engine computes a variational core, consider the
+query formula $f = ((a \wedge b) \wedge \chc[A]{e_{1}, e_{2}}) \wedge ((p \wedge
+\neg q) \vee \chc[B]{e_{3}, e_{4}})$. Translated to an IL formula, $f$ has four
+references ($a$, $b$, $p$, $q$) and two choices. The reduction engine will
+ultimately produce a variational core that asserts $(a \wedge b)$ in the base
+solver, thus pushing it onto the assertion stack, and create a symbolic
+reference for $(p \wedge \neg q)$.
+
+Generating the core begins with evaluation. Evaluation matches on the root
+$\wedge$ node of $f$ and recurs following the $v_1 \wedge v_2$ edge, where
+%
+$v_1=(a\wedge b)\wedge\chc[A]{e_1,e_2}$ and
+$v_2=(p\wedge \neg q) \vee \chc[B]{e_3, e_4}$.
+%
+The recursion processes the left child first. Thus, evaluation again matches on
+$\wedge$ of $v_{1}$ creating another recursive call with $v_{1}' = (a\wedge b)$
+and $v_{2}' = \chc[A]{e_1,e_2}$. Finally, the base case is reached with a final
+recursive call where $v_{1}'' = a$, and $v_{2}'' = b$. At the base case, both
+$a$ and $b$ are references, so evaluation sends $a$ to the base solver
+following the $\kf{r, s, t}$ edge, which returns $\unit{}$ for the left child.
+The right child follows the same process yielding $\unit{} \wedge \unit{}$.
+Since the assertion stack implicitly conjuncts all assertions, $\unit{} \wedge
+\unit{}$ will be further reduced to $\unit{}$ and returned as the result of
+$v_{1}'$, indicating that both children have been pushed to the base solver.
+This leaves $v_{1}' = \unit{}$ and $v_{2}' = \chc[A]{e_1,e_2}$. $v_{2}'$ is a
+base case for choices and cannot be reduced in evaluation, so $\unit{} \wedge
+\chc[A]{e_1,e_2}$ will be reduced to just $\chc[A]{e_1,e_2}$ as the result for
+$v_{1}$.
+
+In evaluation, conjunctions can be split because of the behavior of the
+assertion stack and the and-elimination property of $\wedge$. Disjunctions and
+negations cannot be split in this way because both cannot be performed if a
+child node has been lost to the solver, e.g., $\neg \unit{}$. Thus, in
+accumulation, we construct symbolic terms to represent entire subtrees, which
+ensures information is not lost while still allowing for the subtree to be
+evaluated if it is sound to do so.
+
+The right child, $v_2=(p\wedge \neg q) \vee \chc[B]{e_3, e_4}$ requires
+accumulation. Evaluation will match on the root $\vee$ and send $(p\wedge \neg
+q) \vee \chc[B]{e_3, e_4}$ to accumulation via the $v_{1} \vee v_{2}$ edge.
+Accumulation has two self-loops, one to create symbolic references (with labels
+$r, s, \hdots$), and one to recur to values. Accumulation matches the root
+$\vee$ and recurs on the self-loop with edge $v_{1} \vee v_{2}$, where $v_{1} =
+(p\wedge \neg q)$ and $v_{2} = \chc[B]{e_3, e_4}$. Processing the left child
+first, accumulation will recur again with $v_{1}' = p$ and $v_{2}' = \neg q$.
+$v_{1}' = p$ is a base case for references, so a unique symbolic reference
+$s_{p}$ is generated for $p$ following the self-loop with label $r$ and
+returned as the result for $v_{1}'$. $v_{2}'$ will follow the self-loop with
+label $\neg v$ to recur through $\neg$ to $q$, where a symbolic term $s_{q}$
+will be generated and returned. This yields $\neg s_{q}$, which follows the
+$\neg s$ edge to be processed into a new symbolic term, yielding the result for
+$v_{2}'$ as $s_{\neg q}$. With both results $v_{1} = s_{p}\wedge s_{\neg q}$,
+accumulation will match on $\wedge$ \emph{and} both $s_{p}$ and $s_{\neg q}$ to
+accumulate the entire subtree to a single symbolic term, $s_{pq}$, which will
+be returned as the result for $v_{1}$. $v_{2}$ is a base case, so accumulation
+will return $s_{pq} \vee \chc[B]{e_3, e_4}$ to evaluation. Evaluation will
+conclude with $\chc[A]{e_1,e_2}$ as the result for the left child of $\wedge$
+and $s_{pq} \vee \chc[B]{e_3, e_4}$ for the right child, yielding
+$\chc[A]{e_1,e_2} \wedge s_{pq} \vee \chc[B]{e_3, e_4}$ as the variational core
+of $\kf{f}$.
+
+A variational core is derived to save redundant work.
+%
+If solved naively, plain sub-formulas of $f$, such as $a \wedge b$ and $p
+\wedge \neg q$, would be processed once for each variant even though they are
+unchanged. Evaluation moves sub-formulas into the solver state to be reused
+among different variants. Accumulation caches sub-formulas that cannot be
+immediately evaluated to be evaluated later.
+
+
+Symbolic references are variables in the reduction engine's memory that
+represent a set of statements in the base solver.%
+%
+\footnote{Note that while we use \acl{smtlib} as an implementation target, any
+  solver that exposes an incremental API as defined by
+  minisat~\cite{10.1007/978-3-319-09284-3_16} can be used to implement
+  variational satisfiability solving.}
+%
+For example, $s_{pq}$ represents three declarations in the base solver:
+%
+\begin{lstlisting}[columns=flexible,keepspaces=true,language=SMTLIB]
+(declare-const p Bool)
+(declare-const q Bool)
+(declare-fun $s_{pq}$ () Bool (and p (not q)))
+\end{lstlisting}
+
+Similarly a variational core is a sequence of statements in the base solver with
+holes $\Diamond$. For example, the variational core of $f$ would be encoded as:
+%
+\begin{lstlisting}[columns=flexible,keepspaces=true,language=SMTLIB]
+(assert (and a b))                 ;; add $a \wedge b$ to the assertion stack
+(declare-const $\Diamond$)                   ;; choice A
+  (*@\lstvdots@*)                                 ;; potentially many declarations and assertions
+(declare-fun $s_{pq}$ () Bool (and p q))  ;;  get symbolic reference for $s_{pq}$
+(declare-const $\Diamond$)                   ;; choice B
+  (*@\lstvdots@*)                                 ;; potentially many declarations and assertions
+(assert (or $s_{ab}$ $\Diamond$))                    ;; assert waiting on $\sem[C]{\chc[B]{e_{3},e_{4}}}$
+\end{lstlisting}
+%
+Each hole is filled by configuring a choice and may require multiple
+statements to process the alternative.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../thesis"
+%%% End:
