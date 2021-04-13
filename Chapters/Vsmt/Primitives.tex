@@ -2,10 +2,24 @@
 %
 \begin{figure}
   \input{Figures/Vsmt_Rules_PrimOps}
-  \caption{Syntactic categories of primitive operations}%
-  \label{fig:vsmt:inf:prim}
+  \caption{Assumed base solver primitive operations for \evpl{}}%
+  \label{fig:vsmt:primops}
 \end{figure}
 %
+\begin{figure}
+  \input{Figures/Vsmt_Rules_PrimOpsWrapped}
+  \vspace{-3em}
+  \caption{Wrapped versions of \ac{smt} primitive operations}%
+  \label{fig:vsmt:primops}
+\end{figure}
+%
+\begin{figure}
+  \input{Figures/Vsmt_Rules_PrimOps_Categories}
+  \caption{Syntactic categories of primitive operations}%
+  \label{fig:vsmt:primops}
+\end{figure}
+%
+
 In order to construct a variational \ac{smt} solver we must first extend
 \ac{vpl} to include non-Boolean values. \ac{vpl} included two kinds of
 relations: relations such as $\neg$ and $\vee$ which required accumulation in
@@ -43,6 +57,16 @@ represents two variants:
 $\sem[\{(A, \true)\}]{g} = (1 + j \geq 2) \vee (a \wedge c)$ and
 $\sem[\{(A, \false)\}]{g} = (2 + j \geq 2) \vee (a \wedge d)$.
 
+Similarly to \autoref{chapter:vsat}, we define the assumed primitive operations
+of the base solver in \autoref{fig:vsmt:primops}, and wrapped versions in
+\autoref{fig:vsmt:primwrapped}. The wrapped versions are defined exactly the
+same and serve the same purpose as the wrapped primitives in
+\autoref{fig:vsat:primwrapped}. Finally, from the perspective of the variational
+solver, operations such as addition, division, and subtraction are identical
+except for the primitive operation emitted to the base solver. Thus, we define
+syntactic categories over like operations to simplify the inference rules of
+accumulation, choice removal, and evaluation in
+\autoref{fig:vsmt:primcategories}.
 
 %%% Local Variables:
 %%% mode: latex

@@ -193,8 +193,10 @@
 \newcommand{\crChcAnd}{\TODO{C-Chc-And}}
 
 %%%%% primitive operations
+%%%% Bools
 \newcommand{\primOp}[1]{\texttt{#1}}
 \newcommand{\pspawn}{\primOp{Var}}
+\newcommand{\pspawni}{\primOp{Var\textsubscript{i}}}
 \newcommand{\pnot}{\primOp{Not}}
 \newcommand{\pand}{\primOp{And}}
 \newcommand{\por}{\primOp{Or}}
@@ -202,6 +204,18 @@
 \newcommand{\passert}{\primOp{Assert}}
 \newcommand{\pcombine}{\primOp{Combine}}
 \newcommand{\pwrap}[1]{\underline{#1}}
+%%%% Arithmetic
+\newcommand{\pneg}{\primOp{Neg}}
+\newcommand{\padd}{\primOp{Add}}
+\newcommand{\psub}{\primOp{Sub}}
+\newcommand{\pdiv}{\primOp{Div}}
+\newcommand{\pmult}{\primOp{Mult}}
+%%%% Inequalities
+\newcommand{\plt}{\primOp{Lt}}
+\newcommand{\plte}{\primOp{Lte}}
+\newcommand{\pgt}{\primOp{Gt}}
+\newcommand{\pgte}{\primOp{Gte}}
+\newcommand{\peq}{\primOp{Eqv}}
 
 %%%%%%%%% Proof helpers
 \newcommand{\dcardinality}[1]{\ensuremath{|#1|_{D}}}

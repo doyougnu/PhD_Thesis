@@ -12,10 +12,54 @@
   & $(\aStore{},s,s)$
   & $(\aStore{},s)$
   & \emph{Disjunction of symbolic values} \\
+\pneg
+  & $(\aStore{},s)$
+  & $(\aStore{},s)$
+  & \emph{Negate an arithmetic symbolic value} \\
+\padd
+  & $(\aStore{},s,s)$
+  & $(\aStore{},s)$
+  & \emph{Add two symbolic values} \\
+\psub
+  & $(\aStore{},s,s)$
+  & $(\aStore{},s)$
+  & \emph{Subtract two symbolic values} \\
+\pdiv
+  & $(\aStore{},s,s)$
+  & $(\aStore{},s)$
+  & \emph{Divide two symbolic values} \\
+\pmult
+  & $(\aStore{},s,s)$
+  & $(\aStore{},s)$
+  & \emph{Multiply two symbolic values} \\
+\plt
+  & $(\aStore{},s,s)$
+  & $(\aStore{},s)$
+  & \emph{Less than two over symbolic values} \\
+\plte
+  & $(\aStore{},s,s)$
+  & $(\aStore{},s)$
+  & \emph{Less than equals over two symbolic values} \\
+\pgt
+  & $(\aStore{},s,s)$
+  & $(\aStore{},s)$
+  & \emph{Greater than over two symbolic values} \\
+\pgte
+  & $(\aStore{},s,s)$
+  & $(\aStore{},s)$
+  & \emph{Greater than equals over two symbolic values} \\
+\peq
+  & $(\aStore{},s,s)$
+  & $(\aStore{},s)$
+  & \emph{Arithmetic equivalence over two symbolic values} \\
 \pspawn
   & $(\aStore{},r)$
   & $(\aStore{},s)$
-  & \emph{Create symbolic value based on a variable} \\
+  & \emph{Create symbolic value based on a boolean variable} \\
+\pspawni
+  & $(\aStore{},r_{i})$
+  & $(\aStore{},s)$
+  & \emph{Create symbolic value based on a arithmetic variable} \\
 \passert
   & $(\eStore{},\aStore{},s)$
   & $\eStore{}$
