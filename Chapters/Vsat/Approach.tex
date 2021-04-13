@@ -1,0 +1,79 @@
+~\label{sec:approach}
+%
+\begin{figure}
+  \centering
+    \input{Figures/Vsat_Impl_Solve_Overview}
+    \caption{System overview of the variational solver.}%
+    \label{impl:overview}
+\end{figure}
+
+\ac{vpl} formulas are solved recursively; decoupling the handling of plain terms
+from the handling of variational terms.
+%
+The intuition behind the algorithm is to first process as many plain terms as
+possible (e.g.\ by pushing those terms to the underlying solver) while skipping
+choices, yielding a \emph{variational core} that represents only the variational
+parts of the original formula. We then alternate between configuring choices in
+the variational core and processing the new plain terms produced by
+configuration until the entire term has been consumed.
+%
+A variant in of the original \ac{vpl} formula is found every time the entire
+term is consumed, since all choices will have been configured. Once a variant
+has been found the algorithm queries the underlying solver to obtain a model,
+then backtracks to solve a different variant by configuring the same choices
+differently. The models for each variant are combined into a single
+\emph{variational model} that captures the result of solving all variants of the
+original \ac{vpl} formula. Crucially building a variational model is
+associative, and thus the order the variants' models are found is not important
+to the correctness of the final model.
+
+We present an overview of the variational solver as a state diagram in
+\autoref{impl:overview} that operates on the input's abstract syntax tree.
+Labels on incoming edges denote inputs to a state and labels on outgoing edges
+denote return values; we show only inputs for recursive edges; labels separated
+by a comma share the edge. We omit labels that can be derived from the logical
+properties of connectives, such as commutativity of $\vee$ and $\wedge$.
+Similarly, we omit base case edge labels for choices and describe these cases
+in the text.
+
+The solver has four subsystems: The \emph{reduction engine} processes plain
+terms and generates the variational core, which is ready for reification.
+The \emph{reification engine} configures choices in a variational core. The
+\textit{base solver} is the incremental solver used to produce plain models.
+Finally, the \emph{variational model constructor} synthesizes a single
+variational model from the set of plain models returned by the base solver.
+
+The solver takes a \ac{vpl} formula called a \emph{query formula} and an
+optional input called a \emph{variation context} (\vc{}). A \vc{} is a
+propositional formula of dimensions that restricts the solver to a subset of
+variants, thus prevents computation on extra variants.
+%
+The variational solver translates the query formula to a formula in an
+intermediate language (IL) that the reduction and reification engines operate
+over. The syntax of the IL is given below.
+%
+\[
+  v \hquad \Coloneqq\hquad \unit{}
+  \hquad|\hquad t
+  \hquad|\hquad r
+  \hquad|\hquad s
+  \hquad|\hquad \neg v
+  \hquad|\hquad (v \wedge v)
+  \hquad|\hquad v \vee v
+  \hquad|\hquad \chc[D]{e,e}
+\]
+%
+
+The IL includes two kinds of terminals not present in the input query formulas:
+plain subterms that can be reduced symbolically will be replaced by a reference
+to a \emph{symbolic value} $s$, and subterms that have been sent to the base
+solver will be represented by the unit value \unit{}.
+%
+Note that choices contain unprocessed expressions ($e$) as alternatives.
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../thesis"
+%%% End:
