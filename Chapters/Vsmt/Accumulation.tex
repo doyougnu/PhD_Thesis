@@ -1,5 +1,12 @@
 ~\label{section:vsmt:accumulation}
 %
+\begin{figure}
+  \input{Figures/Vsmt_Rules_Accumulation}
+  \caption{Accumulation inference rules}%
+  \label{fig:vsmt:inf:acc}
+\end{figure}
+%
+%
 With primitive operations and metavariables defined we specify accumulation in
 \autoref{fig:vsmt:inf:acc}. Since the metavariable $\kf{s}$ has two meanings:
 sub-trees of \rn{IL} in the variational \ac{smt} domain and sequences of
@@ -35,3 +42,9 @@ example \aStore{}' contains $\kf{a} \rightarrow s_{a}$, $\kf{b} \rightarrow
 s_{b}$, and $\kf{s_{ab}} \rightarrow (s_{a} \wedge s_{b})$. Finally
 \rn{Ac-BinB} will repeat the last procedure on the outermost conjunction
 adding a new entry to the symbolic store.
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../thesis"
+%%% End:

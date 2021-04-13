@@ -1,5 +1,10 @@
 ~\label{section:vsmt:choice-removal}
 %
+% \begin{figure}
+  % \input{Figures/Vsmt_Rules_Choice_Removal}
+  % \caption{Choice removal inference rules}%
+  % \label{fig:vsmt:inf:chc}
+% \end{figure}
 Choice removal is defined in \autoref{fig:vsmt:inf:chc} as a relation between
 the evaluation/accumulation stores (\aStore{}, \eStore{}), the configuration
 (\configuration{}), and terms in IL\@. Furthermore, we track the current
@@ -39,3 +44,9 @@ context\footnote{that the Huet zipper has been successful implies delimited
   capture the context}, searches the variational core until a choice is in the
 focus position, and then applies a choice removal rule such as
 \rn{Cr-IB-ChcR} or \rn{Cr-LB}.
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../thesis"
+%%% End:

@@ -1,5 +1,11 @@
 ~\label{section:vsmt:evaluation}
 %
+\begin{figure}
+  \input{Figures/Vsmt_Rules_Evaluation}
+  \caption{Evaluation inference rules}%
+  \label{fig:vsmt:inf:eval}
+\end{figure}
+%
 Evaluation is defined in \autoref{fig:vsmt:inf:eval} as a relation of the form
 (\aStore{}, \eStore{}, v) \evaluation{} (\aStore{}, \eStore{}, v), where
 \eStore{} represents the base solver state. The rules \rn{EV-TM} and
@@ -19,3 +25,9 @@ This problem is repeated for inequalities as well. \rn{Ev-AccIB} switches
 to accumulation as one side of an inequality cannot be processed without
 knowledge of the adjacent side. Thus, evaluation contains no rules for
 arithmetic.
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../thesis"
+%%% End:
