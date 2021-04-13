@@ -1,3 +1,4 @@
+~\label{section:vsat:formalization}
 %
 In this section we formalize variational SAT solving by specifying the
 semantics of the \emph{accumulation} and \emph{evaluation} phases of the
@@ -62,7 +63,7 @@ formula, built up through successive calls to the corresponding primitive
 operations.
 %
 For example, recall the example formula $p\wedge\neg q$ from
-\autoref{sec:approach}, which was replaced by the symbolic value $s_{pq}$ after
+\autoref{section:vsat:approach}, which was replaced by the symbolic value $s_{pq}$ after
 the following sequence of \acs{smtlib} declarations.
 %
 \begin{lstlisting}[columns=flexible,keepspaces=true,language=SMTLIB]
@@ -304,7 +305,7 @@ model $\vmodel{}'$. However, to do this requires several pieces of context
 including a configuration $C$, an evaluation store \eStore{}, an accumulation
 store \aStore{}, an initial variational model \vmodel{}, and an evaluation
 context $z$. The two stores have been explained earlier in this subsection, and
-variational models are explained at the end of \autoref{sec:approach}. We
+variational models are explained at the end of \autoref{section:vsat:approach}. We
 explain configurations and evaluation contexts in the context of the relevant
 rules below.
 
@@ -319,7 +320,7 @@ rules below.
 The \crEval\ rule states that $v$ fully evaluates to \unit, then we can get the
 current model from the base solver using the \pmodel\ primitive and update our
 variational model. We use the operation \texttt{Combine} to perform the
-variational model update operation described in \autoref{sec:approach}.
+variational model update operation described in \autoref{section:vsat:approach}.
 %
 The rest of the choice removal rules are structured so that \crEval\ will be
 invoked once for every variant of the variational core so that the final output
