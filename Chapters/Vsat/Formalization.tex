@@ -20,7 +20,7 @@ solver during evaluation.
 
 \subsection{Primitives}
 %
-\autoref{fig:vsmt:inf:prim} lists a minimal set of primitive operations that
+\autoref{fig:vsat:prim} lists a minimal set of primitive operations that
 the base solver is assumed to support. These primitive operations define the
 interface between the base solver and the variational solver.
 
@@ -28,7 +28,7 @@ interface between the base solver and the variational solver.
 \begin{figure}
   \input{Figures/Vsat_Rules_PrimOps}
   \caption{Assumed base solver primitive operations.}%
-  \label{fig:vsmt:inf:prim}
+  \label{fig:vsat:prim}
 \end{figure}
 
 
@@ -122,11 +122,11 @@ c=\fls{}}$.
 \begin{figure}
   \input{Figures/Vsat_Rules_PrimOpsWrapped}
   \caption{Wrapped accumulation primitive operations.}
-  \label{fig:vsmt:inf:primwrapped}
+  \label{fig:vsat:primwrapped}
 \end{figure}
 
 
-Finally, in \autoref{fig:vsmt:inf:primwrapped} we define wrapped versions of the
+Finally, in \autoref{fig:vsat:primwrapped} we define wrapped versions of the
 primitive operations used in accumulation. These wrapper functions first check
 to see whether a symbolic reference for the given IL term exists already in the
 accumulation store, and if so, returns it without changing the store.
@@ -136,7 +136,7 @@ return the new symbolic reference and updated store.
 
 \subsection{Accumulation}
 %
-The accumulation phase is formally specified in \autoref{fig:vsmt:inf:acc} as a
+The accumulation phase is formally specified in \autoref{fig:vsat:acc} as a
 relation of the form $(\aStore{},v)\accumulation(\aStore{}',v')$.
 %
 Accumulation replaces plain subterms of the formula with references to symbolic
@@ -157,7 +157,7 @@ primitive operation cannot be invoked.
 \begin{figure}
   \input{Figures/Vsat_Rules_Accumulation}
   \caption{Accumulation inference rules.}
-  \label{fig:vsmt:inf:acc}
+  \label{fig:vsat:acc}
 \end{figure}
 
 
@@ -233,12 +233,12 @@ reference $s_g$ and the alternatives of the choice were not reduced.
 \begin{figure}
   \input{Figures/Vsat_Rules_Evaluation}
   \caption{Evaluation inference rules.}%
-  \label{fig:vsmt:inf:eval}
+  \label{fig:vsat:eval}
 \end{figure}
 
 \subsection{Evaluation}
 %
-The evaluation phase is formally specified in \autoref{fig:vsmt:inf:eval} as a
+The evaluation phase is formally specified in \autoref{fig:vsat:eval} as a
 relation of the form
 $(\eStore{},\aStore{},v)\evaluation(\eStore{}',\aStore{}',v')$, where an
 evaluation store \eStore{} represents the base solver's state.

@@ -1,32 +1,27 @@
-\begin{syntax}
-  % U_{\booleans{}} & : \booleans{} \rightarrow{} \booleans{} & \textit{Integers} \\
-  \uop{\booleans{}} & \Coloneqq{} & \mathtt{Not}    & \emph{Boolean negation} \\
-  [1.5ex]
-  % _{\booleans{}} & : \booleans{} \rightarrow{} \booleans{} & \textit{Integers} \\
-  \uop{\integers{}} & \Coloneqq{} & \mathtt{Negate} & \emph{Negation} \\
-              &     |       & \texttt{Signum} & \emph{Sign function} \\
-              &     |       & \texttt{Abs}    & \emph{Absolute Value} \\
-  [1.5ex]
-
-  \bop{\booleans{}\booleans{}} & \Coloneqq{} & \texttt{And} & \textit{Conjunction} \\
-                      &      |      & \texttt{Or}  & \textit{Disjunction} \\
-  [1.5ex]
-
-  \bop{\integers{}\booleans{}} & \Coloneqq{} & \texttt{LT}   & \textit{Less than} \\
-                      &     |       & \texttt{GT}   & \textit{Greater than} \\
-                      &     |       & \texttt{LTE}  & \textit{Less than Equal} \\
-                      &     |       & \texttt{GTE}  & \textit{Greater than Equal} \\
-                      &     |       & \texttt{Eqv}  & \textit{Equivalency} \\
-  [1.5ex]
-
-  \bop{\integers{}\integers{}} & \Coloneqq{} & \texttt{Add}   & \textit{Addition} \\
-                      &     |       & \texttt{Sub}   & \textit{Subtraction} \\
-                      &     |       & \texttt{Mult}  & \textit{Multiplication} \\
-                      &     |       & \texttt{Div}  & \textit{Division} \\
-                      &     |       & \texttt{Mod}  & \textit{Modulus} \\
-  [1.5ex]
-
- \sop & \Coloneqq{} & \texttt{Assert}   & \textit{Assert a constraint} \\
-                      &     |       & \texttt{Spawn}   & \textit{Create a new variable} \\
-                      &     |       & \texttt{GetModel}  & \textit{Generate a model} \\
-\end{syntax}
+\centering
+\begin{tabular}{r@{~~:~~}l@{~~\OB{\to}~~}ll}
+\pnot
+  & $(\aStore{},s)$
+  & $(\aStore{},s)$
+  & \emph{Negate a symbolic value} \\
+\pand
+  & $(\aStore{},s,s)$
+  & $(\aStore{},s)$
+  & \emph{Conjunction of symbolic values} \\
+\por
+  & $(\aStore{},s,s)$
+  & $(\aStore{},s)$
+  & \emph{Disjunction of symbolic values} \\
+\pspawn
+  & $(\aStore{},r)$
+  & $(\aStore{},s)$
+  & \emph{Create symbolic value based on a variable} \\
+\passert
+  & $(\eStore{},\aStore{},s)$
+  & $\eStore{}$
+  & \emph{Assert a symbolic value to the solver} \\
+\pmodel
+  & $(\eStore{},\aStore{})$
+  & $m$
+  & \emph{Get a model for the current solver state}
+\end{tabular}

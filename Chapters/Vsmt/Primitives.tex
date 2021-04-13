@@ -1,14 +1,21 @@
 ~\label{section:vsmt:primitives}
 %
+\begin{figure}
+  \input{Figures/Vsmt_Rules_PrimOps}
+  \caption{Syntactic categories of primitive operations}%
+  \label{fig:vsmt:inf:prim}
+\end{figure}
+%
 In order to construct a variational \ac{smt} solver we must first extend
 \ac{vpl} to include non-Boolean values. \ac{vpl} included two kinds of
 relations: relations such as $\neg$ and $\vee$ which required accumulation in
-the context of variation, and relations such as $\wedge$ which required no
-special handling due to variation. All \ac{smt} theories except arrays are
-directly expressible with accumulation because they form a context-free grammar.
-Thus, to extend \ac{vpl} to \evpl{}, we need only to add the appropriate cases
-to the syntax, and add the requisite primitive operations which are supported by
-any \acl{smtlib} compliant solver.
+the presence of variation, and relations such as $\wedge$ which required no
+special handling. Unfortunately, in the presence of variation there are no
+relations such as $\wedge$ for the \ac{smt} theories. Thus we add support for
+each theory except arrays through accumulation. Our strategy to extend \ac{vpl}
+to \evpl{} is to add the appropriate cases to the syntax of \ac{vpl}, add the
+requisite primitive operations, and then extend the inference rules of
+accumulation and choice removal.
 
 The \evpl{} syntax is presented in \autoref{fig:arith:stx}. \evpl{} includes
 syntax of the integer arithmetic extension, which consists of integer variables,
@@ -35,12 +42,6 @@ represents two variants:
 %
 $\sem[\{(A, \true)\}]{g} = (1 + j \geq 2) \vee (a \wedge c)$ and
 $\sem[\{(A, \false)\}]{g} = (2 + j \geq 2) \vee (a \wedge d)$.
-
-\begin{figure}
-  \input{Figures/Vsmt_Rules_PrimOps}
-  \caption{Assumed base solver primitive operations}%
-  \label{fig:vsmt:inf:prim}
-\end{figure}
 
 
 %%% Local Variables:
