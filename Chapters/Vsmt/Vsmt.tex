@@ -1,100 +1,90 @@
 ~\label{chapter:vsmt}
+%
+In this chapter we describe an extension of variational satisfiability solving
+to variational \ac{smt} solving.
+% %
+We generalize variational models to handle any type of value and discuss
+further extensions to other background theories, such as an array theory.
+% %
+\ac{smt} solvers generalize \ac{sat} solvers through the use of \emph{background
+  theories} that allow the solver to reason about values and constructs outside
+the Boolean domain. The SMTLIB2 standard defines seven such background theories:
+\texttt{Core} (Boolean theory), \texttt{ArraysEx}, \texttt{FixedSizeBitVectors},
+\texttt{FloatingPoint}, \texttt{Ints}, \texttt{Reals}, and \texttt{Real\_Ints}.
+In this chapter, we use integer arithmetic (\texttt{Ints}) as an example
+\ac{smt} extension for variational \ac{smt} solving, we conclude the section by
+adding array theory which presents unique challenges.
+% %
 
+\begin{figure}
+  \begin{subfigure}[t]{\linewidth}
+    \centering
+    \input{Figures/Vsmt_Syntax}
+    \caption{Syntax of Integer arithmetic extension.}%
+    \label{fig:arith:stx}
+  \end{subfigure}
+  % \vfill
+  \begin{subfigure}[t]{\linewidth}
+    \input{Figures/Vsmt_Vpl_Syntax}
+    \centering
+    \caption{Syntax of extended \ac{vpl}.}%
+    \label{fig:arith:vpl}
+  \end{subfigure}
+  \caption{Formal definition of extended \ac{vpl}.}%
+  \label{fig:ex:vpl}
+\end{figure}
 
-% In this section we describe an extension of variational satisfiability solving
-% to variational \ac{smt} solving.
+\section{Syntax}
+%
+\autoref{fig:arith:stx} defines the syntax of the integer arithmetic extension,
+which consists of integer variables, integer literals, a set of standard
+operators, and choices.
+%
+The sets of Boolean and arithmetic variables are disjoint, thus an expression
+such as $(\kf{s < 10) \wedge (s \vee p})$, where $s$ occurs as both an integer
+and Boolean variable is disallowed.
+%
+The syntax of the language prevents type errors and expressions that do not
+yield Boolean values. For example, $\chc[D]{1,2} \wedge p$ is syntactically
+invalid.
+%
+Thus, the language is purposefully limited to arithmetic expressions that
+have an inequality at the root of the expression, such as: $\kf{g} =
+(\chc[A]{1, 2} + j \geq 2) \vee a \wedge \chc[A]{c, d}$.
+%
+Choices in the same dimension are synchronized across Boolean and arithmetic
+sub-expressions, for example, the expression
+%
+$\kf{g} = (\chc[A]{1, 2} + j \geq 2) \vee (a \wedge \chc[A]{c,d})$
 % %
-% % We generalize variational models to handle any type of value and discuss
-% % further extensions to other background theories, such as an array theory, in
-% % \autoref{sec:future-work}.
-% %
-% \ac{smt} solvers generalize \ac{sat} solvers through the use of
-% \emph{background theories} that allow the solver to reason about values and
-% constructs outside the Boolean domain. The SMTLIB2 standard defines seven such
-% background theories: \texttt{Core} (Boolean theory), \texttt{ArraysEx},
-% \texttt{FixedSizeBitVectors}, \texttt{FloatingPoint}, \texttt{Ints},
-% \texttt{Reals}, and \texttt{Real\_Ints}. In this section, we use integer
-% arithmetic (\texttt{Ints}) as an example \ac{smt} extension for variational
-% \ac{smt} solving. However, the technique illustrated here can be used to extend
-% the approach to any theory that adds a regular language to the \ac{smt} domain.
-% %
-% \eric{Not sure what ``adds a regular language to the SMT domain'' means.}
-% %
-% Extending the variational solving algorithm to context sensitive
-% theories, such as \texttt{FixedSizeBitVectors} and \texttt{ArraysEx} are open
-% research questions.
+represents two variants:
+%
+$\sem[A_{\tru{}}]{g} = (1 + j \geq 2) \vee (a \wedge c)$ and
+$\sem[A_{\fls{}}]{g} = (2 + j \geq 2) \vee (a \wedge d)$.
 
-% \begin{figure}
-%   \begin{subfigure}[t]{\linewidth}
-%     \centering
-%     \input{Figures/Vsmt_Syntax}
-%     \caption{Syntax of Integer arithmetic extension.}%
-%     \label{fig:arith:stx}
-%   \end{subfigure}
-%   % \vfill
-%   \begin{subfigure}[t]{\linewidth}
-%     \input{Figures/Vsmt_Vpl_Syntax}
-%     \centering
-%     \caption{Syntax of extended \ac{vpl}.}%
-%     \label{fig:arith:vpl}
-%   \end{subfigure}
-%   \caption{Formal definition of extended \ac{vpl}.}%
-%   \label{fig:ex:vpl}
-% \end{figure}
-
-% \paragraph{Syntax}
-% %
-% \autoref{fig:arith:stx} defines the syntax of the integer arithmetic extension,
-% which consists of integer variables, integer literals, a set of standard
-% operators, and choices.
-% %
-% The sets of Boolean and arithmetic variables are disjoint, thus an expression
-% such as $(\kf{s < 10) \wedge (s \vee p})$, where $s$ occurs as both an integer
-% and Boolean variable is disallowed.
-% %
-% The syntax of the language prevents type errors and expressions that do not
-% yield Boolean values. For example, $\chc[D]{1,2} \wedge p$ is syntactically
-% invalid.
-% %
-% % Thus, the language is purposefully limited to arithmetic expressions that
-% % have an inequality at the root of the expression, such as: $\kf{g} =
-% % (\chc[A]{1, 2} + j \geq 2) \vee a \wedge \chc[A]{c, d}$.
-% %
-% % The property of synchronization is maintained.
-% %
-% Choices in the same dimension are synchronized across Boolean and arithmetic
-% sub-expressions, for example, the expression
-% %
-% $\kf{g} = (\chc[A]{1, 2} + j \geq 2) \vee (a \wedge \chc[A]{c,d})$
-% %
-% represents two variants:
-% %
-% $\sem[A_{\tru{}}]{g} = (1 + j \geq 2) \vee (a \wedge c)$ and
-% $\sem[A_{\fls{}}]{g} = (2 + j \geq 2) \vee (a \wedge d)$.
-
-% \begin{figure}
-%   \input{Figures/Vsmt_Rules_PrimOps}
-%   \caption{Assumed base solver primitive operations}%
-%   \label{fig:vsmt:inf:prim}
-% \end{figure}
-% %
-% \begin{figure}
-%   \input{Figures/Vsmt_Rules_Accumulation}
-%   \caption{Accumulation inference rules}%
-%   \label{fig:vsmt:inf:acc}
-% \end{figure}
-% %
-% \begin{figure}
-%   \input{Figures/Vsmt_Rules_Evaluation}
-%   \caption{Evaluation inference rules}%
-%   \label{fig:vsmt:inf:eval}
-% \end{figure}
-% %
-% \begin{figure}
-%   \input{Figures/Vsmt_Rules_Choice_Removal}
-%   \caption{Choice removal inference rules}%
-%   \label{fig:vsmt:inf:chc}
-% \end{figure}
+\begin{figure}
+  \input{Figures/Vsmt_Rules_PrimOps}
+  \caption{Assumed base solver primitive operations}%
+  \label{fig:vsmt:inf:prim}
+\end{figure}
+%
+\begin{figure}
+  \input{Figures/Vsmt_Rules_Accumulation}
+  \caption{Accumulation inference rules}%
+  \label{fig:vsmt:inf:acc}
+\end{figure}
+%
+\begin{figure}
+  \input{Figures/Vsmt_Rules_Evaluation}
+  \caption{Evaluation inference rules}%
+  \label{fig:vsmt:inf:eval}
+\end{figure}
+%
+\begin{figure}
+  \input{Figures/Vsmt_Rules_Choice_Removal}
+  \caption{Choice removal inference rules}%
+  \label{fig:vsmt:inf:chc}
+\end{figure}
 
 
 % \paragraph{Semantics}
@@ -473,7 +463,6 @@
 % tracking the values a variable has been assigned in all variants. However, we
 % desire to keep variational models as simple as possible and therefore only
 % present the minimum required machinery.
-
 
 
 %%% Local Variables:
