@@ -1,75 +1,138 @@
 \begin{mathpar}
-  %%% Computation rules
-  \inferrule*[Right=Ac-Gen]
-  { r \notin{} \kf{dom} (\aStore{}) \quad{}
-    \texttt{Spawn(\aStore{},$r$)} = (\aStore{}', s)}
-  {(\aStore{}, r) \mapsto{} (\aStore{}', s)}
-\\
-  \inferrule*[Right=Ac-Geni]
-  { r \notin{} \kf{dom} (\aStore{}) \quad{}
-    \texttt{Spawn(\aStore{},$r_{i}$)} = (\aStore{}', s)}
-  {(\aStore{}, r_{i}) \mapsto{} (\aStore{}', s)}
+\inferrule*[right=\acRef]
+  { \pwrap{\pspawn}(\aStore{},r) = (\aStore{}', s) }
+  { (\aStore{}, r) \accumulation (\aStore{}', s) }
+
+  \inferrule*[right=\acRefi]
+  { \pwrap{\pspawni}(\aStore{},r_{i}) = (\aStore{}', s) }
+  { (\aStore{}, r_{i}) \accumulation (\aStore{}', s) }
+
+\inferrule*[right=\acNotS]
+  { (\aStore{}, v) \accumulation (\aStore{}', s) \\
+    \pwrap{\pnot}(\aStore{}', s) = (\aStore{}'', s') }
+  { (\aStore{}, \neg{} v) \accumulation (\aStore{}'', s') }
+
+  \inferrule*[right=\acNegS]
+  { (\aStore{}, v) \accumulation (\aStore{}', s) \\
+    \pwrap{\pneg}(\aStore{}', s) = (\aStore{}'', s') }
+  { (\aStore{}, - v) \accumulation (\aStore{}'', s') }
+
+\inferrule*[right=\acBoolS]
+ { \op \in \boolFuncs{} \\
+  (\aStore{}, v_1) \accumulation (\aStore{1}, s_1) \\
+    (\aStore{1}, v_2) \accumulation (\aStore{2}, s_2) \\
+    \lookup{\op}{\boolFuncs{}} \coloneqq \pwrap{\op} \\
+    \pwrap{\op}(\aStore{2}, s_1, s_2) = (\aStore{3}, s_3) }
+  { (\aStore{}, v_1\; \op\; v_2) \accumulation{} (\aStore{3}, s_3) }
+
+  \inferrule*[right=\acArithS]
+  { \op \in \integerFuncs{} \\
+    (\aStore{}, v_1) \accumulation (\aStore{1}, s_1) \\
+    (\aStore{1}, v_2) \accumulation (\aStore{2}, s_2) \\
+    \lookup{\op}{\integerFuncs{}} \coloneqq \pwrap{\op} \\
+    \pwrap{\op}(\aStore{2}, s_1, s_2) = (\aStore{3}, s_3) }
+  { (\aStore{}, v_1\; \op\; v_2) \accumulation{} (\aStore{3}, s_3) }
+
+  \inferrule*[right=\acInEqS]
+  { \op \in\ \inequalities{} \\
+    (\aStore{}, v_1) \accumulation (\aStore{1}, s_1) \\
+    (\aStore{1}, v_2) \accumulation (\aStore{2}, s_2) \\
+    \lookup{\op}{\inequalities} \coloneqq \pwrap{\op} \\
+    \pwrap{\op}(\aStore{2}, s_1, s_2) = (\aStore{3}, s_3) }
+  { (\aStore{}, v_1\; \op\; v_2) \accumulation{} (\aStore{3}, s_3) }
+
+\inferrule*[right=\acChc]
+  { }
+  {(\aStore,\chc[D]{e_1,e_2}) \accumulation (\aStore{},\chc[D]{e_1,e_2})}
+
+\inferrule*[right=\acNotV]
+  { (\aStore{}, v) \accumulation (\aStore{}', v') }
+  { (\aStore{}, \neg{} v) \accumulation (\aStore{}', \neg v') }
+
+\inferrule*[right=\acAndV]
+  { (\aStore{}, v_1) \accumulation (\aStore{1}, v_1') \\
+    (\aStore{1}, v_2) \accumulation (\aStore{2}, v_2') }
+  { (\aStore{}, v_1 \wedge v_2) \accumulation{} (\aStore{2}, v_1' \wedge v_2') }
+
+\inferrule*[right=\acOrV]
+  { (\aStore{}, v_1) \accumulation (\aStore{1}, v_1') \\
+    (\aStore{1}, v_2) \accumulation (\aStore{2}, v_2') }
+  { (\aStore{}, v_1 \vee v_2) \accumulation{} (\aStore{2}, v_1' \vee v_2') }
 \end{mathpar}
-\begin{mathpar}
-\inferrule*[Right=Ac-Ref]
-  {\aStore{}(r) = s}
-  {(\aStore{}, r) \accumulation{} (\aStore{}, s)}
 
-  \inferrule*[Right=Ac-Refi]
-  {\aStore{}(r_{i}) = s}
-  {(\aStore{}, r_{i}) \accumulation{} (\aStore{}, s)}
-\\
-% \inferrule*[Right=Ac-Tm]
-% {\aStore{}(t) = s}
-% {(\aStore{}, t) \accumulation{} (\aStore{}, s)}
 
-% \inferrule*[Right=Ac-Tmi]
-% {\aStore{}(t_{i}) = s}
-% {(\aStore{}, t_{i}) \accumulation{} (\aStore{}, s)}
+% \begin{mathpar}
+%   %%% Computation rules
+%   \inferrule*[Right=Ac-Gen]
+%   { r \notin{} \kf{dom} (\aStore{}) \quad{}
+%     \texttt{Spawn(\aStore{},$r$)} = (\aStore{}', s)}
+%   {(\aStore{}, r) \mapsto{} (\aStore{}', s)}
 % \\
-\inferrule*[Right=Ac-Chc]
-{ }
-{(\aStore, \chc[D]{e_{1},e_{2}}) \accumulation{} (\aStore{}, \chc[D]{e_{1},e_{2}})}
-\\
-  %%% Negation rules
-  \inferrule*[Right=Ac-BU]
-  { \mathtt{Not}(\aStore{}, s) = (\aStore{}', s')}
-  { (\aStore{}, \neg{} s) \accumulation{} (\aStore{}', s')}
+%   \inferrule*[Right=Ac-Geni]
+%   { r \notin{} \kf{dom} (\aStore{}) \quad{}
+%     \texttt{Spawn(\aStore{},$r_{i}$)} = (\aStore{}', s)}
+%   {(\aStore{}, r_{i}) \mapsto{} (\aStore{}', s)}
+% \end{mathpar}
+% \begin{mathpar}
+% \inferrule*[Right=Ac-Ref]
+%   {\aStore{}(r) = s}
+%   {(\aStore{}, r) \accumulation{} (\aStore{}, s)}
 
-  \inferrule*[Right=Ac-IU]
-  { \ui{}(\aStore{}, s) = (\aStore{}', s')}
-  { (\aStore{}, \integerUnary{}s) \accumulation{} (\aStore{}', s')}
-\\
-  \inferrule*[Right=Ac-SBinB]
-  { \bbb(\aStore, s_{1}, s_{2}) = (\aStore{}', s') }
-  {(\aStore{}, s_{1} \boolFuncs{} s_{2}) \accumulation{} (\aStore{}', s')}
-  \\
-  \inferrule*[Right=Ac-SBinI]
-  { \bii(\aStore, s_{1}, s_{2}) = (\aStore{}', s') }
-  {(\aStore{}, s_{1} \integerFuncs{} s_{2}) \accumulation{} (\aStore{}', s')}
-  \\
-  \inferrule*[Right=Ac-SBinIB]
-  { \bib(\aStore, s_{1}, s_{2}) = (\aStore{}', s') }
-  {(\aStore{}, s_{1} \inequalities{} s_{2}) \accumulation{} (\aStore{}', s')}
-\\
-  \inferrule*[Right=Ac-BinB]
-  { (\aStore{}, v_{1}) \accumulation{} (\aStore{1}, s_{1}) \\
-    (\aStore{1}, v_{2}) \accumulation{} (\aStore{}', s_{2}) \\
-  }
-  {(\aStore{}, v_{1} \boolFuncs{} v_{2}) \accumulation{} (\aStore{}', s_{1}
-    \boolFuncs s_{2})}
+%   \inferrule*[Right=Ac-Refi]
+%   {\aStore{}(r_{i}) = s}
+%   {(\aStore{}, r_{i}) \accumulation{} (\aStore{}, s)}
+% \\
+% % \inferrule*[Right=Ac-Tm]
+% % {\aStore{}(t) = s}
+% % {(\aStore{}, t) \accumulation{} (\aStore{}, s)}
 
-  \inferrule*[Right=Ac-BinI]
-  { (\aStore{}, v_{1}) \accumulation{} (\aStore{1}, s_{1}) \\
-    (\aStore{1}, v_{2}) \accumulation{} (\aStore{}', s_{2}) \\
-  }
-  {(\aStore{}, v_{1} \integerFuncs{} v_{2}) \accumulation{} (\aStore{}', s_{1}
-    \integerFuncs{} s_{2})}
+% % \inferrule*[Right=Ac-Tmi]
+% % {\aStore{}(t_{i}) = s}
+% % {(\aStore{}, t_{i}) \accumulation{} (\aStore{}, s)}
+% % \\
+% \inferrule*[Right=Ac-Chc]
+% { }
+% {(\aStore, \chc[D]{e_{1},e_{2}}) \accumulation{} (\aStore{}, \chc[D]{e_{1},e_{2}})}
+% \\
+%   %%% Negation rules
+%   \inferrule*[Right=Ac-BU]
+%   { \mathtt{Not}(\aStore{}, s) = (\aStore{}', s')}
+%   { (\aStore{}, \neg{} s) \accumulation{} (\aStore{}', s')}
 
-  \inferrule*[Right=Ac-BinIB]
-  { (\aStore{}, v_{1}) \accumulation{} (\aStore{1}, s_{1}) \\
-    (\aStore{1}, v_{2}) \accumulation{} (\aStore{}', s_{2}) \\
-  }
-  {(\aStore{}, v_{1} \inequalities{} v_{2}) \accumulation{} (\aStore{}', s_{1}
-    \inequalities{} s_{2})}
-\end{mathpar}
+%   \inferrule*[Right=Ac-IU]
+%   { \ui{}(\aStore{}, s) = (\aStore{}', s')}
+%   { (\aStore{}, \integerUnary{}s) \accumulation{} (\aStore{}', s')}
+% \\
+%   \inferrule*[Right=Ac-SBinB]
+%   { \bbb(\aStore, s_{1}, s_{2}) = (\aStore{}', s') }
+%   {(\aStore{}, s_{1} \boolFuncs{} s_{2}) \accumulation{} (\aStore{}', s')}
+%   \\
+%   \inferrule*[Right=Ac-SBinI]
+%   { \bii(\aStore, s_{1}, s_{2}) = (\aStore{}', s') }
+%   {(\aStore{}, s_{1} \integerFuncs{} s_{2}) \accumulation{} (\aStore{}', s')}
+%   \\
+%   \inferrule*[Right=Ac-SBinIB]
+%   { \bib(\aStore, s_{1}, s_{2}) = (\aStore{}', s') }
+%   {(\aStore{}, s_{1} \inequalities{} s_{2}) \accumulation{} (\aStore{}', s')}
+% \\
+%   \inferrule*[Right=Ac-BinB]
+%   { (\aStore{}, v_{1}) \accumulation{} (\aStore{1}, s_{1}) \\
+%     (\aStore{1}, v_{2}) \accumulation{} (\aStore{}', s_{2}) \\
+%   }
+%   {(\aStore{}, v_{1} \boolFuncs{} v_{2}) \accumulation{} (\aStore{}', s_{1}
+%     \boolFuncs s_{2})}
+
+%   \inferrule*[Right=Ac-BinI]
+%   { (\aStore{}, v_{1}) \accumulation{} (\aStore{1}, s_{1}) \\
+%     (\aStore{1}, v_{2}) \accumulation{} (\aStore{}', s_{2}) \\
+%   }
+%   {(\aStore{}, v_{1} \integerFuncs{} v_{2}) \accumulation{} (\aStore{}', s_{1}
+%     \integerFuncs{} s_{2})}
+
+%   \inferrule*[Right=Ac-BinIB]
+%   { (\aStore{}, v_{1}) \accumulation{} (\aStore{1}, s_{1}) \\
+%     (\aStore{1}, v_{2}) \accumulation{} (\aStore{}', s_{2}) \\
+%   }
+%   {(\aStore{}, v_{1} \inequalities{} v_{2}) \accumulation{} (\aStore{}', s_{1}
+%     \inequalities{} s_{2})}
+% \end{mathpar}

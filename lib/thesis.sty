@@ -121,6 +121,8 @@
 
 %%%%%%%%%%%%%%% shorthand ops for inference rules
 \newcommand{\evpl}{\ensuremath{\kf{\ac{vpl}^{\integers}}}}
+\newcommand{\eIL}{\ensuremath{\kf{v^{\integers}}}}
+\newcommand{\eAR}{\ensuremath{\kf{ar^{\integers}}}}
 \newcommand{\inequalities}{\ensuremath{\bowtie{}}}
 \newcommand{\integerFuncs}{\ensuremath{\oplus{}}}
 \newcommand{\boolFuncs}{\ensuremath{\otimes{}}}
@@ -193,6 +195,7 @@
 \newcommand{\crChcAnd}{\TODO{C-Chc-And}}
 
 %%%%% primitive operations
+\newcommand{\lookup}[2]{\ensuremath{#2[#1]}}
 %%%% Bools
 \newcommand{\primOp}[1]{\texttt{#1}}
 \newcommand{\pspawn}{\primOp{Var}}
@@ -204,12 +207,14 @@
 \newcommand{\passert}{\primOp{Assert}}
 \newcommand{\pcombine}{\primOp{Combine}}
 \newcommand{\pwrap}[1]{\underline{#1}}
+
 %%%% Arithmetic
 \newcommand{\pneg}{\primOp{Neg}}
 \newcommand{\padd}{\primOp{Add}}
 \newcommand{\psub}{\primOp{Sub}}
 \newcommand{\pdiv}{\primOp{Div}}
 \newcommand{\pmult}{\primOp{Mult}}
+
 %%%% Inequalities
 \newcommand{\plt}{\primOp{Lt}}
 \newcommand{\plte}{\primOp{Lte}}
@@ -221,3 +226,11 @@
 \newcommand{\dcardinality}[1]{\ensuremath{|#1|_{D}}}
 \newcommand{\variants}[1]{\ensuremath{\kf{Variants}(#1)}}
 \newcommand{\dimensions}[1]{\ensuremath{\kf{Dimensions(#1)}}}
+
+%%%%% VSMT accumulation
+\newcommand{\acRefi}{\rn{A-Ref-I}}
+\newcommand{\op}{\ensuremath{\sigma}}
+\newcommand{\acNegS}{\rn{A-Neg-S}}
+\newcommand{\acBoolS}{\rn{A-Bool-S}}
+\newcommand{\acArithS}{\rn{A-Arith-S}}
+\newcommand{\acInEqS}{\rn{A-InEq-S}}

@@ -33,49 +33,13 @@ popular \ac{smt} background theories in the variational solver.
 \section{\ac{vpl} extensions and primitives}
 \input{Chapters/Vsmt/Primitives}
 
-\section{Semantics}
-%
-\autoref{fig:vsmt:inf:prim} shows a set of primitive operations that the base
-solver is assumed to support. We use the nonterminals in the grammar as
-metavariables to range over operations. The naming scheme of the metavariables
-is to use \uop{}, \bop{}, and \sop{} to indicate unary, binary, and solver
-functions in the base solver domain, and use subscripts to indicate the
-argument type and (in the case of binary operations) result type of the
-operations they range over.
-%
-For example, integer inequality is ranged over by \bib{}, indicating that
-inequality is a binary function whose arguments are of type \integers{} and
-whose result is of type \booleans{}.
-%
-We do not show subscripts for \sop{} as these operations are run for their side
-effects in the base solver.
-%
-\itodo{not sure if this is a good strategy, we would have to show models and a
-unit value for side effects if we didn't elide these though}.
-
-\itodo{also not sure about the unary symbol, but I think making the
-  variational level all symbols and using text for base solver level is a good
-  idea, open to suggestions here}
-%
-\eric{Can we define these directly in the grammar in Fig.~6? I think this is
-confusing and overwhelming in its current form.}
-%
-Similarly we define metavariables for these
-functions in the variational \ac{smt} domain. We use \inequalities{} to
-represent binary relations over integers, \integerFuncs{} to represent
-arithmetic binary functions such as addition, \integerUnary{} for unary
-arithmetic functions, and \boolFuncs{} to represent binary logical connectives.
-Thus a term such as $\kf{(i < j) \wedge a}$ is represented as
-$\kf{\bbb{}(\bib{}(i,j),a)}$ in the base solver domain, and $(i \inequalities{}
-j) \boolFuncs{} a$ in the variational \ac{smt} solver domain.
-
-\subsection{Accumulation}
+\section{Accumulation}
 \input{Chapters/Vsmt/Accumulation}
 
-\subsection{Evaluation}
+\section{Evaluation}
 \input{Chapters/Vsmt/Evaluation}
 
-\subsection{Choice removal}
+\section{Choice removal}
 \input{Chapters/Vsmt/ChoiceRemoval}
 
 \section{Example derivation and solving of a Variational Core}

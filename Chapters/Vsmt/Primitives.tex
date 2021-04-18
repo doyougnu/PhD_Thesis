@@ -10,7 +10,7 @@
   \centering
   \begin{subfigure}[t]{\linewidth}
     \input{Figures/Vsmt_Rules_PrimOpsWrapped_Math}
-    \caption{Wrapped arithmetic primitive.}%
+    \caption{Wrapped arithmetic primitives.}%
     \label{fig:vsmt:primops:arithmetic}
   \end{subfigure}
   \vfill
@@ -27,7 +27,6 @@
   \caption{Syntactic categories of primitive operations}%
   \label{fig:vsmt:primops}
 \end{figure}
-%
 
 In order to construct a variational \ac{smt} solver we must first extend
 \ac{vpl} to include non-Boolean values. \ac{vpl} included two kinds of
@@ -36,9 +35,9 @@ the presence of variation, and relations such as $\wedge$ which required no
 special handling. Unfortunately, in the presence of variation there are no
 relations such as $\wedge$ for the \ac{smt} theories. Thus we add support for
 each theory except arrays through accumulation. Our strategy to extend \ac{vpl}
-to \evpl{} is to add the appropriate cases to the syntax of \ac{vpl}, add the
-requisite primitive operations, and then extend the inference rules of
-accumulation and choice removal.
+to \evpl{} is to add the appropriate cases to the syntax of \ac{vpl}, extend the
+intermediate language, add the requisite primitive operations, and then extend
+the inference rules of accumulation and choice removal.
 
 The \evpl{} syntax is presented in \autoref{fig:arith:stx}. \evpl{} includes
 syntax of the integer arithmetic extension, which consists of integer variables,
@@ -71,11 +70,44 @@ of the base solver in \autoref{fig:vsmt:primops}, and wrapped versions for new
 operators in \autoref{fig:vsmt:primops:arithmetic} and
 \autoref{fig:vsmt:primops:inequality}. The wrapped versions are defined
 identically as the wrapped primitives in \autoref{fig:vsat:primwrapped} and
-serve the same purpose. Finally, from the perspective of the variational solver,
-operations such as addition, division, and subtraction only differ in the
-primitive operation emitted to the base solver. Thus, we define syntactic
-categories over like operations to simplify the inference rules of accumulation,
-choice removal, and evaluation in \autoref{fig:vsmt:primcategories}.
+serve the same purpose.
+%
+From the perspective of the variational solver, operations such as addition,
+division, and subtraction only differ in the primitive operation emitted to the
+base solver. Thus, we define syntactic categories over like operations in
+\autoref{fig:vsmt:primcategories}. Notice that the categories correspond to the
+respective type of each operation. For example, the boolean categories
+encapsulate operations which take two boolean expressions and return a boolean
+expression, similarly the inequality category encapsulate operators which take
+numeric expressions and return boolean expressions. Further \ac{smt} extensions
+would directly copy this pattern, that is, defining a syntactic category of
+\rn{FixedSizeBitVector} or \rn{Reals} operators. Similarly, while we present
+only a single arithmetic unary function $-$, other arithmetic unary functions
+would be straightforward to add. For example, to include a modulus operator
+$\kf{mod}$, one would define the wrapped primitive, and add the operator to the
+appropriate syntactic category without requiring any modification to the
+inference rules or intermediate languages.
+
+Just as \ac{vpl} was extended the intermediate language must be extended. First
+we must add cases for inequality operations, and second we must define an
+intermediate language for the arithmetic domain.
+%
+\autoref{fig:vsmt:il} defines the intermediate arithmetic language \eAR, and the
+extended intermediate language \eIL. The syntax of both intermediate languages
+follow directly from \evpl and should be unsurprising. The only important
+difference from IL is that \eAR cannot express \unit{}. This is a purposeful
+design decision; recall that a \unit{} represents a term that has been sent to
+the base solver. Thus if \unit{} were in \eAR then expressions such as $\unit{}
++ 2$ would be expressible in \eAR, however because all arithmetic formula's
+require accumulation the only possible result of evaluation/accumulation on
+arithmetic expressions is either a choice or a symbolic term, not a \unit{}.
+Hence, we syntactically avoid classes bugs by eliding the \unit{} value in \eAR.
+% 
+\begin{figure}
+  \input{Figures/Vsmt_IL_Syntax}
+  \caption{Extended intermediate language syntax}%
+  \label{fig:vsmt:il}
+\end{figure}
 
 %%% Local Variables:
 %%% mode: latex
