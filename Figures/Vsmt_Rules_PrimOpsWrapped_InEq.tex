@@ -1,0 +1,34 @@
+\newcommand{\wrappedprimspacer}{\mbox{\hspace{1.8cm}} & \\[-3ex]}
+\centering
+\begin{align*}
+  \pwrap{\plt}(\aStore{},s_1,s_2) &=
+                                     \begin{cases}
+                                       \wrappedprimspacer
+                                       (\aStore{},s_3) & (s_1 < s_2, s_3) \in \aStore{} \\
+                                       \plt(\aStore{},s_1,s_2) & \mathit{otherwise}
+                                     \end{cases} \\
+  \pwrap{\plte}(\aStore{},s_1,s_2) &=
+                                     \begin{cases}
+                                       \wrappedprimspacer
+                                       (\aStore{},s_3) & (s_1 \leq s_2, s_3) \in \aStore{} \\
+                                       \plte(\aStore{},s_1,s_2) & \mathit{otherwise}
+                                     \end{cases} \\
+  \pwrap{\pgt}(\aStore{},s_1,s_2) &=
+                                     \begin{cases}
+                                       \wrappedprimspacer
+                                       (\aStore{},s_3) & (s_1 > s_2, s_3) \in \aStore{} \\
+                                       \pgt(\aStore{},s_1,s_2) & \mathit{otherwise}
+                                     \end{cases} \\
+  \pwrap{\pgte}(\aStore{},s_1,s_2) &=
+                                    \begin{cases}
+                                      \wrappedprimspacer
+                                      (\aStore{},s_3) & (s_1 \geq s_2, s_3) \in \aStore{} \\
+                                      \pgte(\aStore{},s_1,s_2) & \mathit{otherwise}
+                                    \end{cases} \\
+  \pwrap{\peq}(\aStore{},s_1,s_2) &=
+                                     \begin{cases}
+                                       \wrappedprimspacer
+                                       (\aStore{},s_3) & (s_1 \equiv s_2, s_3) \in \aStore{} \\
+                                       \peq(\aStore{},s_1,s_2) & \mathit{otherwise}
+                                     \end{cases} \\
+\end{align*}

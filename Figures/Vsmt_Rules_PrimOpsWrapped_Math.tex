@@ -1,0 +1,40 @@
+\newcommand{\wrappedprimspacer}{\mbox{\hspace{1.8cm}} & \\[-3ex]}
+\centering
+\begin{align*}
+\pwrap{\pspawni}(\aStore{},r_{i}) &=
+                               \begin{cases}
+                                 \wrappedprimspacer
+                                 (\aStore{},s) & (r_{i},s) \in \aStore{} \\
+                                 \pspawni(\aStore{},r_{i}) & \mathit{otherwise}
+                               \end{cases} \\
+\pwrap{\pneg}(\aStore{},s) &=
+                               \begin{cases}
+                                 \wrappedprimspacer
+                                 (\aStore{},s') & (-s, s') \in \aStore{} \\
+                                 \pneg(\aStore{},s) & \mathit{otherwise}
+                               \end{cases} \\
+\pwrap{\padd}(\aStore{},s_1,s_2) &=
+                                 \begin{cases}
+                                   \wrappedprimspacer
+                                   (\aStore{},s_3) & (s_1 + s_2, s_3) \in \aStore{} \\
+                                   \padd(\aStore{},s_1,s_2) & \mathit{otherwise}
+                                 \end{cases} \\
+\pwrap{\psub}(\aStore{},s_1,s_2) &=
+                                \begin{cases}
+                                  \wrappedprimspacer
+                                  (\aStore{},s_3) & (s_1 - s_2, s_3) \in \aStore{} \\
+                                  \psub(\aStore{},s_1,s_2) & \mathit{otherwise}
+                                \end{cases} \\
+\pwrap{\pdiv}(\aStore{},s_1,s_2) &=
+                                 \begin{cases}
+                                   \wrappedprimspacer
+                                   (\aStore{},s_3) & (s_1 \div s_2, s_3) \in \aStore{} \\
+                                   \pdiv(\aStore{},s_1,s_2) & \mathit{otherwise}
+                                 \end{cases} \\
+  \pwrap{\pmult}(\aStore{},s_1,s_2) &=
+                                     \begin{cases}
+                                       \wrappedprimspacer
+                                       (\aStore{},s_3) & (s_1 * s_2, s_3) \in \aStore{} \\
+                                       \pmult(\aStore{},s_1,s_2) & \mathit{otherwise}
+                                     \end{cases}
+\end{align*}

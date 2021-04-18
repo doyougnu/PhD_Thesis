@@ -7,10 +7,19 @@
 \end{figure}
 %
 \begin{figure}
-  \input{Figures/Vsmt_Rules_PrimOpsWrapped}
-  \vspace{-3em}
-  \caption{Wrapped versions of \ac{smt} primitive operations}%
-  \label{fig:vsmt:primops}
+  \centering
+  \begin{subfigure}[t]{\linewidth}
+    \input{Figures/Vsmt_Rules_PrimOpsWrapped_Math}
+    \caption{Wrapped arithmetic primitive.}%
+    \label{fig:vsmt:primops:arithmetic}
+  \end{subfigure}
+  \vfill
+  \begin{subfigure}[t]{\linewidth}
+    \input{Figures/Vsmt_Rules_PrimOpsWrapped_InEq}
+    \caption{Wrapped inequality  primitives.}%
+    \label{fig:vsmt:primops:inequality}
+  \end{subfigure}
+  \caption{Wrapped \ac{smt} primitives.}
 \end{figure}
 %
 \begin{figure}
