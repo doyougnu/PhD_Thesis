@@ -67,15 +67,15 @@ $\sem[\{(A, \true)\}]{g} = (1 + j \geq 2) \vee (a \wedge c)$ and
 $\sem[\{(A, \false)\}]{g} = (2 + j \geq 2) \vee (a \wedge d)$.
 
 Similarly to \autoref{chapter:vsat}, we define the assumed primitive operations
-of the base solver in \autoref{fig:vsmt:primops}, and wrapped versions in
-\autoref{fig:vsmt:primwrapped}. The wrapped versions are defined exactly the
-same and serve the same purpose as the wrapped primitives in
-\autoref{fig:vsat:primwrapped}. Finally, from the perspective of the variational
-solver, operations such as addition, division, and subtraction are identical
-except for the primitive operation emitted to the base solver. Thus, we define
-syntactic categories over like operations to simplify the inference rules of
-accumulation, choice removal, and evaluation in
-\autoref{fig:vsmt:primcategories}.
+of the base solver in \autoref{fig:vsmt:primops}, and wrapped versions for new
+operators in \autoref{fig:vsmt:primops:arithmetic} and
+\autoref{fig:vsmt:primops:inequality}. The wrapped versions are defined
+identically as the wrapped primitives in \autoref{fig:vsat:primwrapped} and
+serve the same purpose. Finally, from the perspective of the variational solver,
+operations such as addition, division, and subtraction only differ in the
+primitive operation emitted to the base solver. Thus, we define syntactic
+categories over like operations to simplify the inference rules of accumulation,
+choice removal, and evaluation in \autoref{fig:vsmt:primcategories}.
 
 %%% Local Variables:
 %%% mode: latex
