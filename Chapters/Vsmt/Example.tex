@@ -1,10 +1,12 @@
 ~\label{section:vsmt:example}
 %
-Consider the query formula $\kf{h = ((1 + 2 < (i - \chc[A]{k,l})) \wedge a)
-  \wedge (\chc[A]{c,\neg b} \vee b)}$; derivation of the variational core
-$\kf{h}$ begins with evaluation and all stores \aStore{}, \eStore{} initialized
-to empty. When a sure inputs a \vc{} the configuration, \configuration{}, is
-initialized to it, otherwise \configuration{} is initialized to empty.
+With variational \ac{smt} solving defined. We conclude the chapter with a
+complete example of solving a variational \ac{smt} problem. Consider the query
+formula $\kf{h = ((1 + 2 < (i - \chc[A]{k,l})) \wedge a) \wedge (\chc[A]{c,\neg
+    b} \vee b)}$; derivation of the variational core $\kf{h}$ begins with
+evaluation and all stores \aStore{}, \eStore{} initialized to $\emptyset$. When a sure
+inputs a \vc{} the configuration, \configuration{}, is initialized to it,
+otherwise \configuration{} is initialized to empty.
 
 \rn{Ev-And} is the only applicable rule, matching \boolFuncs{} with $\wedge$
 at the root of $\kf{h}$. Thus, $v_{1} = \kf{((1 + 2 < (i -

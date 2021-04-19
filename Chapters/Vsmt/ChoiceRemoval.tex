@@ -9,14 +9,14 @@
 \begin{figure}
   \input{Figures/Vsmt_Rules_Choice_Removal}
   \caption{Choice removal inference rules}%
-  \label{fig:vsmt:inf:chc}
+  \label{fig:vsmt:chc}
 \end{figure}
 % 
 \begin{figure}
   \ContinuedFloat
   \input{Figures/Vsmt_Rules_Choice_Removal_Cont}
   \caption{Variational \ac{smt} choice removal inference rules}
-  \label{fig:vsmt:zipper}
+  \label{fig:vsmt:chc-cont}
 \end{figure}
 %
 With accumulation and evaluation complete we turn to choice removal.
@@ -26,13 +26,15 @@ Boolean, arithmetic and inequality relations using the syntactic categories
 defined in \autoref{fig:vsmt:categories}.
 %
 Conceptually, choice removal remains a variational left fold that builds the
-zipper context until a symbolic value is the focus. At which point rules of the
+zipper context until a symbolic value is the focus. at which point rules of the
 form \rn{C-*-InL} \emph{switch} the fold to process the right child of the
-relations, and rules of the form \rn{C-*-InR} call accumulation to process the
-symbolic values at the end of choice removal. Thus, the heart of choice removal
-remains the \crEval, \crChc, \crChcT, and \crChcF rules whose semantics are
-unchanged and are reproduced for the new zipper context \zipper. The remaining
-rules are generalized versions of the \ac{sat} rules. 
+relations, and rules of the form \rn{C-*-InR} call accumulation to reduce the
+relation over symbolic values. We formally specify generalized choice removal in
+\autoref{fig:vsmt:chc}. The heart of choice removal remains the same, the rules
+\crEval, \crChc, \crChcT, and \crChcF are reproduced for the new zipper context
+\zipper but are semantically identical to the specialized versions. The
+remaining rules are generalized versions of the \ac{sat} rules to handle each
+syntactic category the variational solver can process.
 
 For each syntactic category we define three kinds of rules which form a template
 to extend choice removal to new background theories: First, we have rules which
