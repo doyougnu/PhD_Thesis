@@ -1,82 +1,43 @@
 \begin{mathpar}
-  %%% Computation rules
-  \inferrule*[Right=Ev-Tm]
-  { \texttt{Assert}((\eStore{}, \aStore{}), $t$) = \eStore{}' }
-  %%% --------------------------------------------------------------
-  {(\eStore{}, \aStore{}, t) \evaluation{} (\eStore{}', \aStore{}, \unit{}) }
+\inferrule*[right=\evAcc]
+  { (\aStore{},\eIL) \accumulation (\aStore{}',\eIL') \\
+    (\eStore{},\aStore{}',\eIL') \evaluation (\eStore{}',\aStore{}'',\eIL'') }
+  { (\eStore{},\aStore{},\eIL) \evaluation (\eStore{}',\aStore{}'',\eIL'') }
+\qquad
+\inferrule*[right=\evSym]
+  { \passert(\eStore{},\aStore{},s) = \eStore{}' }
+  { (\eStore{},\aStore{},s) \evaluation (\eStore{}',\aStore{},\unit) }
 
+\inferrule*[right=\evChc]
+  { }
+  { (\eStore{},\aStore{},\chc[D]{e_1,e_2}) \evaluation
+    (\eStore{},\aStore{},\chc[D]{e_1,e_2}) }
 
-  \inferrule*[Right=Ev-Sym]
-  { \texttt{Assert}((\eStore{}, \aStore{}), s) = \eStore{}' }
-  %%% --------------------------------------------------------------
-  { (\eStore{}, \aStore{}, s) \evaluation{} (\eStore{}, \Delta, \unit{}) }
-\\
+\inferrule*[right=\evOr]
+  { }
+  { (\eStore{},\aStore{}, \eIL*{1} \vee \eIL*{2}) \evaluation
+    (\eStore{},\aStore{}, \eIL*{1} \vee \eIL*{2}) }
 
-\inferrule*[Right=Ev-Model]
-{ \texttt{GetModel}(\aStore{}, \eStore{}) = m }
-%%% --------------------------------------------------------------
-{ (\aStore{}, \eStore{}, \unit{}) \evaluation{} m }
-\\
+  \inferrule*[right=\evInEq]
+  { }
+  { (\eStore{},\aStore{}, \eIL*{1} \inequalities \eIL*{2}) \evaluation
+    (\eStore{},\aStore{}, \eIL*{1} \inequalities \eIL*{2}) }
 
-\inferrule*[Right=Ev-Chc]
-{ }
-%%% --------------------------------------------------------------
-{(\aStore{}, \eStore{}, \chc[D]{e_{1},e_{2}}) \evaluation{} (\aStore{}, \eStore{}, \chc[D]{e_{1},e_{2}})}
-\end{mathpar}
+\inferrule*[right=\evAndL]
+  { (\eStore{},\aStore{},\eIL*{1}) \evaluation (\eStore{1},\aStore{1},\unit) \\
+    (\eStore{1},\aStore{1},\eIL*{2}) \evaluation (\eStore{2},\aStore{2},\eIL*{2}') }
+  { (\eStore{},\aStore{}, \eIL*{1} \wedge \eIL*{2}) \evaluation
+    (\eStore{2},\aStore{2},\eIL*{2}') }
 
-\begin{mathpar}
-  %%%\unit{} elimination rules
-  \inferrule*[Right=Ev-UL]
-  { \boolFuncs{} = \texttt{And}  }
-  %%% --------------------------------------------------------------
-  { (\Theta,\unit{} \boolFuncs{} v) \evaluation{} (\Theta, v) }
+\inferrule*[right=\evAndR]
+  { (\eStore{},\aStore{},\eIL*{1}) \evaluation (\eStore{1},\aStore{1},\eIL*{1}') \\
+    (\eStore{1},\aStore{1},\eIL*{2}) \evaluation (\eStore{2},\aStore{2},\unit) }
+  { (\eStore{},\aStore{}, \eIL*{1} \wedge \eIL*{2}) \evaluation
+    (\eStore{2},\aStore{2},\eIL*{1}') }
 
-
-  \inferrule*[Right=Ev-UR]
-  { \boolFuncs{} = \texttt{And} }
-  %%% --------------------------------------------------------------
-  { (\Theta, v \boolFuncs{} \unit{}) \evaluation{} (\Theta, v)}
-\end{mathpar}
-
-\begin{mathpar}
-  \inferrule*[Right=Ev-BU]
-  { (\aStore{},\neg{} v) \accumulation{} (\aStore{}', v') }
-  %%% --------------------------------------------------------------
-  { (\eStore{},\aStore{}, \neg{} v) \evaluation{} (\eStore{},\aStore{}', v') }
-
-
-  \inferrule*[Right=Ev-IU]
-  { (\aStore{}, \integerUnary{} v) \accumulation{} (\aStore{}', v') }
-  %%% --------------------------------------------------------------
-  { (\eStore{},\aStore{}, \integerUnary{} v) \evaluation{} (\eStore{},\aStore{}', v') }
-\end{mathpar}
-
-\begin{mathpar}
-  \inferrule*[Right=Ev-And]
-  { \boolFuncs{} = \texttt{And} \\
-    (\Theta, v_{1}) \evaluation{} (\Theta', v_{1}') \\
-    (\Theta', v_{2}) \evaluation{} (\Theta'', v_{2}')
-  }
-  %%% --------------------------------------------------------------
-  { (\Theta, v_{1} \boolFuncs{} v_{2}) \evaluation{} (\Theta'', v_{1}' \boolFuncs{} v_{2}') }
-
-
-    \inferrule*[Right=Ev-AccB]
-    { \boolFuncs \neq \texttt{And} \\
-      (\aStore{}, v_{1}) \accumulation{} (\aStore{}', v_{1}') \\
-      (\aStore{}',v_{2}) \accumulation{} (\aStore{}'', v_{2}')
-    }
-%%% --------------------------------------------------------------
-    { (\Gamma, \Delta, v_{1} \boolFuncs{} v_{2}) \evaluation{} (\Gamma, \Delta'', v_{1}'
-      \boolFuncs{} v_{2}')}
-\end{mathpar}%
-
-\begin{mathpar}
-  \inferrule*[Right=Ev-AccIB]
-  {
-    (\aStore{}, v_{1}) \accumulation{} (\aStore{}', v_{1}') \\
-    (\aStore{}',v_{2}) \accumulation{} (\aStore{}'', v_{2}')
-  }
-  %%% --------------------------------------------------------------
-  { (\Gamma, \Delta, v_{1} \inequalities{} v_{2}) \evaluation{} (\Gamma, \Delta'', v_{1}' \inequalities{} v_{2}')}
+\inferrule*[right=\evAnd]
+  { (\eStore{},\aStore{},\eIL*{1}) \evaluation (\eStore{1},\aStore{1},\eIL*{1}') \\
+    (\eStore{1},\aStore{1},\eIL*{1}) \evaluation (\eStore{2},\aStore{2},\eIL*{2}') }
+  { (\eStore{},\aStore{}, \eIL*{1} \wedge \eIL*{2}) \evaluation
+    (\eStore{2},\aStore{2}, \eIL*{1}' \wedge \eIL*{2}') }
 \end{mathpar}%

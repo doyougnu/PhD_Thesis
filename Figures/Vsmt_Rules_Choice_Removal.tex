@@ -1,78 +1,59 @@
 \begin{mathpar}
-  \inferrule*[Right=Sym]
-  { (\aeStore, s) \evaluation{} (\aeStore{}', \unit{}) }
-  %%% --------------------------------------------------------------
-  { (\configuration{}, \aeStore, \vmodel{}, s) \choiceRemoval{i} (\configuration{}, \aeStore{}', m, \unit{}) }
-  \\
-  \inferrule*[Right=Gen]
-  { (\aeStore{}, \unit{}) \evaluation{} m \quad
-    \texttt{Combine}(\vmodel{}, m) = \vmodel{\configuration{}}
-  }
-  %%% --------------------------------------------------------------
-  { (\configuration{}, \aeStore{}, \vmodel{}, \unit{})
-    \choiceRemoval{i} (\configuration{}, \aeStore{}, \vmodel{\configuration{}},
-    \unit{})
-  }
-\end{mathpar}
+\inferrule*[right=\crEval]
+  { (\eStore{},\aStore{},v) \evaluation (\eStore{}',\aStore{}',\unit) \\
+    \texttt{Combine}(\vmodel{},\pmodel(\aStore{},\eStore{})) = \vmodel{}' }
+  { (\crCtx, \inRoot, v) \choiceRemoval \vmodel{}' }
 
-\begin{mathpar}
-\inferrule*[Right=Cr-LB]
-{
-  (D, \true) \in{} \configuration{} \\
-  (C, \aeStore{}, \vmodel{}, v \boolFuncs{} \toIL{e_{1}}) \choiceRemoval{i} (\configuration{}, \aeStore{}, \vmodel{}, v')
-}
-%%% --------------------------------------------------------------
-{
-  (\configuration{}, \aeStore{}, \vmodel{}, v \boolFuncs{} \chc[D]{e_{1}, e_{2}}) \choiceRemoval{i} (\configuration{}, \aeStore{}, \vmodel{}, v')
-}
+\inferrule*[right=\crChcT]
+  { (D,\true)\in C \\
+    (\crCtx, z, e_1) \choiceRemoval \vmodel{}' }
+  { (\crCtx, z, \chc[D]{e_1,e_2} \choiceRemoval \vmodel{}' }
 
-\end{mathpar}
+\inferrule*[right=\crChcF]
+  { (D,\false)\in C \\
+    (\crCtx, z, e_2) \choiceRemoval \vmodel{}' }
+  { (\crCtx, z, \chc[D]{e_1,e_2} \choiceRemoval \vmodel{}' }
 
-\begin{mathpar}
-\inferrule*[Right=Cr-IB-ChcR]
-{ \qquad{}
-  D \notin{} \dom{\configuration{}} \\
-  (C \cup{} \{(D, \true)\}, \aeStore{}, \vmodel{},  v \inequalities{} \toIL{e_{1}})
-    \choiceRemoval{i+1} (\configuration{l}, \aeStore{l}, \vmodel{l},\unit{}) \\
-    (C \cup{} \{(D, \false)\}, \aeStore{l}, \vmodel{l},  v \inequalities{}
-    \toIL{e_{2}} \choiceRemoval{i+1} (\configuration{r}, \aeStore{r}, \vmodel{r},\unit{}) \\
-}
-  {
-    (\configuration{}, \aeStore{}, \vmodel{}, v \inequalities{} \chc[D]{e_{1}, e_{2}}) \choiceRemoval{i}
-    \vmodel{\configuration{}}
-  }
-%
-\end{mathpar}
+\inferrule*[right=\crChc]
+  { D\notin\dom{C} \\
+    (C\cup(D,\true),\eStore{},\aStore{},\vmodel{}, z, e_1)
+      \choiceRemoval \vmodel{1} \\
+    (C\cup(D,\false),\eStore{},\aStore{},\vmodel{}', z, e_2)
+      \choiceRemoval \vmodel{2} }
+  { (\crCtx, z, \chc[D]{e_1,e_2} \choiceRemoval \vmodel{2} }
 
-\begin{mathpar}
-  \inferrule*[Right=Cr-BinB]
-  { (\aStore{}, v_{1}) \accumulation{} (\aStore{1}, v_{1}') \\
-    (\aStore{}, v_{1}) \accumulation{} (\aStore{}', v_{2}') \\
-  }
-  %%% --------------------------------------------------------------
-  { (\configuration{}, \eStore{}, \aStore{}, \vmodel{}, v_{1} \boolFuncs{} v_{2})
-    \choiceRemoval{i} (\configuration{}, \eStore{}, \aStore{}', \vmodel{}, v_{1}'
-    \boolFuncs{} v_{2}')
-  }
-\\%
-\inferrule*[Right=Cr-BinIB]
-{ (\aStore{}, v_{1}) \accumulation{} (\aStore{1}, v_{1}') \\
-  (\aStore{}, v_{1}) \accumulation{} (\aStore{}', v_{2}') \\
-}
-%%% --------------------------------------------------------------
-{ (\configuration{}, \eStore{}, \aStore{}, \vmodel{}, v_{1} \inequalities{} v_{2})
-  \choiceRemoval{i} (\configuration{}, \eStore{}, \aStore{}', \vmodel{}, v_{1}'
-  \inequalities{} v_{2}')
-}
-\\%
-\inferrule*[Right=Cr-BinI]
-{ (\aStore{}, v_{1}) \accumulation{} (\aStore{1}, v_{1}') \\
-  (\aStore{}, v_{1}) \accumulation{} (\aStore{}', v_{2}') \\
-}
-%%% --------------------------------------------------------------
-{ (\configuration{}, \eStore{}, \aStore{}, \vmodel{}, v_{1} \integerFuncs{} v_{2})
-  \choiceRemoval{i} (\configuration{}, \eStore{}, \aStore{}', \vmodel{}, v_{1}'
-  \integerFuncs{} v_{2}')
-}
+\inferrule*[right=\crNot]
+  { (\crCtx, \inNot{z}, v) \choiceRemoval \vmodel{}' }
+  { (\crCtx, z, \neg v) \choiceRemoval \vmodel{}' }
 
+\inferrule*[right=\crNotIn]
+  { (\aStore{}, \neg s) \accumulation (\aStore{}', s') \\
+    (\crCtx, z, s') \choiceRemoval \vmodel{}' }
+  { (\crCtx, \inNot{z}, s) \choiceRemoval \vmodel{}' }
+
+\inferrule*[right=\crAnd]
+  { (\crCtx, \inAndL{z}{v_2}, v_2) \choiceRemoval \vmodel{}' }
+  { (\crCtx, z, v_1 \wedge v_2) \choiceRemoval \vmodel{}' }
+
+\inferrule*[right=\crAndL]
+  { (\crCtx, \inAndR{s}{z}, v) \choiceRemoval \vmodel{}' }
+  { (\crCtx, \inAndL{z}{v}, s) \choiceRemoval \vmodel{}' }
+
+\inferrule*[right=\crAndR]
+  { (\aStore{}, s_1 \wedge s_2) \accumulation (\aStore{}', s_3) \\
+    (\crCtx, z, s_3) \choiceRemoval \vmodel{}' }
+  { (\crCtx, \inAndR{s_1}{z}, s_2) \choiceRemoval \vmodel{}' }
+
+\inferrule*[right=\crOr]
+  { (\crCtx, \inOrL{z}{v_2}, v_2) \choiceRemoval \vmodel{}' }
+  { (\crCtx, z, v_1 \vee v_2) \choiceRemoval \vmodel{}' }
+
+\inferrule*[right=\crOrL]
+  { (\crCtx, \inOrR{s}{z}, v) \choiceRemoval \vmodel{}' }
+  { (\crCtx, \inOrL{z}{v}, s) \choiceRemoval \vmodel{}' }
+
+\inferrule*[right=\crOrR]
+  { (\aStore{}, s_1 \vee s_2) \accumulation (\aStore{}', s_3) \\
+    (\crCtx, z, s_3) \choiceRemoval \vmodel{}' }
+  { (\crCtx, \inOrR{s_1}{z}, s_2) \choiceRemoval \vmodel{}' }
 \end{mathpar}

@@ -1,8 +1,4 @@
 \begin{mathpar}
-% \inferrule*[right=\crEval]
-%   { (\eStore{},\aStore{},v) \evaluation (\eStore{}',\aStore{}',v') }
-%   { (C,\eStore{},\aStore{},\vmodel{},v) \crAny
-%     (C,\eStore{}',\aStore{}',\vmodel{},v') }
 \inferrule*[right=\crEval]
   { (\eStore{},\aStore{},v) \evaluation (\eStore{}',\aStore{}',\unit) \\
     \texttt{Combine}(\vmodel{},\pmodel(\aStore{},\eStore{})) = \vmodel{}' }

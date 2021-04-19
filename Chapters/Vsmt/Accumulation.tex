@@ -22,10 +22,9 @@ operation to emit.
 The notation \lookup{\op}{\boolFuncs} performs a lookup for the wrapped
 operator, and $\coloneqq$ binds the result of the lookup to a variable. For
 example, if $\op = \wedge$ then \acBoolS{} specializes to \acAndS{} where
-$\pwrap{\op} \coloneqq \pwrap{\pand}$, and thus the resultant call to the base
-solver becomes $\pwrap{\pand}(\aStore{2}, s_1, s_2)$. Hence, the rules
-\acAndS{}, and \acOrS{} are merely specialized forms of the general rule
-\acBoolS. 
+$\pwrap{\op} \coloneqq \pwrap{\pand}$, and thus the resultant call becomes
+$\pwrap{\pand}(\aStore{2}, s_1, s_2)$. Hence, the rules \acAndS{}, and \acOrS{}
+are merely specialized forms of the general rule \acBoolS.
 
 Similarly, with the extra notation we collapse the arithmetic and inequality
 computation rules to \acArithS{} and \acInEqS{}. The semantics of each rule,

@@ -241,3 +241,18 @@
 \newcommand{\acArithV}{\rn{A-Arith-V}}
 \newcommand{\acInEqV}{\rn{A-InEq-V}}
 \newcommand{\acUnaryV}{\rn{A-Unary-V}}
+
+%%%%% VSMT evaluation
+\newcommand{\evChcI}{\rn{E-Chc-I}}
+\newcommand{\evArith}{\rn{E-Arith}}
+\newcommand{\evInEq}{\rn{E-InEq}}
+
+%% breadcrumb style for vsmt
+\newcommand{\zipper}{\ensuremath{z^{\integers}}}
+\newcommand{\inUnary}[1]{\ensuremath{\integerUnary\,\cdot :: #1}}
+\newcommand{\inBoolL}[2]{\ensuremath{\cdot\boolFuncs #2 :: #1}}
+\newcommand{\inBoolR}[2]{\ensuremath{#1 \boolFuncs\cdot :: #2}}
+\newcommand{\inArithL}[2]{\ensuremath{\cdot\integerFuncs #2 :: #1}}
+\newcommand{\inArithR}[2]{\ensuremath{#1 \integerFuncs\cdot :: #2}}
+\newcommand{\inInEqL}[2]{\ensuremath{\cdot\inequalities #2 :: #1}}
+\newcommand{\inInEqR}[2]{\ensuremath{#1 \inequalities \cdot :: #2}}
