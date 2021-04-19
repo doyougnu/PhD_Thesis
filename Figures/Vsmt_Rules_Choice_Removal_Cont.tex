@@ -1,0 +1,36 @@
+\begin{mathpar}
+  \inferrule*[right=\crUnary]
+  { (\crCtx, \inUnary{\zipper}, \eIL) \choiceRemoval \vmodel{}' }
+  { (\crCtx, \zipper, \integerUnary \eIL) \choiceRemoval \vmodel{}' }
+
+  \inferrule*[right=\crUnaryIn]
+  { (\aStore{}, \integerUnary s) \accumulation (\aStore{}', s') \\
+    (\crCtx, \zipper, s') \choiceRemoval \vmodel{}' }
+  { (\crCtx, \inUnary{\zipper}, s) \choiceRemoval \vmodel{}' }
+
+\inferrule*[right=\crInEq]
+  { (\crCtx, \inInEqL{z}{\eIL*{2}}, \eIL*{1}) \choiceRemoval \vmodel{}' }
+  { (\crCtx, \zipper, \eIL*{1} \inequalities{} \eIL*{2}) \choiceRemoval \vmodel{}' }
+
+\inferrule*[right=\crInEqL]
+  { (\crCtx, \inInEqR{s}{\zipper}, \eIL) \choiceRemoval \vmodel{}' }
+  { (\crCtx, \inInEqL{\zipper}{\eIL}, s) \choiceRemoval \vmodel{}' }
+
+\inferrule*[right=\crInEqR]
+  { (\aStore{}, s_1 \inequalities{} s_2) \accumulation (\aStore{}', s_3) \\
+    (\crCtx, \zipper, s_3) \choiceRemoval \vmodel{}' }
+  { (\crCtx, \inInEqR{s_1}{\zipper}, s_2) \choiceRemoval \vmodel{}' }
+
+\inferrule*[right=\crArith]
+  { (\crCtx, \inArithL{z}{\eIL*{2}}, \eIL*{1}) \choiceRemoval \vmodel{}' }
+  { (\crCtx, \zipper, \eIL*{1} \integerFuncs{} \eIL*{2}) \choiceRemoval \vmodel{}' }
+
+\inferrule*[right=\crArithL]
+  { (\crCtx, \inArithR{s}{\zipper}, \eIL) \choiceRemoval \vmodel{}' }
+  { (\crCtx, \inArithL{\zipper}{\eIL}, s) \choiceRemoval \vmodel{}' }
+
+\inferrule*[right=\crArithR]
+  { (\aStore{}, s_1 \integerFuncs{} s_2) \accumulation (\aStore{}', s_3) \\
+    (\crCtx, \zipper, s_3) \choiceRemoval \vmodel{}' }
+  { (\crCtx, \inArithR{s_1}{\zipper}, s_2) \choiceRemoval \vmodel{}' }
+\end{mathpar}
