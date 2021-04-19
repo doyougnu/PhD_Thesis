@@ -317,15 +317,18 @@ rules below.
 \end{figure}
 
 
-The \crEval\ rule states that $v$ fully evaluates to \unit, then we can get the
-current model from the base solver using the \pmodel\ primitive and update our
-variational model. We use the operation \texttt{Combine} to perform the
-variational model update operation described in \autoref{section:vsat:approach}.
+\todo{are the C-AND like rules wrong? Should the $v_{1}$ be in the focus not
+  $v_{2}$}The \crEval\ rule states that $v$ fully evaluates to \unit, then we can
+get the current model from the base solver using the \pmodel\ primitive and
+update our variational model. We use the operation \texttt{Combine} to perform
+the variational model update operation described in
+\autoref{section:vsat:approach}.
 %
-The rest of the choice removal rules are structured so that \crEval\ will be
-invoked once for every variant of the variational core so that the final output
-will be a variational model that encodes the solutions to every variant of the
-original formula.
+\todo{is there a missing rule to convert references to symbolic with
+  accumulation?}The rest of the choice removal rules are structured so that
+\crEval\ will be invoked once for every variant of the variational core so that
+the final output will be a variational model that encodes the solutions to every
+variant of the original formula.
 
 
 The next three rules concern choices and are the heart of choice removal.
