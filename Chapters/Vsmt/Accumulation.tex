@@ -7,38 +7,47 @@
 \end{figure}
 %
 %
-With primitive operations and metavariables defined we specify accumulation in
-\autoref{fig:vsmt:inf:acc}. Since the metavariable $\kf{s}$ has two meanings:
-sub-trees of \rn{IL} in the variational \ac{smt} domain and sequences of
-clauses in the base solver, we treat it as overloaded.
+The variational \ac{smt} version of accumulation is specified in
+\autoref{fig:vsmt:inf:acc} and is a generalized variational fold over the
+abstract syntax tree of \eIL. Just as before accumulation is split into
+congruence rules over the intermediate languages, computation rules over
+symbolic values and computation rules for references and choices.
+
+The variational \ac{sat} version of accumulation is a specialized form of this
+version of accumulation. Recall that the only semantic difference between
+operators is the code emitted to the base solver, hence we generalize the
+previous version by introducing new notation that dispatches the appropriate
+operation to emit.
+
+The notation \lookup{\op}{\boolFuncs} performs a lookup for the wrapped
+operator, and $\coloneqq$ binds the result of the lookup to a variable. For
+example, if $\op = \wedge$ then \acBoolS{} specializes to \acAndS{} where
+$\pwrap{\op} \coloneqq \pwrap{\pand}$, and thus the resultant call to the base
+solver becomes $\pwrap{\pand}(\aStore{2}, s_1, s_2)$. Hence, the rules
+\acAndS{}, and \acOrS{} are merely specialized forms of the general rule
+\acBoolS. 
+
+Similarly, with the extra notation we collapse the arithmetic and inequality
+computation rules to \acArithS{} and \acInEqS{}. The semantics of each rule,
+besides the operator lookup, remains unchanged; the congruence rules recur into
+the abstract syntax tree to convert references to symbolic values, choices are
+skipped over due to \acChc{} and \acChcI{}, and plain values are combined with
+the computation rules \acBoolS, \acArithS, and \acInEqS.
 %
-An implementation of the rules would require a store which maps symbolics at
-the variational level to terms or sequences at the base solver level.
+The only other substantial difference is two new computation rules to handle
+arithmetic choices and variables, \acChcI{}, and \acRefI{}. Both serve the same
+function as their boolean counterparts \acChc{} and \acRef{}. 
 
-Accumulation is represented as a binary relation with \accumulation{}. The rules
-follow a simple pattern: \rn{Ac-Chc} skips any choices, \rn{Ac-Gen} and
-\rn{Ac-Geni} provide a method to inject references into the symbolic domain,
-\rn{Ac-Ref} and \rn{Ac-Refi} cache references to ensure the same
-reference is mapped to the same symbolic, and the rest of the rules provide
-operations on symbolic terms, \eg{}, \rn{Ac-SBinB}, or are congruence rules
-such as \rn{Ac-BinI}. We elide rules which process formulas composed of
-constants such $\kf{(\tru{} \wedge \fls{})}$ or $(1 + 2 + 3)$. In cases such as
-$1 + 2 < \kf{i}$, constants are reduced and treated as references, thus this
-formula becomes $3 < \kf{i}$ and is accumulated to $s_{3} < \kf{i}$.
+In this form it should be plain to see the recipe to further extend accumulation
+to another background theory. One would add a new computation rules for the new
+kinds of references and choices, a new computation rule for symbolic references
+in the theory, and a new congruence rule over the new abstract syntax trees.
+Extending accumulation with new operators is similarly trivial. Recall the
+modulus example, to extend accumulation with a modulus operator, assuming the
+wrapped primitive has been defined, we would only need to add the operator to
+\integerFuncs{} syntactic category and create a case such that $\kf{mod} \in
+\integerFuncs{}$ succeeds.
 
-Accumulation maintains a store, \aStore{}, to track and cache symbolic terms.
-For example, given formula such as: $g = a \wedge (a \wedge b)$, \rn{Ac-Gen}
-will spawn only two new references, one for $\kf{a}$ and one for $\kf{b}$, and
-\rn{Ac-Ref} ensures the same symbolic will represent the $a$ reference. This
-will produce $g = s_{a} \wedge (s_{a} \wedge s_{b})$, because we $g$ contains
-two boolean connective \rn{Ac-BinB} will be called twice beginning with the
-inner conjunction. \rn{Ac-BinB} will combine $s_{a}$ and $s_{b}$ into a new
-symbolic $s_{ab}$, update the store to \aStore{}'. The new store will include
-entries for both references \textit{and} symbolic references, thus, in this
-example \aStore{}' contains $\kf{a} \rightarrow s_{a}$, $\kf{b} \rightarrow
-s_{b}$, and $\kf{s_{ab}} \rightarrow (s_{a} \wedge s_{b})$. Finally
-\rn{Ac-BinB} will repeat the last procedure on the outermost conjunction
-adding a new entry to the symbolic store.
 
 
 %%% Local Variables:

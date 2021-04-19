@@ -12,7 +12,7 @@
     \pwrap{\pnot}(\aStore{}', s) = (\aStore{}'', s') }
   { (\aStore{}, \neg{} \eIL) \accumulation (\aStore{}'', s') }
 
-  \inferrule*[right=\acNegS]
+  \inferrule*[right=\acUnaryS]
   { \op \in \integerUnary{} \\
     \lookup{\op}{\integerUnary{}} \coloneqq \pwrap{\op} \\
     (\aStore{}, \eAR) \accumulation (\aStore{}', s) \\
@@ -45,17 +45,17 @@
 
 \inferrule*[right=\acChc]
   { }
-  {(\aStore,\chc[D]{e_1,e_2}) \accumulation (\aStore{},\chc[D]{e_1,e_2})}
+  {(\aStore,\ \chc[D]{e_1,e_2}) \accumulation (\aStore{},\chc[D]{e_1,e_2})}
 
 \inferrule*[right=\acChcI]
   { }
-  {(\aStore,\chc[D]{ar_{1},ar_{2}}) \accumulation (\aStore{},\chc[D]{ar_{1},ar_{2}})}
+  {(\aStore,\ \chc[D]{ar_{1},ar_{2}}) \accumulation (\aStore{},\chc[D]{ar_{1},ar_{2}})}
 
 \inferrule*[right=\acNotV]
   { (\aStore{}, \eIL) \accumulation (\aStore{}', \eIL') }
   { (\aStore{}, \neg{} \eIL) \accumulation (\aStore{}', \neg \eIL') }
 
-  \inferrule*[right=\acNegV]
+  \inferrule*[right=\acUnaryV]
   { (\aStore{}, \eIL) \accumulation (\aStore{}', \eIL') }
   { (\aStore{}, \integerUnary \eIL) \accumulation (\aStore{}', \integerUnary \eIL') }
 
