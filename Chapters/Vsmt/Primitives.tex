@@ -95,13 +95,14 @@ intermediate language for the arithmetic domain.
 \autoref{fig:vsmt:il} defines the intermediate arithmetic language \eAR, and the
 extended intermediate language \eIL. The syntax of both intermediate languages
 follow directly from \evpl and should be unsurprising. The only important
-difference from IL is that \eAR cannot express \unit{}. This is a purposeful
-design decision; recall that a \unit{} represents a term that has been sent to
-the base solver. Thus if \unit{} were in \eAR then expressions such as $\unit{}
-+ 2$ would be expressible in \eAR, however because all arithmetic formula's
-require accumulation the only possible result of evaluation/accumulation on
-arithmetic expressions is either a choice or a symbolic term, not a \unit{}.
-Hence, we syntactically avoid classes bugs by eliding the \unit{} value in \eAR.
+difference from IL is that \eAR cannot express a \unit{} value. This is a
+purposeful design decision; recall that a \unit{} represents a term that has
+been sent to the base solver. Thus if \unit{} were in \eAR then expressions such
+as $\unit{} + 2$ would be expressible in \eAR, however because all arithmetic
+formula's require accumulation the only possible result of
+evaluation/accumulation on arithmetic expressions is either a choice or a
+symbolic term, not a \unit{}. Hence, we syntactically avoid classes bugs by
+eliding the \unit{} value in \eAR.
 % 
 \begin{figure}
   \input{Figures/Vsmt_IL_Syntax}
