@@ -7,50 +7,63 @@
     \label{fig:vsmt:models:plain}
 \end{figure}
 % %
-To support \ac{smt} theories, variational models must be abstract enough to
+We have thus far covered accumulation, evaluation, and choice removal. However,
+to support \ac{smt} theories, variational models must be abstract enough to
 handle values other than Booleans. Functionally, variational \ac{smt} models
 must satisfy several constraints: the variational \ac{smt} model must be more
 memory efficient than storing all models returned by the solver naively. The
 variational model must allow users to find satisfying values for a variant. The
-model must allow users to find all variants a variable has a particular value or
-range of values.
+model must allow users to find all variants in which a variable has a particular
+value or range of values.
 
 Furthermore, several useful properties of variational models should be
-maintained: The model is non-variational; thus the user does not need to
-understand the choice calculus to understand their results. The model produces
-results that can be fed into a plain \ac{sat} solver (or \ac{smt} solver in the
-extension). The model can be built incrementally and without regard to the
-ordering of results, because it forms a commutative monoid under $\vee$.
+maintained: The model is non-variational; the user should not need to understand
+the choice calculus to understand their results. The model produces results that
+can be fed into a plain \ac{sat} or \ac{smt} solver. The model can be built
+incrementally and without regard to the ordering of results. Variational
+\ac{sat} models guaranteed this last constraint by forming commutative monoid
+under $\vee$; a technique which we cannot replicate for variational \ac{smt}
+models.
 
 To maintain these properties and satisfy the functional requirements, our
 strategy for variational \ac{smt} models is to create a mapping of variables to
 \ac{smt} expressions. By virtue of this strategy, variables are disallowed from
-changing types across the set of variants and hence disallowed from changing
-type as the result of a choice. For any variable in the model, we assume the
-type returned by the base solver is correct, and store the satisfying value in a
-linked list constructed \emph{if-statements}\footnote{Also called a
-  church-encoded list}. Specifically, we utilize the function $ite : \mathbb{B}
-\rightarrow T \rightarrow T$ from the SMTLIB2 standard to construct the list.
-All variables are initialized as undefined (\emph{Und}) until a value is
-returned from the base solver for a variant. To ensure the correct value of a
-variable corresponds to the appropriate variant, we translate the configuration
-which determines the variant to a variation context, and place the appropriate
-value in the \emph{then} branch. For example, a possible entry for $\kf{j}$ in
-the variational model of $\kf{g}$ would be $j \rightarrow (\kf{ite}\ \kf{A}\ 1\
-(\kf{ite}\ \neg\kf{A}\ 0\ \kf{Und}))$.
+changing types across variants and hence disallowed from changing type as the
+result of a choice. For any variable in the model, we assume the type returned
+by the base solver is correct, and store the satisfying value in a linked list
+constructed \emph{if-statements}\footnote{Also called a church-encoded list}.
+Specifically, we utilize the function $ite : \mathbb{B} \rightarrow T
+\rightarrow T$ from the SMTLIB2 standard to construct the list. All variables
+are initialized as undefined (\emph{Und}) until a value is returned from the
+base solver for a variant. To ensure the correct value of a variable corresponds
+to the appropriate variant, we translate the configuration which determines the
+variant to a variation context, and place the appropriate value in the
+\emph{then} branch.
 
-\autoref{fig:vsmt:models:plain} show possible plain models for $\kf{f}$ with the
-corresponding variational \ac{smt} model display in
-\autoref{fig:vsmt:models:var}. We've added line breaks to emphasize the branches
-the $\kf{then}$ and $\kf{else}$ branches of the $\kf{ite}$ SMTLIB2 primitive.
-
+Consider the following variational \ac{smt} problem extended with an integer
+arithmetic theory: $f = ((\chc[A]{\iV{}, 13} - \cV{}) < (\bV + 10)) \rightarrow
+\chc[B]{\aV{}, \cV{} > \iV{}}$. \fV{} contains two unique choices, $\kf{A}$,
+$\kf{B}$, and thus represents four variants. In this case, the expression is
+under-constrained and so each variant will be found satisfiable.
+% 
 \begin{figure}[h]
   \centering
-  \input{Figures/Vsmt_Variational_Model}
+  \input{Figures/Vsmt_plain_models}
+  \caption{Possible plain models for variants of $\kf{f}$.}%
+  \label{fig:vsmt:models:plain}
+\end{figure}
+\begin{figure}[h]
+  \centering
+  \input{Figures/Vsmt_variational_model}
   \caption{Variational model corresponding to the plain models in
     \autoref{fig:vsmt:models:plain}.}%
   \label{fig:vsmt:models:var}
 \end{figure}
+
+\autoref{fig:vsmt:models:plain} show possible plain models for $\kf{f}$ with the
+corresponding variational \ac{smt} model presented in
+\autoref{fig:vsmt:models:var}. We've added line breaks to emphasize the branches
+the $\kf{then}$ and $\kf{else}$ branches of the $\kf{ite}$ SMTLIB2 primitive.
 
 This formulation maintains the functional requirements of the model. We maintain
 a special variable $\_Sat$ to track the variants that were found satisfiable. In
