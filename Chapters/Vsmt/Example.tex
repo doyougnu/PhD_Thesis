@@ -75,14 +75,90 @@ sub-term $s_{12}$ with context $\zipper =
   - \chc[A]{k,l})}{<}$ which states that $s_{12}$ exists in the left child of an
 inequality which also exists in the left child of a conjunction.
 
-We have arrived at a base case, where a symbolic value is in focus, and the
+We have arrived at the base case with a symbolic value is in focus, and the
 immediate parent in the evaluation context is an inequality. To proceed we need
 to \emph{switch} to begin processing the right child of the inequality; thus we
 must apply \crInEqL{}. \crInEqL{} swaps the symbolic with the un-processed right
 child held in the context, hence we have $(s_{i} - \chc[A]{k,l})$ in focus with
-context $\zipper = \inInEqR*{s_{12}}{\inBoolL*{\inRoot{}}{(\chc[B]{c,\neg b} \vee{}
-    s_{b})}{\wedge}}{<}$. 
+context $\zipper = \inInEqR*{s_{12}}{\inBoolL*{\inRoot{}}{(\chc[B]{c,\neg b}
+    \vee{} s_{b})}{\wedge}}{<}$. $-$ is a previously unseen relation, when an
+new relation is found choice removal will recur into the left child. In this
+case $- \in \integerFuncs{}$ and so \crArith{} applies. \crArith{} moves $s_{i}$
+into the focus and extend the evaluation context to $\zipper =
+\inArithL*{\inInEqR*{s_{12}}{\inBoolL*{\inRoot{}}{(\chc[B]{c,\neg b} \vee{}
+      s_{b})}{\wedge}}{<}}{\chc[A]{k,l}}{-}$.
 
+With $s_{i}$ in the focus we've arrived at another base case, only this time when
+the switch occurs a choice will be in focus. The switch is performed by
+\crArithL{} and yields $\chc[A]{k, l}$ as the focus with context $\zipper =
+\inArithR*{s_{i}}{\inInEqR*{s_{12}}{\inBoolL*{\inRoot{}}{(\chc[B]{c,\neg b}
+      \vee{} s_{b})}{\wedge}}{<}}{-}$. Now we the heart of choice removal
+applies, because we have $\configuration{} = \emptyset$, the only applicable
+rule with a choice in the focus is \crChc. \crChc{} creates two recursive calls,
+one for each alternative using \emph{the same context}, thus we'll have
+$\configuration= \set{(A,\true)}$, with focus $k$, and context $\zipper =
+\inArithR*{s_{i}}{\inInEqR*{s_{12}}{\inBoolL*{\inRoot{}}{(\chc[B]{c,\neg b}
+      \vee{} s_{b})}{\wedge}}{<}}{-}$.
+
+For the remainder of the example we'll continue with only true alternatives; the
+other variants follow similar paths. \todo{make sure this isn't a type
+  error}Accumulation is called on the introduced plain terms, converting $k$ to
+$s_{k}$ and extending the accumulation store to
+\newline$\aStore{}=\set{(k,s_{k}),(b, s_{b}),(a,s_{a}),(i, s_{i}),(s_{1} +
+  s_{2}, s_{12}), (2,s_{2}), (1,s_{1})}$.
+
+With a symbolic value in the focus, and with the context already switched to the
+right child we have come to a sequence of base cases which perform the folds, in
+this case \crArithR{} applies. \crArithR{} calls accumulation on $s_{i} -
+s_{k}$. $s_{i} - s_{k}$ has not yet been observed in accumulation and thus the
+new symbolic value $s_{ik}$ will be generated. This yields $s_{ik}$ in the
+focus, with $\aStore{}=\set{(s_{i} - s_{k}, s_{ik}), (k,s_{k}),(b,
+  s_{b}),(a,s_{a}),(i, s_{i}),(s_{1} + s_{2}, s_{12}), (2,s_{2}), (1,s_{1})}$,
+and $\zipper = \inInEqR*{s_{12}}{\inBoolL*{\inRoot{}}{(\chc[B]{c,\neg b} \vee{}
+    s_{b})}{\wedge}}{<}$.
+
+With $s_{ik}$ in the focus we have yet another base case which consumes some
+context, only this time we consume the inequality using \crInEqR{}. \crInEqR{}
+calls accumulation on $s_{12} < s_{ik}$, similar to the previous call over $-$
+this call produces a new symbolic value and extends the accumulation store.
+Hence, we'll have $s_{12ik}$ in the focus, with $\aStore{}=\set{(s_{12} <
+  s_{ik}, s_{12ik}),(s_{i} - s_{k}, s_{ik}), (k,s_{k}),(b, s_{b}),(a,s_{a}),(i,
+  s_{i}),(s_{1} + s_{2}, s_{12}), (2,s_{2}), (1,s_{1})}$, and $\zipper =
+\inBoolL*{\inRoot{}}{(\chc[B]{c,\neg b} \vee{} s_{b})}{\wedge}$ as the
+evaluation context. With a symbolic value in the focus, and a context indicating
+the left child of a relation, choice removal switches to process the right
+alternative. The relation in this case is $\wedge$ and so \crBoolL{} applies to
+execute the switch yielding $\chc[B]{c,\neg b} \vee{} s_{b}$ in the focus, and
+$\zipper = \inBoolR*{s_{12ik}}{\inRoot{}}{\wedge}$. $\vee$ is a relation that is
+previously unseen, and thus \crBool{} recurs into its left child yielding the
+choice $\chc[B]{c, \neg b}$ in the focus and \newline$\zipper =
+\inBoolL*{\inBoolR*{s_{12ik}}{\inRoot{}}{\wedge}}{s_{b}}{\vee}$ as the context.
+
+We have arrived at the second choice. $B \notin \dom{C}$ and thus only \crChc
+applies. Following the true alternative for $B$, accumulation is called on $c$
+yielding $s_{c}$ in the focus, with $\configuration = \set{(B,\true),
+  (A,\true)}$, $\aStore{}=\{(c,s_{c}),(s_{12} < s_{ik}, s_{12ik}),(s_{i} -
+s_{k}, s_{ik}),(k,s_{k})$ $ ,(b, s_{b}), (a,s_{a}),(i, s_{i}),(s_{1} + s_{2},
+s_{12}), (2,s_{2}), (1,s_{1})\}$, and $\zipper =
+\inBoolL*{\inBoolR*{s_{12ik}}{\inRoot{}}{\wedge}}{s_{b}}{\vee}$. All that is
+left is a switch and then to complete the fold with the symbolic values.
+\crBoolL{} switches the context placing $s_{b}$ in the focus and yielding
+$\zipper = \inBoolR*{s_{c}}{\inBoolR*{s_{12ik}}{\inRoot{}}{\wedge}}{\vee}$,
+which will be followed by \crBoolR{} to disjunct $s_{c}$ and $s_{b}$ using
+accumulation. The resulting term will have $s_{bc}$ in the focus,
+$\aStore{}=\{(s_{c} \vee s_{b}, s_{cb}),(c,s_{c}),(s_{12} < s_{ik},
+s_{12ik}),(s_{i} - s_{k}, s_{ik}),(k,s_{k})$ $ ,(b, s_{b}), (a,s_{a}),(i,
+s_{i}),(s_{1} + s_{2}, s_{12}), (2,s_{2}), (1,s_{1})\}$, and $\zipper =
+\inBoolR*{s_{12ik}}{\inRoot{}}{\wedge}$, which leaves only one more reduction
+until model generation. \crBoolR{} applies again to conjunct the last two
+symbolic values, yielding $\zipper = \inRoot{}$, $s_{12ikbc}$ in the focus and
+$\aStore{}=\{(s_{12ik} \wedge s_{bc}, s_{12ikbc}), (s_{c} \vee s_{b},
+s_{cb}),(c,s_{c}),(s_{12} < s_{ik}, s_{12ik}),(s_{i} - s_{k}, s_{ik}),(k,s_{k})$
+$ ,(b, s_{b}), (a,s_{a}),(i, s_{i}),(s_{1} + s_{2}, s_{12}), (2,s_{2}),
+(1,s_{1})\}$. Thus we have reached the variant parameterized by
+$\configuration=\set{(B,\true),(A,\true)}$ \evSym{} applied to the focus will
+yields \unit{} with $\zipper = \inRoot{}$, indicating that it is safe to query a
+model for this variant from the base solver.
 
 %%% Local Variables:
 %%% mode: latex
