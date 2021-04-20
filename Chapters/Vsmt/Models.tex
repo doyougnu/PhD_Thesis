@@ -101,13 +101,13 @@ avoided in an implementation by tracking the values a variable has been
 previously assigned, we provide only a minimum specification and thus leave the
 details to an implementation.
 %
-Lastly, the use of \undefined may seem unattractive. While all bindings in the
-model end with an \undefined, a binding cannot result in an \undefined{} as that
-would imply a variant that was found to be satisfiable but was not satisfiable,
-and hence would be indicative of a bug in the variational solver implementation.
-Thus mathematically inclined readers may notice that the monoid variational
-\ac{smt} models form corresponds to the free monoid formed with church-encoded
-lists.
+Lastly, the use of \undefined{} may seem unattractive. While all bindings in the
+model end with an \undefined{}, a binding cannot result in an \undefined{} as
+that would imply a variant that was found to be satisfiable but was not
+satisfiable, and hence would be indicative of a bug in the variational solver
+implementation. Thus mathematically inclined readers may observe that the monoid
+variational \ac{smt} models form corresponds to the free monoid formed by
+church-encoded lists.
 
 %%% Local Variables:
 %%% mode: latex
