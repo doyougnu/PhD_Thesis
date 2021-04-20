@@ -155,10 +155,21 @@ symbolic values, yielding $\zipper = \inRoot{}$, $s_{12ikbc}$ in the focus and
 $\aStore{}=\{(s_{12ik} \wedge s_{bc}, s_{12ikbc}), (s_{c} \vee s_{b},
 s_{cb}),(c,s_{c}),(s_{12} < s_{ik}, s_{12ik}),(s_{i} - s_{k}, s_{ik}),(k,s_{k})$
 $ ,(b, s_{b}), (a,s_{a}),(i, s_{i}),(s_{1} + s_{2}, s_{12}), (2,s_{2}),
-(1,s_{1})\}$. Thus we have reached the variant parameterized by
-$\configuration=\set{(B,\true),(A,\true)}$ \evSym{} applied to the focus will
-yields \unit{} with $\zipper = \inRoot{}$, indicating that it is safe to query a
-model for this variant from the base solver.
+(1,s_{1})\}$.
+
+Thus we have reached the variant parameterized by
+$\configuration=\set{(B,\true),(A,\true)}$ \crEval{} applies due to $\zipper =
+\inRoot{}$ and the symbolic value in the focus, \evSym{} will yields \unit{}
+with $\zipper = \inRoot{}$, indicating that it is safe to query a model for this
+variant from the base solver. Due to the two application of \crChc three other
+variants will be found during back tracking beginning with the dimension used in
+the most recent application. In this case that is the dimension $B$, and thus
+the next variant that will be found is parameterized by
+$\configuration=\set{(B,\false),(A, \true)}$ with context $\zipper =
+\inBoolL*{\inBoolR*{s_{12ik}}{\inRoot{}}{\wedge}}{s_{b}}{\vee}$ and
+$\aStore{}=\{(c,s_{c}),(s_{12} < s_{ik}, s_{12ik}),(s_{i} - s_{k},
+s_{ik}),(k,s_{k})$ $,(b, s_{b}), (a,s_{a}),(i, s_{i}),(s_{1} + s_{2}, s_{12}),
+(2,s_{2}), (1,s_{1})\}$.
 
 %%% Local Variables:
 %%% mode: latex
