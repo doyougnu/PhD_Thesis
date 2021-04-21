@@ -97,7 +97,7 @@ aforementioned ordering behavior and offload the hard work to choice removal.
 into the array, and $e$ is an element of the array. Each operation must exist
 inside a boolean constraint to propagate information about the array, for
 example $\store*{a}{2}{b}$ leaves $a$ unconstrained, while $a \equiv
-\store*{a}{2}{b}$ adds a constraint that forces position 2 to store $b$.
+\store*{a}{2}{b}$ adds a constraint that forces position 2 to store $b$ in $a$.
 Similarly, \select{} must exist in a constraint, \eg{}, $x \equiv
 \select*{a}{2}$ will add a constraint which sets $x$ to $b$.
 
