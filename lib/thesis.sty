@@ -285,3 +285,14 @@
 
 %%%% example
 \newcommand{\hV}{\mkVar{h}}
+
+%%%% arrays
+\newcommand{\store}{\ensuremath{\kf{store}}}
+\newcommand{\select}{\ensuremath{\kf{select}}}
+\WithSuffix\newcommand\store*[3]{\ensuremath{(\kf{store}~#1~#2~#3)}}
+\WithSuffix\newcommand\select*[2]{\ensuremath{(\kf{select}~#1~#2)}}
+\newcommand{\inSelectL}[3]{\store*{\cdot}{#1}{#2} :: #3}
+\newcommand{\inSelectM}[3]{\store*{#1}{\cdot}{#2} :: #3}
+\newcommand{\inSelectR}[3]{\store*{#1}{#2}{\cdot} :: #3}
+\newcommand{\inStoreL}[2]{\select*{\cdot}{#1} :: #2}
+\newcommand{\inStoreR}[2]{\select*{#1}{\cdot} :: #2}
