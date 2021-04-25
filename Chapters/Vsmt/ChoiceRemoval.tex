@@ -1,70 +1,60 @@
 ~\label{section:vsmt:choice-removal}
-%
-\begin{figure}
-  \input{Figures/Vsmt_Rules_Choice_Removal}
-  \caption{Choice removal inference rules}%
-  \label{fig:vsmt:inf:chc}
-\end{figure}
-% 
-\begin{figure}
-  \ContinuedFloat
-  \input{Figures/Vsmt_Rules_Choice_Removal_Cont}
-  \caption{variational \ac{smt} zipper context}
-  \label{fig:vsmt:zipper}
-\end{figure}
-%
-With accumulation and evaluation we turn to choice removal. Our strategy is to
-generalize the zipper context over the Boolean, arithmetic and inequality
-relations using the syntactic categories and machinery we employed to generalize
-accumulation. The extended zipper is given by the following grammar
 % 
 \begin{figure}
   \input{Figures/Vsmt_Zipper}
   \caption{variational \ac{smt} zipper context}
   \label{fig:vsmt:zipper}
 \end{figure}
-
+%
+\begin{figure}
+  \input{Figures/Vsmt_Rules_Choice_Removal}
+  \caption{Variational \ac{smt} choice removal inference rules}%
+  \label{fig:vsmt:chc}
+\end{figure}
 % 
-% Choice removal is defined in \autoref{fig:vsmt:inf:chc} as a relation between
-% the evaluation/accumulation stores (\aStore{}, \eStore{}), the configuration
-% (\configuration{}), and terms in IL\@. Furthermore, we track the current
-% variational model as part of the 4-tuple. The vast majority of rules are either
-% commutative versions of the presented rules; such as \rn{CR-RB} which is
-% \rn{CR-LB} but with a choice as the left child of \boolFuncs{}, or the same
-% rules over different operators, such as \rn{CR-LIB} which is \rn{CR-LB}
-% only for \inequalities{}; thus we only present a subset.
+\begin{figure}
+  \ContinuedFloat
+  \input{Figures/Vsmt_Rules_Choice_Removal_Cont}
+  \caption{Variational \ac{smt} choice removal inference rules}
+  \label{fig:vsmt:chc-cont}
+\end{figure}
+%
+With accumulation and evaluation complete we turn to choice removal.
+%
+Our strategy is similar to accumulation; we generalize the zipper context over
+Boolean, arithmetic and inequality relations using the syntactic categories
+defined in \autoref{fig:vsmt:categories}.
+%
+Conceptually, choice removal remains a variational left fold that builds the
+zipper context until a symbolic value is the focus. at which point rules of the
+form \rn{C-*-InL} \emph{switch} the fold to process the right child of the
+relations, and rules of the form \rn{C-*-InR} call accumulation to reduce the
+relation over symbolic values. We formally specify generalized choice removal in
+\autoref{fig:vsmt:chc}. The heart of choice removal remains the same, the rules
+\crEval, \crChc, \crChcT, and \crChcF are reproduced for the new zipper context
+\zipper but are semantically identical to the specialized versions. The
+remaining rules are generalized versions of the \ac{sat} rules to handle each
+syntactic category the variational solver can process.
 
-% The interesting rules are \rn{Gen} and \rn{Sym} which use evaluation to
-% query for a plain model, and construct a new variational model through the
-% \rn{Combine} function. \rn{CR-LB} ensure the property of
-% synchronization; when a choice is observed as the right child of a boolean
-% operator, and the dimension has a value in the configuration (in this case
-% \true{}), then the proper alternative (in this case the left alternative) of the
-% choice is retrieved. \rn{CR-IB-ChcR} removes choices when the choice is not
-% present in the configuration. We present the version of \rn{CR-IB-ChcR} for
-% \inequalities{}; the same rule exists for \boolFuncs{}, \integerFuncs{}, and for
-% choices as the left children of \inequalities{}. The assertion stack counter,
-% $\kf{i}$, is incremented indicating that all recursive processing occurs in a
-% new \rn{push}/\rn{pop} context. Each configuration is updated to process
-% both alternatives, \true{} for the left and \false{} for the right alternative.
-% Both alternatives eventually conclude to a \unit{} and thus a variational model,
-% which are combined to a final result.
-
-% The remaining rules are congruence rules that recursively call accumulation
-% after a choice has been found, and new terms are introduced as the result of a
-% replacing a choice with an alternative. Careful readers will recognize that the
-% provided rules can easily become stuck. For example, given the formula $a \vee{}
-% (b \leq{} \chc[D]{p,q})$ the rules cannot further reduce the formula due to the
-% disjunction and inequality, and the choice cannot be accumulated. What is
-% required is to find the choice while storing the \emph{context} around the
-% choice. We leave this as an implementation detail, the prototype variational
-% solvers utilize a Huet zipper~\cite{huet_1997} data structure to capture this
-% context\footnote{that the Huet zipper has been successful implies delimited
-%   continuations~\itodo{cite} may be an alternative and efficient method to
-%   capture the context}, searches the variational core until a choice is in the
-% focus position, and then applies a choice removal rule such as
-% \rn{Cr-IB-ChcR} or \rn{Cr-LB}.
-
+For each syntactic category we define three kinds of rules which form a template
+to extend choice removal to new background theories: First, we have rules which
+determine what to do when encountering a binary or unary relation for the first
+time. As a design choice this is defined to proceed into the left child. For
+example \crNot{}, \crBool{}, and \crInEq{} initiate the left fold by storing the
+relation in the zipper and focusing the left child $\eIL*{1}$.
+%
+Second, we define rules which recur down the left child of the relations until a
+symbolic value results from accumulation. For example, \crInEqL{}, \crBoolL{}
+and \crArithL{} all move the focused symbol value $s$ to the zipper context
+allowing choice removal to proceed to the right children of the same relation.
+%
+Lastly, we have computation rules which perform the fold on the relation by
+calling accumulation. For example, \crUnaryIn, \crArithR and \crInEqR call
+accumulation to process the symbolic value and reduce the given relation. In
+effect, accumulation \emph{encapsulates} the semantics of the relations,
+evaluation propagates accumulation and performs code generation in the base
+solver, and choice removal alters the configuration, maintains evaluation
+contexts, and removes choices introducing new plain terms to the formula.
 
 %%% Local Variables:
 %%% mode: latex

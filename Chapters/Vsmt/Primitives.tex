@@ -1,4 +1,4 @@
-~\label{section:vsmt:primitives}
+~\label{section:vsmt:primitives}%
 %
 \begin{figure}
   \input{Figures/Vsmt_Rules_PrimOps}
@@ -25,9 +25,9 @@
 \begin{figure}
   \input{Figures/Vsmt_Rules_PrimOps_Categories}
   \caption{Syntactic categories of primitive operations}%
-  \label{fig:vsmt:primops}
+  \label{fig:vsmt:categories}
 \end{figure}
-
+%
 In order to construct a variational \ac{smt} solver we must first extend
 \ac{vpl} to include non-Boolean values. \ac{vpl} included two kinds of
 relations: relations such as $\neg$ and $\vee$ which required accumulation in
@@ -75,7 +75,7 @@ serve the same purpose.
 From the perspective of the variational solver, operations such as addition,
 division, and subtraction only differ in the primitive operation emitted to the
 base solver. Thus, we define syntactic categories over like operations in
-\autoref{fig:vsmt:primcategories}. Notice that the categories correspond to the
+\autoref{fig:vsmt:categories}. Notice that the categories correspond to the
 respective type of each operation. For example, the boolean categories
 encapsulate operations which take two boolean expressions and return a boolean
 expression, similarly the inequality category encapsulate operators which take

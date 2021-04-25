@@ -198,6 +198,7 @@
 
 %%%%% primitive operations
 \newcommand{\lookup}[2]{\ensuremath{#2[#1]}}
+
 %%%% Bools
 \newcommand{\primOp}[1]{\texttt{#1}}
 \newcommand{\pspawn}{\primOp{Var}}
@@ -257,6 +258,14 @@
 \newcommand{\inInEqL}[2]{\ensuremath{\cdot\inequalities #2 :: #1}}
 \newcommand{\inInEqR}[2]{\ensuremath{#1 \inequalities \cdot :: #2}}
 
+\WithSuffix\newcommand\inUnary*[2]{\ensuremath{#2\,\cdot :: #1}}
+\WithSuffix\newcommand\inBoolL*[3]{\ensuremath{\cdot#3 #2 :: #1}}
+\WithSuffix\newcommand\inBoolR*[3]{\ensuremath{#1 #3 \cdot :: #2}}
+\WithSuffix\newcommand\inArithL*[3]{\ensuremath{\cdot#3 #2 :: #1}}
+\WithSuffix\newcommand\inArithR*[3]{\ensuremath{#1 #3 \cdot:: #2}}
+\WithSuffix\newcommand\inInEqL*[3]{\ensuremath{\cdot#3 #2 :: #1}}
+\WithSuffix\newcommand\inInEqR*[3]{\ensuremath{#1 #3 \cdot :: #2}}
+
 %%%% Choice Removal
 \newcommand{\crUnary}{\rn{C-Unary}}
 \newcommand{\crUnaryIn}{\rn{C-Unary-In}}
@@ -270,6 +279,23 @@
 \newcommand{\crArithL}{\rn{C-Arith-InL}}
 \newcommand{\crArithR}{\rn{C-Arith-InR}}
 
+%%%% variational smt models
+\newcommand{\undefined}{\ensuremath{\kf{Und}}}
+\newcommand{\bigOof}[1]{\ensuremath{\mathcal{O(\kf{#1})}}}
+
+%%%% example
+\newcommand{\hV}{\mkVar{h}}
+
+%%%% arrays
+\newcommand{\store}{\ensuremath{\kf{store}}}
+\newcommand{\select}{\ensuremath{\kf{select}}}
+\WithSuffix\newcommand\store*[3]{\ensuremath{(\kf{store}~#1~#2~#3)}}
+\WithSuffix\newcommand\select*[2]{\ensuremath{(\kf{select}~#1~#2)}}
+\newcommand{\inSelectL}[3]{\store*{\cdot}{#1}{#2} :: #3}
+\newcommand{\inSelectM}[3]{\store*{#1}{\cdot}{#2} :: #3}
+\newcommand{\inSelectR}[3]{\store*{#1}{#2}{\cdot} :: #3}
+\newcommand{\inStoreL}[2]{\select*{\cdot}{#1} :: #2}
+\newcommand{\inStoreR}[2]{\select*{#1}{\cdot} :: #2}
 
 %%%% Case Studies helpers
 \newcommand{\github}[0]{\url{https://github.com/lambda-land/VSat-Papers/tree/master/EMSE2021}}
