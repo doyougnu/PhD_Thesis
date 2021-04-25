@@ -20,7 +20,7 @@ of features in each model never flipped from their initialized value \fls{} to
 of plain models. Compression metrics were not calculated as this is an
 orthogonal concern to the performance of variational satisfiability solving.
 
-Variational models permit product analyses without a \sat{} solver.
+Variational models permit product analyses without a \ac{sat} solver.
 \autoref{res:vmodels} shows such a purely syntactic analysis: counting
 disjuncted clauses in the variational model as a representation of satisfiable
 plain models. We believe post-hoc analyses such as this may be useful to feature
@@ -162,7 +162,7 @@ is to leverage the laws of the variational logic to automatically refactor input
 formulas to increase sharing. The consequences of this observation will be
 particular to the application domain. For software product lines this means that
 any method to increase sharing between product line versions or the
-representative \sat{} problems is desirable; this may be smaller changes with
+representative \ac{sat} problems is desirable; this may be smaller changes with
 respect to the entire feature model, more frequent snapshots of the feature
 model, or syntactic manipulations to mitigate the occurrence of new features.
 
@@ -177,19 +177,23 @@ model, or syntactic manipulations to mitigate the occurrence of new features.
 \paragraph{RQ4: Overhead of a Plain Query on \vsat{}}
 %
 \begin{figure}
-  \includegraphics[width=0.95\textwidth]{Plots/RQ4_Auto}
-  \caption{(Auto) RQ4: Overhead of \vTov{} on plain formulas. We observe that
-    \vTov{} incurs an average slowdown of 9\% for \auto{}, when
-    solving a version variant.}%
-  \label{res:overhead:auto}
-\end{figure}
-%
-\begin{figure}
-  \includegraphics[width=0.95\textwidth]{Plots/RQ4_Fin}
-  \caption{(Financial) RQ4: Overhead of \vTov{} on plain formulas. We observe
-    that \vTov{} incurs an average slowdown of 75\% for the \fin{}
-    dataset, when solving a version variant.}%
-  \label{res:overhead:fin}
+  \begin{subfigure}[t]{\textwidth}
+    \centering
+    \includegraphics[width=0.95\textwidth]{Plots/RQ4_Auto}
+    \caption{(Auto) RQ4: Overhead of \vTov{} on plain formulas. We observe that
+      \vTov{} incurs an average slowdown of 9\% for \auto{}, when
+      solving a version variant.}%
+    \label{res:overhead:auto}
+  \end{subfigure}
+~
+  \begin{subfigure}[t]{\textwidth}
+    \centering
+    \includegraphics[width=0.95\textwidth]{Plots/RQ4_Fin}
+    \caption{(Financial) RQ4: Overhead of \vTov{} on plain formulas. We observe
+      that \vTov{} incurs an average slowdown of 75\% for the \fin{}
+      dataset, when solving a version variant.}%
+    \label{res:overhead:fin}
+  \end{subfigure}
 \end{figure}
 %
 \new{\autoref{res:overhead:auto} and \autoref{res:overhead:fin} displays the
@@ -226,20 +230,20 @@ terms as described in \autoref{sec:exper:perf}. \new{Furthermore our results,
   paths through the library.}
 
 We have evinced the scalability claim with RQ1, and shown the translation and
-automation of incremental solving in \autoref{sec:impl}. However, our results
-depend on a \vpl{} formula as input. We believe that \vpl{} formulas can be
-incrementally and automatically constructed in practice, as described in
-\autoref{sec:vlogic}, as new variants occur or become known. However, assessing
-the challenges of \vpl{} construction is left to future work.
+automation of incremental solving in \autoref{chapter:vsat}. However, our
+results depend on a \ac{vpl} formula as input. We believe that \ac{vpl} formulas
+can be incrementally and automatically constructed in practice, as described in
+\autoref{chapter:vpl}, as new variants occur or become known. However, assessing
+the challenges of \ac{vpl} construction is left to future work.
 
 In this paper, we do not provide a proof of the soundness of our methods. We
 mitigate this threat in several ways: we performed property-based
-testing~\citep{quickcheck} on our prototype and verified that a satisfiable
+testing~\cite{quickcheck} on our prototype and verified that a satisfiable
 variant was found to be satisfiable across all algorithms. In addition, we
 define a property that ensures that for each plain model $p$, found with
 \pTov{}, \vTop{}, and \pTop{}, an identical model $p'$ was found by substituting
 $p$ on the variational model returned from \vsat{}. We performed the
-property-based tests with 3,000 generated \vpl{} formulas, finding no
+property-based tests with 3,000 generated \ac{vpl} formulas, finding no
 counter-examples.
 
 
