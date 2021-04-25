@@ -1,0 +1,139 @@
+~\label{section:case-studies:experimental-methodology}
+
+It is important to distinguish between concepts in the application domain, such
+as a void or core analysis, and concepts in the solver domain, such as a query
+or choice. In general, for the remainder of the paper, we focus on the solver
+domain. We use the phrase \textit{version variant} to refer to a variant that is
+a version or snapshot of a sound feature model in the application domain.
+
+We assess the performance characteristics \vsat{} by attempting to answer the
+following research questions using our datasets.
+%
+\begin{enumerate}%[align=left]
+\item[\resQ{1}] How does variational solving scale as variation increases?
+\item[\resQ{2}] What is the impact of base solvers on performance?
+\item[\resQ{3}] What is the impact of sharing on performance?
+\item[\resQ{4}] What is the cost of solving a plain formula on \vsat{}?
+\end{enumerate}
+
+To investigate \resQ{1} and \resQ{2}, we consider all variants of the \ac{vpl}
+formulas constructed for each dataset, rather than just the version variants
+that are of interest in the application domain. This allows us to better
+evaluate how \vsat{} scales to accommodate variability.
+%
+For \resQ{3}, we hypothesize that \vsat{} will get faster as sharing increases,
+which would validate our method of deriving a variational core. To investigate
+this, we restrict the analysis to consecutive version variants (i.e.,
+consecutive monthly snapshots of a feature model), and observe performance
+as sharing is left uncontrolled.
+%
+Finally, \resQ{4} provides insight on the overhead incurred by variational
+solving, which we investigate by inputting each version variant as a
+propositional logic formula rather than a single variational formula for each
+solver used in \resQ{2} and \resQ{1}.
+
+\paragraph{Data Description and Encoding}%
+\label{sec:exper:description}
+%
+\nieke{}'s formulas collapse sets of \pl{} formulas to a single formula using
+implications on an SMT variable that represents a moment in time. A two-pass
+process was used to translate \nieke{}'s formulas into \ac{vpl}---one pass to
+parse to an internal representation and another to detect and convert \nieke{}'s
+temporal ranges to choices, nesting the implied clauses into the true
+alternative. The two-pass process conserves \nieke{}'s ordering of plain terms
+and encoding. The two datasets differ in important ways. The \auto{} dataset
+encodes four monthly snapshots while the \fin{} dataset encodes ten. Hence, the
+\auto{}'s query formula represents 16 variants, while the \fin{} query formula
+represents 1,024 variants. For \resQ{3} and \resQ{4}, we construct several
+\vc{}'s to restrict the analysis to version variants. The \vc{}s range from ones
+that enable only one version variant (for \resQ{4}): $\kf{vc_{\kf{auto\_V_{1}}}}
+= (V_{1} \wedge \neg V_{2} \wedge \neg V_{3} \wedge \neg V_{4})$ to \vc{}s that
+enable only consecutive version variants (for \resQ{3}):
+$\kf{vc_{\kf{auto\_V12}}} = V_{1} \veebar V_{2}$.
+
+For \resQ{4} we decouple performance from the number of variants by performing
+an initial pass over the query formula to replace choices representing
+non-consecutive versions variants (\eg{} a variational formula which represents
+$V_{1}$ and $V_{2}$ but not $V_{1}$ and $V_{3}$) with their false alternatives
+(which contain the value \tru{}). Then we construct a \vc{} to forbid
+non-version variants. As an example, the \auto{} dataset, yields three data
+points by this process, the change from versions $V_{1}$ to $V_{2}$, $V_{2}$ to
+$V_{3}$, and $V_{3}$ to $V_{4}$. All results presented for \resQ{3} were
+  calculated using the z3~{\citep{10.1007/978-3-540-78800-3_24}} \ac{sat}
+  solver.
+
+\paragraph{Measuring Performance}%
+\label{sec:exper:perf}
+%
+To answer our research questions, we construct four different solving
+algorithms using our prototype tool. We use the notation
+\iToj{<formula>}{<solver>} to describe, for each algorithm, whether the query
+formulas and solver are plain ($p$) or variational ($v$), respectively.
+%
+The algorithms are: the baseline, \pTop{}, which runs plain formulas on a plain
+solver; variational case, \vTov{}, which runs a variational formula on the
+variational solver; the overhead case, \pTov{}, which runs plain formulas on the
+variational solver; and the typical case, \vTop{}, which runs the variational
+formula, variant by variant, on a plain solver. Inputs for each algorithm are
+constructed by configuring the query formula, thus ensuring that the same
+variation context is used across algorithms.
+
+We construct the \pTop{} algorithm by configuring the query formula to its
+variants \textit{before} benchmarking begins. These formulas are then sent to
+the base solver one-by-one, with the solver begin shut down and initialized
+between runs, thus preventing the solver form maintaining any learned
+information.
+%
+The \pTov{} case corresponds to \resQ{4} and elucidates the potential overhead
+of solving a plain query on a variational solver. We perform the same
+pre-processing as the \pTop{} case but send each plain formula to \vsat{}
+instead. This provides insight into the cost incurred by the reduction engine.
+%
+For \vTop{}, we configure the query formula to retrieve variants \textit{during}
+benchmarking. Each formula is sent to the base solver \textit{with} the solver
+maintaining information between queries. This gives insight into the overhead
+incurred by configuring a variational formula, and the benefits of the internal
+caching in the base solver. Notable, this case keeps the base solver running,
+performing each call in incremental mode, thus this case corresponds to the
+typical use of an incremental solver in applications that utilize incremental
+\ac{sat} solvers.
+
+We construct a variational model for all algorithms since it is unclear how to
+combine plain models, and since the storage of plain models is an orthogonal
+concern to performance, we sought to keep convolved variables constant.
+
+Unless specified, all results are a bootstrapped statistical average
+representing numerous raw measurements.\footnote{Using v0.2.5 of the
+  gauge~\citep{gauge} library and v8.6 of the sbv~\citep{sbv} library with
+    solver seeds set to \texttt{1729}. All data was collected on a desktop
+    running NixOS 20.09, with an AMD Ryzen 7 2700X CPU @ 4.0GHz, 32GB RAM.\@We
+    used stack lts-15.7 (GHC 8.8.3) and tested with RTS options ``-qg'' which
+    enables parallel garbage collection in the Haskell runtime.}
+%
+  For \resQ{2} we repeat \resQ{1} with four different base solvers:
+  z3~\cite{10.1007/978-3-540-78800-3_24},
+  cvc4~\citep{10.1007/978-3-642-22110-1_14}, yices~\citep{Dutertre:cav2014} and
+  boolector~\citep{DBLP:conf/tacas/BrummayerB09}, each of which called through
+  the widely used Haskell library~\citep{sbv}. To assess \resQ{2} we perform a
+  Kruskall-Wallis test~\citep{nist} followed by a pairwise Wilcox
+  test~\citep{WilcoxonPairwise} with Holm-Bonferroni p-value
+  correction~\citep{10.2307/4615733} in the R programming language~\citep{RLang}
+  v4.0.3 and assume a 5\% significance level.
+%
+For \resQ{3}, we similarly normalize the data to the baseline (\vTop{}), fit a
+linear model, and statistically assess differences by repeating the
+aforementioned statistical tests. For \resQ{4}, we retrieve the raw measurements
+from the bootstrapped average and assess statistical differences identically to
+\resQ{3} but do not fit any models to the data. Furthermore, the variational
+input is nuanced for \resQ{4} as each data point is on a variant, which is
+necessarily plain. Thus, \resQ{4} is a special case; for \resQ{4} \vTov{} inputs
+the variational formula but utilizes a variant context to restrict the solver to
+the version variant. \vTop{} performs configuration to configure for the version
+variant and then runs the variant on a base solver during benchmarking. All
+results, including variational models and statistical analysis scripts, are
+available online.\footnote{\github{}}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../thesis"
+%%% End:
