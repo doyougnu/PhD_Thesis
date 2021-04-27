@@ -1,8 +1,8 @@
 ~\label{section:case-studies:experimental-methodology}
-
-It is important to distinguish between concepts in the application domain, such
-as a void or core analysis, and concepts in the solver domain, such as a query
-or choice. In general, for the remainder of the paper, we focus on the solver
+%
+First we must distinguish between concepts in the application domain, such as a
+void or core analysis, and concepts in the solver domain, such as a query or
+choice. In general, for the remainder of the paper, we focus on the solver
 domain. We use the phrase \textit{version variant} to refer to a variant that is
 a version or snapshot of a sound feature model in the application domain.
 
@@ -34,6 +34,15 @@ solver used in \resQ{2} and \resQ{1}.
 
 \paragraph{Data Description and Encoding}%
 \label{sec:exper:description}
+\nieke{} provides two datasets\footnote{available at
+  \url{https://gitlab.com/evolutionexplanation/evolutionexplanation}},
+\textit{automotive02} and \textit{financialServices1} which encode the evolution
+histories of two feature models as propositional formulas.
+% 
+% 
+We refer to these as the \auto{} dataset, and \fin{} dataset for the
+remainder of this chapter.
+% 
 %
 \nieke{}'s formulas collapse sets of \pl{} formulas to a single formula using
 implications on an SMT variable that represents a moment in time. A two-pass

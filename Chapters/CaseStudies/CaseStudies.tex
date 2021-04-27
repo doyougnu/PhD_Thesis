@@ -1,11 +1,11 @@
 ~\label{chapter:case-studies}
-
+%
 We have formalized variational \ac{smt} and \ac{sat} solving. However, we have
 yet to investigate the performance of our methods. Recall from
-\autoref{chapter:introduction} that one of our motivating reasons for this
-project was the idea that if we only compute shared terms once, then we should
-observe a speedup in runtime performance when solving sets of related ac{sat}
-problems. In this chapter, we investigate and verify these claims.
+\autoref{chapter:introduction} that one of the motivating reasons for a
+variational solver was the idea that if we only compute shared terms once, then
+we should observe a speedup in runtime performance when solving sets of related
+ac{sat} problems. In this chapter, we investigate and verify these claims.
 
 Assessing the performance of \ac{sat} and \ac{smt} solvers is notoriously
 difficult~\cite{Gent94thesat} because it highly depends on the input to the
@@ -16,10 +16,41 @@ variables then the problem is over-constrained and it is easy to show
 \rn{unsat}, however if there are not many clauses but many variables then the
 problem is under-constrained and it is easy to show \rn{sat}.
 
+Thus to investigate, we construct a prototype variational solver, \vsat{} in the
+Haskell programming language~\cite{Hudak:1992:RPL:130697.130699} and
+quantitatively compare it to incremental and non-incremental \ac{sat} solving.
+To assess the prototype in realistic conditions we reuse real-world data from a
+previous study by~\citet{NMS+:GPCE18} from the \ac{spl} community.
+
+Before we describe the datasets we first introduce some terminology from the
+\ac{spl} community. A software product-line is an instance of variational
+software; \todo{get a source here}or more formally it is a set of
+software-intensive systems that share a common, managed set of features
+satisfying the specific needs of a particular market segment or mission and that
+are developed from a common set of core assets in a prescribed way.
+
+A good example of a software product-line is the Linux kernel~\cite{linux}. The
+Linux kernel is a set of core assets which devise an operating system, but the
+assets are parameterized by \emph{features} which, in this case, are the Boolean
+conditions of conditional-compilation statements such as \cpp{ifdef}s. To select
+the particular kind of kernel to build, the Linux kernel uses the
+\texttt{KConfig}~\cite{kconfig} tool to enable or disable features and thus
+specify the exact kernel to build. The set of features and their dependencies
+which determine the product, or in this case determine the kernel that is built
+is call a \emph{feature model}\cite{KCHNP90}.
+
+It is common to express feature models as a \ac{sat} formula where variables are
+features, and dependencies are expressed using logical connectives. Thus,
+reasoning about feature models with a \ac{sat} solver is an active sub-field in
+\acl{spl}~\cite{BSRC10,GBT+19,BSTRC06,TAK+:SE15}. In this domain, if a \rn{sat}
+is returned from the solver then the resulting model is an assignment of
+features which specifies a viable product. If an \rn{unsat} is returned than no
+viable product exists given the constraints on the feature model for the
+software product-line.
 
 \section{Experimental Methodology}
 \input{Chapters/CaseStudies/Experimental_Methodology}
-
+%
 \section{Results and Discussion}
 \input{Chapters/CaseStudies/ResultsAndDiscussion}
 
