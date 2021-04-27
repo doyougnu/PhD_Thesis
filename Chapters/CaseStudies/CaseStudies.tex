@@ -1,5 +1,22 @@
 ~\label{chapter:case-studies}
 
+We have formalized variational \ac{smt} and \ac{sat} solving. However, we have
+yet to investigate the performance of our methods. Recall from
+\autoref{chapter:introduction} that one of our motivating reasons for this
+project was the idea that if we only compute shared terms once, then we should
+observe a speedup in runtime performance when solving sets of related ac{sat}
+problems. In this chapter, we investigate and verify these claims.
+
+Assessing the performance of \ac{sat} and \ac{smt} solvers is notoriously
+difficult~\cite{Gent94thesat} because it highly depends on the input to the
+\ac{sat} or \ac{smt} solver. The issue is related to the hardness of the input
+problem, where hardness is a ratio of clauses in the \ac{sat} or \ac{smt}
+problem to the number of variables. If we have many clauses and not many
+variables then the problem is over-constrained and it is easy to show
+\rn{unsat}, however if there are not many clauses but many variables then the
+problem is under-constrained and it is easy to show \rn{sat}.
+
+
 \section{Experimental Methodology}
 \input{Chapters/CaseStudies/Experimental_Methodology}
 
