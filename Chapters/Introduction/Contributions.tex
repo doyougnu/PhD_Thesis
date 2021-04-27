@@ -64,12 +64,10 @@ contributions of each chapter:
       Solving}) extends the variational solving algorithm to consider \ac{smt}
     theories and propositions which include numeric values such as Integers and
     Reals in addition to Booleans. We present the requisite extensions to the
-    variational propositional logic, the variational transpiler and solving
+    variational propositional logic, the variational compiler and solving
     algorithm, and extend the output to support types other than just Booleans.
-    While these extensions are relatively straightforward, complete support of
-    \ac{smt} theories would need to include \texttt{BitVector} and
-    \texttt{Arrays}. Supporting these theories is not straightforward, thus the
-    chapter concludes by outlining the problem space for adding these features.
+    We demonstrate that our method fully generalizes to the core \ac{smt}
+    theories in the \acl{smtlib} standard.
 
   \item \autoref{chapter:case-studies} (\emph{Case Studies}) The central project
     of this thesis is to evaluate the ideas of variational programming in
