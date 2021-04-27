@@ -1,13 +1,24 @@
 ~\label{section:case-studies:experimental-methodology}
 %
-First we must distinguish between concepts in the application domain, such as a
-void or core analysis, and concepts in the solver domain, such as a query or
-choice. In general, for the remainder of the paper, we focus on the solver
-domain. We use the phrase \textit{version variant} to refer to a variant that is
-a version or snapshot of a sound feature model in the application domain.
+We must distinguish between concepts in the application domain, such as kinds of
+analysis on feature models \eg{}, a void or core analysis, and concepts in the
+solver domain, such as a query or choice. In general, we focus on the solver
+domain as it is our primary concern.
+
+\nieke{} provides two datasets\footnote{see
+  \url{https://gitlab.com/evolutionexplanation/evolutionexplanation}},
+\textit{automotive02} and \textit{financialServices1} which encode the evolution
+histories of two feature models as propositional formulas. Thus variants in our
+analysis correspond to snapshots of a feature models over time. We refer to
+these as the \auto{} dataset, and \fin{} dataset for the remainder of this
+chapter. For example, a variant of the \auto{} dataset is a \pl{} formula which
+encodes a feature model at time 0, and another variant encodes \emph{the same}
+feature model at time 2, where $0 < 2$. We use the phrase \textit{version
+  variant} to refer to variants that are versions or snapshots of a sound
+feature model in the application domain.
 
 We assess the performance characteristics \vsat{} by attempting to answer the
-following research questions using our datasets.
+following research questions.
 %
 \begin{enumerate}%[align=left]
 \item[\resQ{1}] How does variational solving scale as variation increases?
@@ -32,16 +43,8 @@ solving, which we investigate by inputting each version variant as a
 propositional logic formula rather than a single variational formula for each
 solver used in \resQ{2} and \resQ{1}.
 
-\paragraph{Data Description and Encoding}%
-\label{sec:exper:description}
-\nieke{} provides two datasets\footnote{available at
-  \url{https://gitlab.com/evolutionexplanation/evolutionexplanation}},
-\textit{automotive02} and \textit{financialServices1} which encode the evolution
-histories of two feature models as propositional formulas.
-% 
-% 
-We refer to these as the \auto{} dataset, and \fin{} dataset for the
-remainder of this chapter.
+\subsection{Data Description and Encoding}%
+\label{section:exper-meth:description}
 % 
 %
 \nieke{}'s formulas collapse sets of \pl{} formulas to a single formula using
@@ -72,7 +75,7 @@ $V_{3}$, and $V_{3}$ to $V_{4}$. All results presented for \resQ{3} were
   solver.
 
 \paragraph{Measuring Performance}%
-\label{sec:exper:perf}
+\label{section:exper-meth:perf}
 %
 To answer our research questions, we construct four different solving
 algorithms using our prototype tool. We use the notation
