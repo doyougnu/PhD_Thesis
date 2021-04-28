@@ -1,22 +1,27 @@
 ~\label{section:case-studies:experimental-methodology}
 %
 For the remainder of the chapter, we must distinguish between concepts in the
-application domain, such as kinds of analysis on feature models \eg{}, a void or
-core analysis which decides whether no viable products exist, or if a given
-feature must always be enabled, respectively, and concepts in the solver domain, such as a query or choice. In
-general, we focus on the solver domain as it is our primary concern.
+application domain, such as a void or core analysis, and concepts in the solver
+domain, such as a query or choice. In general, we focus on the solver domain as
+it is our primary concern.
 
 \nieke{} provides two datasets\footnote{see
   \url{https://gitlab.com/evolutionexplanation/evolutionexplanation}},
 \textit{automotive02} and \textit{financialServices1} which encode the evolution
-histories of two feature models as propositional formulas. Thus variants in our
-analysis correspond to snapshots of a feature models over time. We refer to
-these as the \auto{} dataset, and \fin{} dataset for the remainder of this
-chapter. For example, a variant of the \auto{} dataset is a \pl{} formula which
-encodes a feature model at time 0, and another variant encodes \emph{the same}
-feature model at time 2, where $0 < 2$. We use the phrase \textit{version
-  variant} to refer to variants that are versions or snapshots of a sound
-feature model in the application domain.
+histories of two feature models as propositional formulas. We refer to these as
+the \auto{} dataset, and \fin{} dataset for the remainder of this chapter. Since
+these datasets encode evolution histories, variants in our analysis correspond
+to snapshots of feature models over time, and a plain model of a variant
+corresponds to a void analysis over that feature model. For example, a variant
+of the \auto{} dataset is a \pl{} formula which encodes a feature model at time
+0, and another variant encodes \emph{the same} feature model at time 2, where $0
+< 2$. Recall the possible existence of extra variants from
+\autoref{section:vpl:example}, since extra variants may exist given a \ac{vpl}
+encoding of the datasets we use the phrase \textit{version variant} to refer to
+variants that are snapshots of a feature model in the application domain. For
+example, the variant which corresponds to a feature model at time 0 is a version
+variant, but the variant which corresponds to a feature model at time 0
+\emph{and} and time 2 are non-version variants.
 
 We assess the performance characteristics \vsat{} by attempting to answer the
 following research questions.
