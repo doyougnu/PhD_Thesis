@@ -38,11 +38,11 @@ formulas constructed for each dataset, rather than just the version variants
 that are of interest in the application domain. This allows us to better
 evaluate how \vsat{} scales to accommodate variability.
 %
-For \resQ{3}, we hypothesize that \vsat{} will get faster as sharing increases,
-which would validate our method of deriving a variational core. To investigate
-this, we restrict the analysis to consecutive version variants (i.e.,
-consecutive monthly snapshots of a feature model), and observe performance
-as sharing is left uncontrolled.
+For \resQ{3}, we hypothesize that \vsat{} will show observable speedups as
+sharing increases, which would validate our method of deriving a variational
+core. To investigate this, we restrict the analysis to consecutive version
+variants (i.e., consecutive monthly snapshots of a feature model), and observe
+performance as sharing is left uncontrolled.
 %
 Finally, \resQ{4} provides insight on the overhead incurred by variational
 solving, which we investigate by inputting each version variant as a
@@ -52,20 +52,20 @@ solver used in \resQ{2} and \resQ{1}.
 \subsection{Data Description and Encoding}%
 \label{section:exper-meth:description}
 %
-%
 \nieke{}'s formulas collapse sets of \pl{} formulas to a single formula using
-implications on an SMT variable that represents a moment in time. A two-pass
-process was used to translate \nieke{}'s formulas into \ac{vpl}---one pass to
-parse to an internal representation and another to detect and convert \nieke{}'s
-temporal ranges to choices, nesting the implied clauses into the true
-alternative. The two-pass process conserves \nieke{}'s ordering of plain terms
-and encoding. The two datasets differ in important ways. The \auto{} dataset
-encodes four monthly snapshots while the \fin{} dataset encodes ten. Hence, the
-\auto{}'s query formula represents 16 variants, while the \fin{} query formula
-represents 1,024 variants. For \resQ{3} and \resQ{4}, we construct several
-\vc{}'s to restrict the analysis to version variants. The \vc{}s range from ones
-that enable only one version variant (for \resQ{4}): $\kf{vc_{\kf{auto\_V_{1}}}}
-= (V_{1} \wedge \neg V_{2} \wedge \neg V_{3} \wedge \neg V_{4})$ to \vc{}s that
+implications on an \ac{smt} variable that represents a moment in time. A
+two-pass process was used to translate \nieke{}'s formulas into \ac{vpl}---one
+pass to parse to an internal representation and another to detect and convert
+\nieke{}'s temporal ranges to choices, nesting the implied clauses into the true
+alternative.
+
+The two datasets differ in important ways. The \auto{} dataset encodes four
+monthly snapshots while the \fin{} dataset encodes ten. Hence, the \auto{}'s
+query formula represents 16 variants, while the \fin{} query formula represents
+1,024 variants. For \resQ{3} and \resQ{4}, we construct several \vc{}'s to
+restrict the analysis to version variants. The \vc{}s range from ones that
+enable only one version variant (for \resQ{4}): $\kf{vc_{\kf{auto\_V_{1}}}} =
+(V_{1} \wedge \neg V_{2} \wedge \neg V_{3} \wedge \neg V_{4})$ to \vc{}s that
 enable only consecutive version variants (for \resQ{3}):
 $\kf{vc_{\kf{auto\_V12}}} = V_{1} \veebar V_{2}$.
 
@@ -89,7 +89,7 @@ algorithms using our prototype tool. We use the notation
 formulas and solver are plain ($p$) or variational ($v$), respectively.
 %
 The algorithms are: the baseline, \pTop{}, which runs plain formulas on a plain
-solver; variational case, \vTov{}, which runs a variational formula on the
+solver; the variational case, \vTov{}, which runs a variational formula on the
 variational solver; the overhead case, \pTov{}, which runs plain formulas on the
 variational solver; and the typical case, \vTop{}, which runs the variational
 formula, variant by variant, on a plain solver. Inputs for each algorithm are
