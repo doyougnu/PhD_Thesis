@@ -1,9 +1,10 @@
 ~\label{section:case-studies:experimental-methodology}
 %
-We must distinguish between concepts in the application domain, such as kinds of
-analysis on feature models \eg{}, a void or core analysis, and concepts in the
-solver domain, such as a query or choice. In general, we focus on the solver
-domain as it is our primary concern.
+For the remainder of the chapter, we must distinguish between concepts in the
+application domain, such as kinds of analysis on feature models \eg{}, a void or
+core analysis which decides whether no viable products exist, or if a given
+feature must always be enabled, respectively, and concepts in the solver domain, such as a query or choice. In
+general, we focus on the solver domain as it is our primary concern.
 
 \nieke{} provides two datasets\footnote{see
   \url{https://gitlab.com/evolutionexplanation/evolutionexplanation}},
@@ -45,7 +46,7 @@ solver used in \resQ{2} and \resQ{1}.
 
 \subsection{Data Description and Encoding}%
 \label{section:exper-meth:description}
-% 
+%
 %
 \nieke{}'s formulas collapse sets of \pl{} formulas to a single formula using
 implications on an SMT variable that represents a moment in time. A two-pass

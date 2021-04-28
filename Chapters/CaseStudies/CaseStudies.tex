@@ -2,32 +2,40 @@
 %
 We have formalized variational \ac{smt} and \ac{sat} solving. However, we have
 yet to investigate the performance of our methods. Recall from
-\autoref{chapter:introduction} that one of the motivating reasons for a
-variational solver was the idea that if we only compute shared terms once, then
-we should observe a speedup in runtime performance when solving sets of related
-ac{sat} problems. In this chapter, we investigate and verify these claims.
+\autoref{chapter:introduction} that a motivating reasons for a variational
+solver was that if we only compute shared terms once, then we should observe a
+speedup in runtime performance when solving sets of related \ac{sat} problems
+because information is reused. In this chapter, we investigate and verify these
+claims.
 
 Assessing the performance of \ac{sat} and \ac{smt} solvers is notoriously
-difficult~\cite{Gent94thesat} because it highly depends on the input to the
-\ac{sat} or \ac{smt} solver. The issue is related to the hardness of the input
-problem, where hardness is a ratio of clauses in the \ac{sat} or \ac{smt}
-problem to the number of variables. If we have many clauses and not many
-variables then the problem is over-constrained and it is easy to show
-\rn{unsat}, however if there are not many clauses but many variables then the
-problem is under-constrained and it is easy to show \rn{sat}.
+difficult~\cite{Gent94thesat} because it depends on the input problem to the
+\ac{sat} or \ac{smt} solver. The issue is related to the computational hardness
+of the input. Hardness, in this domain is estimated by the ratio of clauses in
+the \ac{sat} or \ac{smt} problem to the number of variables. Conceptually, if
+there are many clauses and not many variables then the problem is
+over-constrained and it is easy to decide \rn{unsat}, however if there are few
+clauses but many variables then the problem is under-constrained and it is easy
+to decide \rn{sat}. Thus, hard problems rest in a \emph{phase transition} zone
+where the ratio of clauses to variables is neither over-constrained nor
+\todo{cite}under-constrained.
 
-Thus to investigate, we construct a prototype variational solver, \vsat{} in the
-Haskell programming language~\cite{Hudak:1992:RPL:130697.130699} and
-quantitatively compare it to incremental and non-incremental \ac{sat} solving.
-To assess the prototype in realistic conditions we reuse real-world data from a
-previous study by~\citet{NMS+:GPCE18} from the \ac{spl} community.
+To investigate the performance of our methods, we construct a prototype
+variational solver, \vsat{} in the Haskell programming
+language~\cite{Hudak:1992:RPL:130697.130699} and quantitatively compare it to
+incremental and non-incremental \ac{sat} solving. Assessing the prototype in
+realistic conditions is difficult as there does not exist a corpus of accepted
+representative variational \ac{sat} problems. Thus, to test the prototype in as
+realistic conditions as possible we utilize real-world data from a previous
+study by~\citet{NMS+:GPCE18} from the \ac{spl} community.
 
-Before we describe the datasets we first introduce some terminology from the
-\ac{spl} community. A software product-line is an instance of variational
-software; \todo{get a source here}or more formally it is a set of
-software-intensive systems that share a common, managed set of features
-satisfying the specific needs of a particular market segment or mission and that
-are developed from a common set of core assets in a prescribed way.
+Before we describe the datasets and resulting variational \ac{sat} problems we
+first introduce some terminology from the \ac{spl} community. A software
+product-line is an instance of variational software; \todo{get a source here}or
+more formally it is a set of software-intensive systems that share a common,
+managed set of features satisfying the specific needs of a particular market
+segment or mission and that are developed from a common set of core assets in a
+prescribed way.
 
 A good example of a software product-line is the Linux kernel~\cite{linux}. The
 Linux kernel is a set of core assets which devise an operating system, but the
@@ -42,11 +50,15 @@ is call a \emph{feature model}\cite{KCHNP90}.
 It is common to express feature models as a \ac{sat} formula where variables are
 features, and dependencies are expressed using logical connectives. Thus,
 reasoning about feature models with a \ac{sat} solver is an active sub-field in
-\acl{spl}~\cite{BSRC10,GBT+19,BSTRC06,TAK+:SE15}. In this domain, if a \rn{sat}
-is returned from the solver then the resulting model is an assignment of
-features which specifies a viable product. If an \rn{unsat} is returned than no
-viable product exists given the constraints on the feature model for the
-software product-line.
+\acl{spl}~\cite{BSRC10,GBT+19,BSTRC06,TAK+:SE15}. For example, a \emph{void
+  analysis} uses a \ac{sat} solver to determine that a product is possible, and
+a \emph{core analysis} manipulates the feature model to check that a given
+feature must be \tru{} (or enabled in the \ac{spl} terminology) for every viable
+product. Conceptually in this domain, if a \rn{sat} is returned from the solver
+then the resulting model is an assignment of features which specifies a viable
+product. If an \rn{unsat} is returned than no viable product exists given the
+constraints on the feature model for the software product-line. Further analysis
+on the product line are
 
 \section{Experimental Methodology}
 \input{Chapters/CaseStudies/Experimental_Methodology}
