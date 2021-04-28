@@ -29,15 +29,15 @@ For example, the change from $V_{7}$ to $V_{8}$ (128 to 256 Variants) of \fin{}
 clearly constrained the feature model as the number of unsatisfiable models
 increased from 50\% to 80\%.
 
-\new{The experiment required 7 days, 6 hours and 21 minutes to complete. Due to
-  the amount of time required to generate the data, we limited the number of raw
-  measurements to 3. Thus, each data point presented in our results is a
-  bootstrapped average of 3 raw measurements. In contrast, the conference
-  version of this work used 56 raw measurements per data point. This experiment
-  quadruples the run time of the conference version, because we repeat the
-  experiment with four base solvers. Thus we restrict the sampling as the
-  experiment was not feasible with the previous rate of sampling. Our results
-  agree with our former work even with the reduced sampling. }
+The experiment required 7 days, 6 hours and 21 minutes to complete. Due to the
+amount of time required to generate the data, we limited the number of raw
+measurements to 3. Thus, each data point presented in our results is a
+bootstrapped average of 3 raw measurements. In contrast, the conference version
+of this work used 56 raw measurements per data point. This experiment quadruples
+the run time of the conference version, because we repeat the experiment with
+four base solvers. Thus we restrict the sampling as the experiment was not
+feasible with the previous rate of sampling. Our results agree with our former
+work even with the reduced sampling.
 
 \paragraph{RQ1: Performance of Variational Solving as Variation Scales}
 
@@ -84,7 +84,7 @@ increased from 50\% to 80\%.
     \caption{Time [s] to solve with \vTov{} by solver.}%
     \label{tab:rq1:comparison}
   \end{subtable}
-  \caption{\new{Time to solve and speedup of most variational case by solver.}}%
+  \caption{Time to solve and speedup of most variational case by solver.}%
   \label{tab:rq1}
 \end{table}
 
@@ -113,33 +113,29 @@ solving still grows linearly in the number of variants being solved.
 
 \paragraph{RQ2: Performance Impact of Base Solver}
 %
-
-\new{In the conference version of this work, we cited that all of our results
-  were dependent on z3 as a threat to validity. In this research question we
-  address that threat. From \resQ{1} we determined that \vTov{} is faster than
-  the baseline algorithms and that the difference is statistically significant.
-  We observe from \autoref{res:rq1:auto} and \autoref{res:rq1:fin} that the
-  \vTov{} algorithm is robust across every tested base solver and \vTov{}
-  produced reasonable results with each base solver.
+From \resQ{1} we determined that \vTov{} is faster than the baseline algorithms
+and that the difference is statistically significant. We observe from
+\autoref{res:rq1:auto} and \autoref{res:rq1:fin} that the \vTov{} algorithm is
+robust across every tested base solver and \vTov{} produced reasonable results
+with each base solver.
 %
+We summarize our results in \autoref{tab:rq1}. Notable yices was consistently
+the most performent base solver for all algorithms and all test cases. For
+\vTov{} yices demonstrates not only a high degree of speedup but also a
+reduction of 238.3 seconds, and 132.8 seconds, in run time from z3 for the
+most variational case of \auto{} and \fin{}. Thus, yices is an attractive
+target for the base solver of future prototype variational \ac{sat} solvers.
 
-  We summarize our results in \autoref{tab:rq1}. Notable yices was consistently
-  the most performent base solver for all algorithms and all test cases. For
-  \vTov{} yices demonstrates not only a high degree of speedup but also a
-  reduction of 238.3 seconds, and 132.8 seconds, in run time from z3 for the
-  most variational case of \auto{} and \fin{}. Thus, yices is an attractive
-  target for the base solver of future prototype variational \ac{sat} solvers.
-
-  Cvc4 is also noteworthy; cvc4 benefited the most from \vTov{} for both
-  datasets with a speedup 3.51x (\auto{}) and 2.51 (\fin{}). The cvc4 case is
-  interesting as it implies that a base solver which shows poor performance with
-  in the typical use case (\vTop{}; \ac{sat} calls occur in an incremental
-  constext, and solver is kept alive) may greatly benefit from the variational
-  solving algorithm we've presented. Although the exact reasons behind this
-  behavior will be particular to the base solver, these results imply that our
-  use case (\ie{}, heavily exercising the incremental code paths) is peculiar
-  and thus selecting a solver based on only its typical performance may not be
-  representative of its performance in this use case. }
+Cvc4 is also noteworthy; cvc4 benefited the most from \vTov{} for both
+datasets with a speedup 3.51x (\auto{}) and 2.51 (\fin{}). The cvc4 case is
+interesting as it implies that a base solver which shows poor performance with
+in the typical use case (\vTop{}; \ac{sat} calls occur in an incremental
+constext, and solver is kept alive) may greatly benefit from the variational
+solving algorithm we've presented. Although the exact reasons behind this
+behavior will be particular to the base solver, these results imply that our
+use case (\ie{}, heavily exercising the incremental code paths) is peculiar
+and thus selecting a solver based on only its typical performance may not be
+representative of its performance in this use case.
 
 \paragraph{RQ3: Performance Impact of Plain Terms}
 We hypothesize that the ratio of plain terms to total terms should increase the
@@ -151,7 +147,6 @@ showed a statistically significant fit to a linear model. Furthermore, only
 p-values of $6.95\times 10^{-3}$ and $4.44\times 10^{-6}$ thus confirming that
 sharing positively correlates to speedups for variational solving in these
 datasets.
-% \footnote{Analysis at: \github{}}
 
 This result is evidence that a dataset's sharing ratio is an important factor in
 the performance of a variational \ac{sat} solver, as we hypothesized. When the
@@ -196,20 +191,20 @@ model, or syntactic manipulations to mitigate the occurrence of new features.
   \end{subfigure}
 \end{figure}
 %
-\new{\autoref{res:overhead:auto} and \autoref{res:overhead:fin} displays the
-  bootstrapped averages of each version variant, for each algorithm, and base
-  solver for the \auto{}, and \fin{} datasets, respectively.} Given \resQ{2},
-and the composition of \fin{}, we expect \vsat{} to show slowdowns for \fin{}.
-This is observed in \autoref{res:overhead:fin} and is statistically significant
-for all versions. For \auto{}, only the $V_{1}$ version variant showed a
-significant difference between the overhead case, \pTov{}, and \vTov{}, and
-between the overhead case \pTov{}, and the typical case \vTop{}. Notably,
-\vTov{} did not differ from the typical case, \vTop{}.
-\autoref{res:overhead:auto} suggests statistically significant differences for
-other versions but omits variance, hence the discrepancy between the plot and
-statistical tests. That \pTov{} was statistically different for $V_{1}$ suggests
-particular formulas may not respond well to the reduction engine, although the
-exact slowdown will be dependent on the \ac{sat} problem.
+\autoref{res:overhead:auto} and \autoref{res:overhead:fin} displays the
+bootstrapped averages of each version variant, for each algorithm, and base
+solver for the \auto{}, and \fin{} datasets, respectively. Given \resQ{2}, and
+the composition of \fin{}, we expect \vsat{} to show slowdowns for \fin{}. This
+is observed in \autoref{res:overhead:fin} and is statistically significant for
+all versions. For \auto{}, only the $V_{1}$ version variant showed a significant
+difference between the overhead case, \pTov{}, and \vTov{}, and between the
+overhead case \pTov{}, and the typical case \vTop{}. Notably, \vTov{} did not
+differ from the typical case, \vTop{}. \autoref{res:overhead:auto} suggests
+statistically significant differences for other versions but omits variance,
+hence the discrepancy between the plot and statistical tests. That \pTov{} was
+statistically different for $V_{1}$ suggests particular formulas may not respond
+well to the reduction engine, although the exact slowdown will be dependent on
+the \ac{sat} problem.
 
 \paragraph{Threats to Validity}
 Our results are subject to several threats to validity. Notably, we are unable
@@ -218,16 +213,15 @@ lines, may not be representative. To mitigate this we reused real-world data
 from \nieke{}'s previous study~\citep{NMS+:GPCE18} and chose dissimilar product
 lines. We inherit encoding-based threats to validity by reusing \nieke{}'s
 formulas but ensured each algorithm experienced identical ordering of plain
-terms as described in \autoref{sec:exper:perf}. \new{Furthermore our results,
-  and our prototype solver are based on the widely used Haskell library sbv.
-  However, we believe this is a likely to be a common implementation strategy
-  for a variational solver (\ie{}, a solver built using a library rather than a
-  foreign function interface, similar to tools built on top of
-  sat4j~\citep{LP:JSAT10}) it is nonetheless a threat to validity as our
-  prototype directly depends on this library. To mitigate this threat we
-  maintained the same version of sbv throughout the experiment, employed it's
-  interface to interoperate for each base solver, and enforced the same code
-  paths through the library.}
+terms as described in \autoref{sec:exper:perf}. Furthermore our results, and our
+prototype solver are based on the widely used Haskell library sbv. However, we
+believe this is a likely to be a common implementation strategy for a
+variational solver (\ie{}, a solver built using a library rather than a foreign
+function interface, similar to tools built on top of sat4j~\citep{LP:JSAT10}) it
+is nonetheless a threat to validity as our prototype directly depends on this
+library. To mitigate this threat we maintained the same version of sbv
+throughout the experiment, employed it's interface to interoperate for each base
+solver, and enforced the same code paths through the library.
 
 We have evinced the scalability claim with RQ1, and shown the translation and
 automation of incremental solving in \autoref{chapter:vsat}. However, our
@@ -236,8 +230,8 @@ can be incrementally and automatically constructed in practice, as described in
 \autoref{chapter:vpl}, as new variants occur or become known. However, assessing
 the challenges of \ac{vpl} construction is left to future work.
 
-In this paper, we do not provide a proof of the soundness of our methods. We
-mitigate this threat in several ways: we performed property-based
+We do not provide a proof of the soundness of the prototype solver. We mitigate
+this threat in several ways: we performed property-based
 testing~\cite{quickcheck} on our prototype and verified that a satisfiable
 variant was found to be satisfiable across all algorithms. In addition, we
 define a property that ensures that for each plain model $p$, found with
