@@ -39,7 +39,7 @@ four base solvers. Thus we restrict the sampling as the experiment was not
 feasible with the previous rate of sampling. Our results agree with our former
 work even with the reduced sampling.
 
-\paragraph{RQ1: Performance of Variational Solving as Variation Scales}
+\subsection{RQ1: Performance of Variational Solving as Variation Scales}
 
 \begin{figure}
   \centering
@@ -111,7 +111,7 @@ variant. By this data, we observed a constant factor speedup. Thus, variational
 solving still grows linearly in the number of variants being solved.
 
 
-\paragraph{RQ2: Performance Impact of Base Solver}
+\subsection{RQ2: Performance Impact of Base Solver}
 %
 From \resQ{1} we determined that \vTov{} is faster than the baseline algorithms
 and that the difference is statistically significant. We observe from
@@ -137,7 +137,7 @@ use case (\ie{}, heavily exercising the incremental code paths) is peculiar
 and thus selecting a solver based on only its typical performance may not be
 representative of its performance in this use case.
 
-\paragraph{RQ3: Performance Impact of Plain Terms}
+\subsection{RQ3: Performance Impact of Plain Terms}
 We hypothesize that the ratio of plain terms to total terms should increase the
 variational solver's performance. Specifically, we hypothesize that as sharing
 grows, the query formula's variational core is further reduced. We observe this
@@ -169,7 +169,7 @@ model, or syntactic manipulations to mitigate the occurrence of new features.
   \label{res:speedup}
 \end{figure}
 
-\paragraph{RQ4: Overhead of a Plain Query on \vsat{}}
+\subsection{RQ4: Overhead of a Plain Query on \vsat{}}
 %
 \begin{figure}
   \begin{subfigure}[t]{\textwidth}
@@ -206,7 +206,7 @@ statistically different for $V_{1}$ suggests particular formulas may not respond
 well to the reduction engine, although the exact slowdown will be dependent on
 the \ac{sat} problem.
 
-\paragraph{Threats to Validity}
+\subsection{Threats to Validity}
 Our results are subject to several threats to validity. Notably, we are unable
 to make absolute performance claims because our study, with only two product
 lines, may not be representative. To mitigate this we reused real-world data
