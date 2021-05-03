@@ -9,33 +9,30 @@
 %
 The variational \ac{smt} version of accumulation is specified in
 \autoref{fig:vsmt:inf:acc} and is a generalized variational fold over the
-abstract syntax tree of \eIL. Just as before accumulation is split into
-congruence rules over the intermediate languages, computation rules over
-symbolic values and computation rules for references and choices.
+abstract syntax tree of \eIL{}. Just as before, accumulation is split into
+congruence rules over the intermediate language, computation rules over symbolic
+values and computation rules for references and choices.
 
 The variational \ac{sat} version of accumulation is a specialized form of this
-version of accumulation. Recall that the only semantic difference between
-operators is the code emitted to the base solver, hence we generalize the
-previous version by introducing new notation that dispatches the appropriate
-operation to emit.
+version of accumulation. The only semantic difference between operators is the
+code emitted to the base solver, hence we generalize the previous version by
+performing a lookup to retrieve the appropriate wrapped primitive. The primitive
+is indicated with an \pwrap{underline}. For example, if $\boolFuncs{} = \wedge$
+then \acBoolS{} specializes to \acAndS{} where $\pwrap{\boolFuncs{}} =
+\pwrap{\pand}$, and thus the resulting call becomes $\pwrap{\pand}(\aStore{2},
+s_1, s_2)$. Hence, the rules \acAndS{}, and \acOrS{} are specialized forms of
+the general rule \acBoolS.
 
-The notation \lookup{\op}{\boolFuncs} performs a lookup for the wrapped
-operator, and $\coloneqq$ binds the result of the lookup to a variable. For
-example, if $\op = \wedge$ then \acBoolS{} specializes to \acAndS{} where
-$\pwrap{\op} \coloneqq \pwrap{\pand}$, and thus the resultant call becomes
-$\pwrap{\pand}(\aStore{2}, s_1, s_2)$. Hence, the rules \acAndS{}, and \acOrS{}
-are merely specialized forms of the general rule \acBoolS.
-
-Similarly, with the extra notation we collapse the arithmetic and inequality
-computation rules to \acArithS{} and \acInEqS{}. The semantics of each rule,
-besides the operator lookup, remains unchanged; the congruence rules recur into
-the abstract syntax tree to convert references to symbolic values, choices are
-skipped over due to \acChc{} and \acChcI{}, and plain values are combined with
-the computation rules \acBoolS, \acArithS, and \acInEqS.
+Similarly, we collapse the arithmetic and inequality computation rules to
+\acArithS{} and \acInEqS{}. The semantics of each rule, besides the operator
+lookup, remains unchanged; the congruence rules recur into the abstract syntax
+tree to convert references to symbolic values, choices are skipped over due to
+\acChc{} and \acChcI{}, and plain values are combined with the computation rules
+\acBoolS, \acArithS, and \acInEqS.
 %
 The only other substantial difference is two new computation rules to handle
 arithmetic choices and variables, \acChcI{}, and \acRefI{}. Both serve the same
-function as their boolean counterparts \acChc{} and \acRef{}. 
+function as their boolean counterparts \acChc{} and \acRef{}.
 
 In this form it should be plain to see the recipe to further extend accumulation
 to another background theory. One would add a new computation rules for the new

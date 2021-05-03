@@ -13,35 +13,27 @@
   { (\aStore{}, \neg{} \eIL) \accumulation (\aStore{}'', s') }
 
   \inferrule*[right=\acUnaryS]
-  { \op \in \integerUnary{} \\
-    \lookup{\op}{\integerUnary{}} \coloneqq \pwrap{\op} \\
-    (\aStore{}, \eAR) \accumulation (\aStore{}', s) \\
-    \pwrap{\op}(\aStore{}', s) = (\aStore{}'', s') }
-  { (\aStore{}, \op\; \eAR) \accumulation (\aStore{}'', s') }
+  {(\aStore{}, \eAR) \accumulation (\aStore{}', s) \\
+    \pwrap{\integerUnary}(\aStore{}', s) = (\aStore{}'', s') }
+  { (\aStore{}, \integerUnary\; \eAR) \accumulation (\aStore{}'', s') }
 
 \inferrule*[right=\acBoolS]
- { \op \in \boolFuncs{} \\
-   \lookup{\op}{\boolFuncs{}} \coloneqq \pwrap{\op} \\
-  (\aStore{}, \eIL*{1}) \accumulation (\aStore{1}, s_1) \\
+ {(\aStore{}, \eIL*{1}) \accumulation (\aStore{1}, s_1) \\
     (\aStore{1}, \eIL*{2}) \accumulation (\aStore{2}, s_2) \\
-    \pwrap{\op}(\aStore{2}, s_1, s_2) = (\aStore{3}, s_3) }
-  { (\aStore{}, \eIL*{1}\; \op\; \eIL*{2}) \accumulation{} (\aStore{3}, s_3) }
+     \pwrap{\boolFuncs}(\aStore{2}, s_1, s_2) = (\aStore{3}, s_3) }
+  { (\aStore{}, \eIL*{1}\; \boolFuncs\; \eIL*{2}) \accumulation{} (\aStore{3}, s_3) }
 
   \inferrule*[right=\acArithS]
-  { \op \in \integerFuncs{} \\
-    \lookup{\op}{\integerFuncs{}} \coloneqq \pwrap{\op} \\
-    (\aStore{}, \eAR*{1}) \accumulation (\aStore{1}, s_1) \\
+  { (\aStore{}, \eAR*{1}) \accumulation (\aStore{1}, s_1) \\
     (\aStore{1}, \eAR*{2}) \accumulation (\aStore{2}, s_2) \\
-    \pwrap{\op}(\aStore{2}, s_1, s_2) = (\aStore{3}, s_3) }
-  { (\aStore{}, \eAR*{1}\; \op\; \eAR*{2}) \accumulation{} (\aStore{3}, s_3) }
+    \pwrap{\integerFuncs}(\aStore{2}, s_1, s_2) = (\aStore{3}, s_3) }
+  { (\aStore{}, \eAR*{1}\; \integerFuncs\; \eAR*{2}) \accumulation{} (\aStore{3}, s_3) }
 
   \inferrule*[right=\acInEqS]
-  { \op \in\ \inequalities{} \\
-    \lookup{\op}{\inequalities} \coloneqq \pwrap{\op} \\
-    (\aStore{}, \eAR*{1}) \accumulation (\aStore{1}, s_1) \\
+  {(\aStore{}, \eAR*{1}) \accumulation (\aStore{1}, s_1) \\
     (\aStore{1}, \eAR*{2}) \accumulation (\aStore{2}, s_2) \\
-    \pwrap{\op}(\aStore{2}, s_1, s_2) = (\aStore{3}, s_3) }
-  { (\aStore{}, \eAR*{1}\; \op\; \eAR*{2}) \accumulation{} (\aStore{3}, s_3) }
+    \pwrap{\inequalities}(\aStore{2}, s_1, s_2) = (\aStore{3}, s_3) }
+  { (\aStore{}, \eAR*{1}\; \inequalities\; \eAR*{2}) \accumulation{} (\aStore{3}, s_3) }
 
 \inferrule*[right=\acChc]
   { }

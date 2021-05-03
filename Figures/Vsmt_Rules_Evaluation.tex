@@ -3,7 +3,8 @@
   { (\aStore{},\eIL) \accumulation (\aStore{}',\eIL') \\
     (\eStore{},\aStore{}',\eIL') \evaluation (\eStore{}',\aStore{}'',\eIL'') }
   { (\eStore{},\aStore{},\eIL) \evaluation (\eStore{}',\aStore{}'',\eIL'') }
-\qquad
+% \qquad
+\\
 \inferrule*[right=\evSym]
   { \passert(\eStore{},\aStore{},s) = \eStore{}' }
   { (\eStore{},\aStore{},s) \evaluation (\eStore{}',\aStore{},\unit) }
