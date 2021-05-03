@@ -15,7 +15,7 @@ is true for the prototype variational \ac{smt} solver, \vsmt{}.
 To test \vsmt{} we use an \ac{smt} version of the \fin{} dataset from \nieke{}'s
 study. Unfortunately, only the \fin{} dataset has an \ac{smt} version and so our
 evaluation of the prototype \ac{smt} solver is limited. Furthermore, in the
-course of encoding the dataset to a \ac{vpl} formula we discovered type errors
+course of encoding the dataset to a \evpl{} formula we discovered type errors
 in 1,514 formulas out of a total of 4,621 formulas. To utilize the dataset we
 detected and corrected the type errors during parsing. The type errors were
 essentially identical and revolved around the encoding of a \rn{one-of}
@@ -30,3 +30,71 @@ constraint correctly. For example the corrected version of the above formula is
 $(f_{i} \equiv{} 1) \wedge{} (f_{i} \equiv{} (f_{0} + f_{1} \ldots{} + f_{n}))$,
 where we separate out the left child from the summation but preserve the
 semantics of the \rn{one-of} constraint.
+
+\autoref{res:rq1:vsmt} displays the performance of \vsmt{} as variants to solve
+increases. The resulting \evpl{} formula matched the number of choice and plain
+terms from the \vsat{} version. Similarly, the number of satisfiable variants
+matched the results for the \fin{} dataset in \autoref{res:vmodels}. \vsmt{}
+displays a speedup of 1.22x over the baseline \vTop{} at 1,024 variants. There
+are two significant differences between the \vsmt{} and \vsat{} results. First,
+the prototype \ac{smt} solver \emph{does not} depend on the Haskell library
+\texttt{sbv}. Instead, \vsmt{} utilizes a foreign-function interface to the C
+API of z3. Consequently, where \texttt{sbv} utilizes strings over
+\texttt{stdout} to communicate to the base solver, the ffi \vsmt{} uses utilizes
+bytecode and hence has higher throughput. This has several implications, first,
+the range of results \autoref{res:rq1:vsmt} are measured in seconds rather than
+minutes such as \autoref{res:rq1:auto} and \autoref{res:rq1:fin}. Secondly, the
+overhead case \pTov{} shows a speedup of 1.71x over the same baseline and is
+consistently faster than the variational case \vTov{}. There are several
+possible explanations while the exact reason is unclear. We speculate on
+possible causes; the complete \pTov{} algorithm is given below:
+%
+\begin{lstlisting}[columns=flexible,keepspaces=true,language=Haskell]
+  -- | Plain propositions on the variational solver testing the overhead of
+  -- accumulate/evaluate
+  pOnV :: [Plain Proposition] -> IO R.Result
+  pOnV =  fmap mconcat . mapM (solve Nothing defSettings) . fmap unPlain
+\end{lstlisting}
+
+Which is in the form for a classic optimization technique in functional
+programming called \emph{map fusion}\todo{cite map fusion and deforesting} and
+thus could be highly optimized by the Haskell compiler while the other
+algorithms where not. Furthermore, \pTov{} computes the variant by
+accumulation/evaluation, reducing the entire variant to a single symbolic and
+then issuing a \rn{check-sat} call. Thus, any difference between \vTov{} and
+\pTov{} must come from choice removal.
+
+This is significant because this result may be a case where the extra work
+induced by the evaluation context for choice removal does not yield performance
+increases. To be specific, \vTov{} constructs a context that to efficiently
+reuse symbolic values, but if there exists a tautology or contradiction that is
+plain, then \vTov{} will still construct and operate on this context even though
+the result will be unchanged. Thus, it could be the case that for the majority
+of variants a contradiction or tautology occurred and was found by z3 before the
+local variation was considered (before the \rn{push}/\rn{pop} calls) and thus
+any extra work to compute the result for the variant was redundant. The exact
+reason for this result is unclear and more testing is required, however the
+overall result: that \vTov{} still outperformed the baseline case \vTop{}, is
+further demonstration of the success of our methods. Discovering the definitive
+reason is left to future work. If an early tautology or contradiction is the
+culprit then this could be addressed in an early optimization pass. Similarly,
+if the Haskell compiler is optimizing \pTov{} and not optimizing the other
+treatment conditions then this is an implementation detail which does not
+invalidate our methods for variational \ac{sat} and \ac{smt} solving.
+
+Lastly, the magnitude of difference in the runtime between the variational
+\ac{smt} prototype and variational \ac{sat} difference is a significant result.
+Such a difference is to be expected given their implementation differences, but
+this difference indicates \emph{other} domains where applying variation as a
+computational concept might be useful. As we have shown (perhaps unsurprisingly)
+the performance benefits from using the concept of variation are greater when
+the cost of a single transaction is high. For example, when the cost of emitting
+a single string to the base solver is high, \eg{} in the prototype variational
+\ac{sat} solver, we observe a greater performance speedup than we the cost is
+low, \eg{} in the prototype variational \ac{smt} solver. Thus, it is likely that
+other domains where a transaction cost is high are likely to benefit from
+research on variation. These domains might include network communication, where
+throughput and response times can be significant, or file systems and databases,
+where disk accesses are the limiting performance factor. In either case, this
+project successfully demonstrates performance speedups for two real-world cases
+in \ac{sat} and \ac{smt} solving through the use of variational concepts.
