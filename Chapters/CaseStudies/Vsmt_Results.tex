@@ -57,12 +57,13 @@ possible causes; the complete \pTov{} algorithm is given below:
 \end{lstlisting}
 
 Which is in the form for a classic optimization technique in functional
-programming called \emph{map fusion}\todo{cite map fusion and deforesting} and
-thus could be highly optimized by the Haskell compiler while the other
-algorithms where not. Furthermore, \pTov{} computes the variant by
-accumulation/evaluation, reducing the entire variant to a single symbolic and
-then issuing a \rn{check-sat} call. Thus, any difference between \vTov{} and
-\pTov{} must come from choice removal.
+programming called \emph{map fusion}\footnote{in practice fusion can lead to
+  significant speedups ranging from 2x to an order of magnitude}\todo{cite map
+  fusion and deforesting and average speedup} and thus could be highly optimized
+by the Haskell compiler while the other algorithms where not. Furthermore,
+\pTov{} computes the variant by accumulation/evaluation, reducing the entire
+variant to a single symbolic and then issuing a \rn{check-sat} call. Thus, any
+difference between \vTov{} and \pTov{} must come from choice removal.
 
 This is significant because this result may be a case where the extra work
 induced by the evaluation context for choice removal does not yield performance
