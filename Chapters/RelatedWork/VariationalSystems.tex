@@ -34,11 +34,15 @@ heuristics (optimizations in their paper) which further improved performance for
 both implementations by 43\%.
 
 The work on variational stacks yields an alternative implementation strategy for
-variational \ac{sat} solvers. We have designed our variational \ac{sat} and
-\ac{smt} solvers with a goal to utilize a plain base solver. We could have done
-otherwise and implemented a variational solver directly. With variational
-stacks the variational solver could utilize a variational assertion
-stack, we would avoid the need for a zipper in choice removal.
+variational \ac{sat} solvers. We have carefully designed our variational
+\ac{sat} and \ac{smt} solvers with a goal to utilize a plain base solver. We
+could have done otherwise and implemented a variational solver directly. With
+variational stacks the variational solver could utilize a variational assertion
+stack and we would avoid the need for a zipper in choice removal. Such an
+implementation is worth considering although by developing an independent solver
+we lose any benefits brought by the \ac{sat}/\ac{smt} communities and lose the
+general recipe for constructing a variation-aware system \emph{using} its plain
+counterpart.
 
 Similar to variational stacks, \citet{SE17fosd} successfully implemented
 variational lists. Smeltzer and Erwig devise six implementations of variational
