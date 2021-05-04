@@ -1,0 +1,68 @@
+~\label{section:related-work:reasoning-about-variability}
+%
+Since \ac{sat} solving is so common in software variability applications, many
+strategies have been developed to reduce effort in this domain.
+
+Similar to variational formulas, \citet{NMS+:GPCE18} encode several versions of
+a feature model in a single formula. We reuse their benchmark as part of our
+evaluation as described in
+\autoref{section:case-studies:experimental-methodology}; a direct comparison
+with their approach is nuanced and discussed in
+\autoref{section:case-studies:results-and-discussion}.
+%
+While their work focuses on feature-model analysis only, variational formulas
+and variational solving can be applied to many application areas.
+
+In the context of family-based type checking~\citep{TAK+:CSUR14}, others have
+discussed merging multiple \ac{sat} problems into one.
+%
+Most work in this area use a \emph{local} approach where \ac{sat} problems are
+solved as they are encountered during typing; in contrast, \emph{global}
+approaches collect \ac{sat} checks into a single problem that is solved at the
+end of the analysis.
+%
+While the global approach improves efficiency by increasing reuse of learned
+clauses in the solver, it loses the ability to identify \emph{which} variants
+contain type errors~\citep{ASLK:FOSD10,HZS:SCP11}.
+%
+% Through variational models,
+Variational solving can achieve the reuse benefits of the global approach
+without sacrificing the precision of the local approach.
+
+
+Since the size of \ac{sat} problems in software variability applications is often
+dominated by the feature model, researchers tried to reduce the size of
+satisfiability problems by delaying consideration of the feature model until
+after the analysis and only using it rule out false
+positives~\citep{BMB+:PLDI13,CCS+13,LKA+:ESECFSE13}, a technique known as late
+feature-model consideration~\citep{TAK+:CSUR14}.
+%
+\citet{BMB+:PLDI13} found that this technique increases the overall efficiency
+of static analysis~\citep{BMB+:PLDI13}, while \citet{CCS+13} found that it
+actually decreases efficiency of family-based model checking. Variational
+solving is orthogonal to these approaches since the feature model can be
+excluded from a variational formula and then used later to rule out false
+positives.
+
+
+Feature models can also be reduced in size to speed up analyses, for example,
+by slicing~\citep{ACLF:ASE11,KST+:SPLC16} or decomposition~\citep{SKT+:ICSE16}.
+It is largely unexplored how much such reductions can improve efficiency, but the
+analysis will still involve multiple similar \ac{sat} problems, which can
+benefit from variational solving.
+
+
+A final approach is to avoid \ac{sat} problems by using modal implications
+graphs~\citep{KTS+:ICSE18}, which support faster reasoning. The idea is to
+encode as many software variability constraints as possible in such graphs,
+then use a \ac{sat} solver only for the remaining constraints.
+%
+The construction of modal implication graphs already requires solving \ac{sat}
+problems, but this cost is amortized if many \ac{sat} queries will be solved
+during the analysis, as \citet{KTS+:ICSE18} found for configuration processes.
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../thesis"
+%%% End:

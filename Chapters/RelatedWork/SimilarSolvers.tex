@@ -1,0 +1,77 @@
+~\label{section:related-work:similar-solvers}
+%
+This work is most similar to the Green solver by \citet{VGD:FSE12}, which also
+constructs a \ac{sat} solver that exploits shared terms and prevents redundant
+computation. However, the projects differ in important ways. Visser et al.'s
+solver is oriented for program analysis and does not use incremental \ac{sat}
+solving. Rather, it employs heuristics to find canonical forms of sliced
+programs, and caches solver results on these canonical forms in a key-value
+store~\citep{redis}. In contrast, variational \ac{sat} solving is domain
+agnostic, solves \ac{sat} problems expressed in \ac{vpl}, returns a variational
+model, and uses incremental \ac{sat} solving.
+
+It is also possible to view incremental \ac{sat} and \ac{smt} solvers as
+variational systems because they are designed to efficiently solve related
+problems. The incremental \ac{sat} problem was first defined by
+\citet{hooker_1993}, with successive refinements of techniques
+by~\citet{branch-bound}, and with the assertion stack idea developed
+in~\citet{kim2000solving}\todo{double check}. Incremental \ac{sat} was invented
+as a solution to verification and optimization problems in electronic design
+automation such as covering problems~\cite{10.1145/217474.217603}, detecting
+delay faults\cite{10.1145/343647.343801}, and model
+checking\cite{Clarke:1986:AVF:5397.5399}. The first incremental solver to gain
+traction was \texttt{SATIRE} created by \citet{10.1145/378239.379019}.
+
+While not the first, \citet{10.1007/978-3-540-24605-3_37} made a major advance
+in incremental \ac{sat} with \texttt{MiniSat}. \texttt{MiniSat} was the result
+of work on two other solver's called \texttt{SATZOO} and \texttt{SATNIK}.
+\texttt{MiniSat} further combined propagation strategies from the
+\texttt{Chaff}~\cite{Moskewicz:2001:CEE:378239.379017} solver such as
+conflict-driven backtracking\cite{Zhang:2001:ECD:603095.603153} and dynamic
+variable ordering~\cite{Moskewicz:2001:CEE:378239.379017}.
+
+Lastly, our idea of representing variation in a non-traditional formula (a
+\ac{vpl} formula in our case) is similar to the approach by
+\cite{10.1145/3442391.3442405}, which uses quantified boolean formulas to encode
+variation, and quantified boolean \ac{sat} solvers to detect anomalies in
+context-aware feature models. Notably, this approach has the benefit of avoiding
+incremental \ac{sat} solving altogether.
+
+The use of choices in the variational solvers is similar to the concept of
+\textit{facets} by~\cite{austin2012multiple} and \textit{faceted execution}
+by~\cite{Schmitz2018FacetedSM,Micinski2018AbstractingFE,10.1145/2465106.2465121},
+in that both choices and facets syntactically demarcate terms in an object
+language that must be specially handled, and yet must also operate with terms
+outside of the choice or facet. Facets are very similar to choices, facets use a
+label to determine branches (or alternatives in our language), facets are
+synchronized by these labels, facets are treated as tree-data structures, and
+facets are similarly treated as undetermined until they are reified.
+
+\citet{10.1145/3243734.3243806} define the faceted secure execution framework
+\texttt{Multef}, which tries to avoid repeated execution of non-faceted values
+just as this work tries to gain performance through avoiding repeated execution
+of plain values. \texttt{Multref} does this by forking executions threads when a
+novel facet is encountered. This strategy avoids redundant execution before the
+facet is found but still has redundant or repeated computations inside the fork.
+In contrast, our methods of accumulation, evaluation, and utilization's of a
+zipper succeeds in only evaluating plain terms a single time and reusing that
+information across variants. The facets have been employed to policy-agnostic
+programming models and information flow control~\cite{IFC}, thus our methods
+might leak too much information to be useful in that domain.
+
+However, there are other striking similarities, \citet{optimisingFacets}
+improves the performance of \texttt{Multref} by defining rewrite rules which
+manipulate facets similarly to the equivalence laws presented for choices in
+\autoref{fig:cc:eqv}. For example, Algehed et al. removes redundant facets
+through a rewrite rule called \texttt{Choice Irrelevance}, which is isomorphic
+to the \rn{IDemp} rule in \autoref{fig:cc:eqv}. Another case is definition of
+\emph{Squashes} which finds dead branches in nested facets. Squashes are
+similarly isomorphic to our discussion of \emph{dominating choices} in
+\autoref{section:vpl:semantics}.
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../thesis"
+%%% End:

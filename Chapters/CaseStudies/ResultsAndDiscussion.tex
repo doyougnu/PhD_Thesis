@@ -213,15 +213,16 @@ lines, may not be representative. To mitigate this we reused real-world data
 from \nieke{}'s previous study~\citep{NMS+:GPCE18} and chose dissimilar product
 lines. We inherit encoding-based threats to validity by reusing \nieke{}'s
 formulas but ensured each algorithm experienced identical ordering of plain
-terms as described in \autoref{sec:exper:perf}. Furthermore our results, and our
-prototype solver are based on the widely used Haskell library sbv. However, we
-believe this is a likely to be a common implementation strategy for a
-variational solver (\ie{}, a solver built using a library rather than a foreign
-function interface, similar to tools built on top of sat4j~\citep{LP:JSAT10}) it
-is nonetheless a threat to validity as our prototype directly depends on this
-library. To mitigate this threat we maintained the same version of sbv
-throughout the experiment, employed it's interface to interoperate for each base
-solver, and enforced the same code paths through the library.
+terms as described in \autoref{section:case-studies:experimental-methodology}.
+Furthermore our results, and our prototype solver are based on the widely used
+Haskell library sbv. However, we believe this is a likely to be a common
+implementation strategy for a variational solver (\ie{}, a solver built using a
+library rather than a foreign function interface, similar to tools built on top
+of sat4j~\citep{LP:JSAT10}) it is nonetheless a threat to validity as our
+prototype directly depends on this library. To mitigate this threat we
+maintained the same version of sbv throughout the experiment, employed it's
+interface to interoperate for each base solver, and enforced the same code paths
+through the library.
 
 We have evinced the scalability claim with RQ1, and shown the translation and
 automation of incremental solving in \autoref{chapter:vsat}. However, our
