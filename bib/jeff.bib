@@ -3281,3 +3281,39 @@ numpages = {5},
 location = {Paris, France},
 series = {DATE '00}
 }
+
+%% The PBS solver was and important precursor to MiniSat
+@inproceedings{10.1145/774572.774638,
+author = {Aloul, Fadi A. and Ramani, Arathi and Markov, Igor L. and Sakallah, Karem A.},
+title = {Generic ILP versus Specialized 0-1 ILP: An Update},
+year = {2002},
+isbn = {0780376072},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/774572.774638},
+doi = {10.1145/774572.774638},
+abstract = {Optimized solvers for the Boolean Satisfiability (SAT) problem have many applications in areas such as hardware and software verification, FPGA routing, planning, etc. Further uses are complicated by the need to express "counting constraints" in conjunctive normal form (CNF). Expressing such constraints by pure CNF leads to more complex SAT instances. Alternatively, those constraints can be handled by Integer Linear Programming (ILP), but generic ILP solvers may ignore the Boolean nature of 0--1 variables. Therefore specialized 0--1 ILP solvers extend SAT solvers to handle these so-called "pseudo-Boolean" constraints.This work provides an update on the on-going competition between generic ILP techniques and specialized 0--1 ILP techniques. To make a fair comparison, we generalize recent ideas for fast SAT-solving to more general 0--1 ILP problems that may include counting constraints and optimization. Another aspect of our comparison is evaluation on 0--1 ILP benchmarks that originate in Electronic Design Automation (EDA), but that cannot be directly solved by a SAT solver. Specifically, we solve instances of the Max-SAT and Max-ONEs optimization problems which seek to maximize the number of satisfied clauses and the "true" values over all satisfying assignments, respectively. Those problems have straightforward applications to SAT-based routing and are additionally important due to reductions from Max-Cut, Max-Clique, and Min Vertex Cover. Our experimental results show that specialized 0--1 techniques tend to outperform generic ILP techniques on Boolean optimization problems as well as on general EDA SAT problems.},
+booktitle = {Proceedings of the 2002 IEEE/ACM International Conference on Computer-Aided Design},
+pages = {450–457},
+numpages = {8},
+location = {San Jose, California},
+series = {ICCAD '02}
+}
+
+%%%% SMTLIB first proposal
+@article{SMT-LIBformat,
+author = {Tinelli, Cesare},
+year = {2003},
+month = {01},
+pages = {},
+title = {The SMT-LIB format: an initial proposal}
+}
+
+%%%% SMTLIB 2.0 standard, first standard that had incremental commands
+@TECHREPORT{BarST-RR-10,
+  author =	 {Clark Barrett and Aaron Stump and Cesare Tinelli},
+  title =	 {{The SMT-LIB Standard: Version 2.0}},
+  institution =	 {Department of Computer Science, The University of Iowa},
+  year =	 2010,
+  note =	 {Available at {\tt www.SMT-LIB.org}}
+}

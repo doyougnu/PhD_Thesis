@@ -10,25 +10,39 @@ store~\citep{redis}. In contrast, variational \ac{sat} solving is domain
 agnostic, solves \ac{sat} problems expressed in \ac{vpl}, returns a variational
 model, and uses incremental \ac{sat} solving.
 
-It is also possible to view incremental \ac{sat} and \ac{smt} solvers as
-variational systems because they are designed to efficiently solve related
-problems. The incremental \ac{sat} problem was first defined by
-\citet{hooker_1993}, with successive refinements of techniques
-by~\citet{branch-bound}, and with the assertion stack idea developed
-in~\citet{kim2000solving}\todo{double check}. Incremental \ac{sat} was invented
-as a solution to verification and optimization problems in electronic design
-automation such as covering problems~\cite{10.1145/217474.217603}, detecting
-delay faults\cite{10.1145/343647.343801}, and model
+It is also possible to view incremental \ac{sat} and \ac{smt} solvers and the
+incremental \ac{sat} problem as variational systems and as a variational
+problem. Both are concerned with efficiently solving instances of problems which
+by definition share terms and are therefore related, and thus variational. We
+provide a small history of incremental \ac{sat} here as it is related work by
+being the target language of our compiler.
+
+The incremental \ac{sat} problem was first defined by \citet{hooker_1993}, with
+successive refinements of techniques by~\citet{branch-bound}, and with the
+assertion stack idea developed in~\citet{kim2000solving}\todo{double check}. The
+incremental \ac{sat} problem was devised as a solution to verification and
+optimization problems in electronic design automation such as covering
+problems~\cite{10.1145/217474.217603}, detecting delay
+faults\cite{10.1145/343647.343801}, and model
 checking\cite{Clarke:1986:AVF:5397.5399}. The first incremental solver to gain
 traction was \texttt{SATIRE} created by \citet{10.1145/378239.379019}.
 
-While not the first, \citet{10.1007/978-3-540-24605-3_37} made a major advance
-in incremental \ac{sat} with \texttt{MiniSat}. \texttt{MiniSat} was the result
-of work on two other solver's called \texttt{SATZOO} and \texttt{SATNIK}.
-\texttt{MiniSat} further combined propagation strategies from the
-\texttt{Chaff}~\cite{Moskewicz:2001:CEE:378239.379017} solver such as
+Just two years later, \citet{10.1007/978-3-540-24605-3_37} made a major advance
+in incremental \ac{sat} with \texttt{MiniSat} by defining, documenting, and
+popularizing the implementation techniques required for an incremental \ac{sat}
+solver. \texttt{MiniSat} was the result of work on two other solver's called
+\texttt{SATZOO} and \texttt{SATNIK}, and seemed to hit a sweet spot in the
+design space. It simplified the existing notions of incrementality from the
+state of the art incremental solvers \texttt{SATIRE} and
+\texttt{PBS}~\cite{10.1145/774572.774638} and combined propagation strategies
+from the \texttt{Chaff}~\cite{Moskewicz:2001:CEE:378239.379017} solver such as
 conflict-driven backtracking\cite{Zhang:2001:ECD:603095.603153} and dynamic
-variable ordering~\cite{Moskewicz:2001:CEE:378239.379017}.
+variable ordering~\cite{Moskewicz:2001:CEE:378239.379017}. These combinations
+lead to a solver that was performent, and whose implementation was small and
+communicative. That same year, the first SMTLIB standard would be proposed by
+\citet{SMT-LIBformat} although incremental \ac{sat} commands would not be
+Incorporated until the 2.0 version\cite{BarST-RR-10} in 2010.
+
 
 Lastly, our idea of representing variation in a non-traditional formula (a
 \ac{vpl} formula in our case) is similar to the approach by
