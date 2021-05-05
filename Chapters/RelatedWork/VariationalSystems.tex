@@ -1,11 +1,12 @@
 ~\label{section:related-work:variational-systems}
 %
-
 Variational \ac{sat} solving is the latest in a line of work that uses the
 choice calculus to investigate variation as a computational phenomena. This body
 of work ranges from data structures, to graphics, to full fledged systems such
-as the system presented in this thesis. We collect and discuss these
-contributions here beginning with variational data structures.
+as the system presented in this thesis. Due to the nature of variational
+problems, many variational or variation-aware systems employ \ac{sat} and
+\ac{smt} solvers. We collect and discuss these contributions here beginning with
+variational data structures.
 
 There is relatively little work on variational data structures.
 \citet{EWC13fosd} describes a general strategy for constructing a variational
@@ -23,15 +24,15 @@ variation, and provides a set of operations to manipulate the data structure
 that are as close to the performance of their plain counterparts as possible.
 
 A fundamental tension in this domain is exemplified by work on variational
-stacks by~\citet{MMWWK17vamos}. Meng et al.\ identify that two kinds of
-variational stacks are possible depending on the location of variation on may
-have either: a stack of choices, or a choice of stacks. However, their analysis
-on a general implementation strategy was inconclusive, rather they found that
-depending on the implementation strategy runtime performance could be affected
-by as much as 20\%. Furthermore, the variation in their experiment is coarse
-grained, \ie{}, the sharing ratio is high. Thus, Meng et al.\ utilized
-heuristics (optimizations in their paper) which further improved performance for
-both implementations by 43\%.
+stacks by~\citet{MMWWK17vamos}. Meng et al.\ identify two kinds of possible
+variational stacks depending on the location of variation on may have either: a
+stack of choices, or a choice of stacks. However, their analysis on a general
+implementation strategy was inconclusive, rather they found that depending on
+the implementation strategy runtime performance could be affected by as much as
+20\%. Furthermore, the variation in their experiment is coarse grained, \ie{},
+the sharing ratio is high. Thus, Meng et al.\ utilized heuristics (optimizations
+in their paper) which further improved performance for both implementations by
+43\%.
 
 The work on variational stacks yields an alternative implementation strategy for
 variational \ac{sat} solvers. We have carefully designed our variational
@@ -63,14 +64,68 @@ on performance (a finding we also observed) and thus minimizing or manipulating
 choices to increase the ratio is important; a result that has also been observed
 in software product-lines by~\citet{ARW+:ICSE13} and~\citet{KRE+:FOSD12}.
 
-The
-choice calculus has been successfully applied to diverse areas of computer
+In addition to data structures there has been research on applications of the
+choice calculus to graphics~\citep{ES18diagrams},type
+systems~\citep{CCEW18popl,CCW18icfp,CEW:TOPLAS14,CEW12icfp}, and error
+messages~\citep{CES17jvlc,CE14popl,CEW12icfp,CES14hcc}. For the remainder of
+this section we focus on variational or variation-aware systems.
+
+This work is not the first to construct a variational or variation-aware system.
+Notably, \citet{KKHL:FOSD10} used the choice calculus and variational data
+structures to type check every possible Linux kernel. Thus constructing a
+variational parsing~\cite{KGR+:OOPSLA11}, a variational
+lexer~\cite{Kastner11partialpreprocessing}, type
+system\cite{LKA+:ESECFSE13,KOE:OOPSLA12} and control-flow and data-flow
+analyses\cite{LKA+:ESECFSE13}. Similarly, \citet{GG:PLDI12} variationally parse
+the Linux kernel by utilizing variational data structures and \emph{choice
+  nodes} in the abstract syntax tree. TypeChef is notable for several reasons:
+its implementation is a direct inspiration for our baseline algorithm \vTop{}
+which uses an incremental \ac{sat} solver but only exhibits sharing
+\emph{before} a choice is discovered. This kind of sharing, called \emph{prefix
+  sharing} by \citet{SE17fosd} is the de-facto standard in software product-line
+applications which employ incremental \ac{sat} solvers. Given the results of
+this thesis, large performance gains are possible if our results are
+Representative with the use of a variational \ac{sat} or \ac{smt} solver.
+TypeChef is also notable for its two step approach, first it parses source code
+to find \cpp{if-def} annotations, and stores these in files called
+\emph{presence conditions}. Presence conditions are isomorphic to variation
+contexts, both are \pl{} formula's over dimensions (or conditions of the
+\cpp{if-def}) which determine a variant. Using the presence conditions, TypeChef
+annotates choice nodes to determine which variant the leaves of the choice node
+belong. Then TypeChef extends the symbol table of a C program to contain types
+which are conditional based on the presence conditions. This allows a variable's
+type to change from one variant to another. Each type checking operation is then
+lifted to handle the variational cases and then type checking checks the
+variation-aware types to ensure every each variant type checks. Similar to our
+use of variation contexts, TypeChef allows a \emph{variability model} which
+specifies variants that should be type checked by conjoining the model with the
+presence conditions.
+
+In his PhD dissertation, \citet{M14,JensDebugging} constructs a variational
+interpreter called VarexJ and a variational bytecode transformer called VarexC,
+to achieve a variational execution and debugging framework. The framework tries
+to maximize sharing in two ways: It directly utilizes the choice calculus to
+represent local points of variation and achieve a \emph{fine-grained approach},
+this allows the framework to share program states and keep a unified heap.
+Additionally, the framework achieves instruction-level sharing among
+control-flows between variants. It achieves this by implementing a variational
+scheduler, which seeks to order the execution of program statements to optimize
+sharing. We achieve this same effect through the interaction between
+accumulation, evaluation and choice removal with the wrapped primitive
+operations. Interestingly, Meinicke identifies redundant \ac{sat} calls as a
+major bottleneck in the variational execution framework. Specifically they
+determine redundant \rn{check-sat} calls as the most expensive. To reduce the
+redundant calls the variational execution framework caches calls to the solver
+thus only employing the solver for new queries.
+
+% Lastly, Meinicke's work was put to use by \citet{ChuPanThesis} to induce
+% \emph{speculative variation} for automatic program repair and mutation testing.
+% We only touch on this work briefly as it applies a variational system rather
+% than creating one. However, the work utilizes the aforementioned variational
+% execution framework and a \ac{sat} solver to reduce the search space of
+% interesting mutants to test.
+
 science, such as databases~\citep{ATW17dbpl,ATW18poly},
-graphics~\citep{ES18diagrams}, data
-structures~\citep{Walk14onward,EWC13fosd} type
-systems~\citep{CCEW18popl,CCW18icfp,CEW:TOPLAS14,CEW12icfp}, error
-messages~\citep{CES17jvlc,CE14popl,CEW12icfp,CES14hcc}, variational execution
-systems~\citep{10.1145/3276487,M14} and now satisfiability solving.
 
 
 %%% Local Variables:
