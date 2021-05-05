@@ -128,18 +128,18 @@ thus only employing the solver for new queries.
 Lastly, choice calculus has been successfully applied to databases to construct
 a complete approach for variational databases including a variational database
 management system, a variational query language, and variational tables.
-\citet{ATW17dbpl,ATW18poly} add choices to relational algebra to define a
-variational query language for a variational relational database. The
-variational query language serves as the variational artifact similar to the
-role of \ac{vpl} in the variational \ac{sat} and \ac{smt} solvers. Ataei et al.
-specifically choose to avoid adding choices to variational tables, instead
-opting to apply \emph{annotations} to the table schema, table attributes, and
-table tuples. The annotations are \pl{} formulas and are derived from the
-dimensions of choices in the variational query language. Annotations that are
-attached to an aspect of the database, such as a schema, attribute or tuple are
-called \emph{presence conditions} following the work on TypeChef. Furthermore,
-annotations which are not attached but describe possible variants are called
-\emph{feature expressions}.
+\citet{ATW17dbpl,ATW18poly} constructs a variational database in an interesting
+way. Ataei et al. add choices to relational algebra to define a variational
+query language for a variational relational database. The variational query
+language serves as the variational artifact similar to the role of \ac{vpl} in
+the variational \ac{sat} and \ac{smt} solvers. Ataei et al. specifically choose
+to avoid adding choices to variational tables, instead opting to apply
+\emph{annotations} to the table schema, table attributes, and table tuples. The
+annotations are \pl{} formulas and are derived from the dimensions of choices in
+the variational query language. Annotations that are attached to an aspect of
+the database, such as a schema, attribute or tuple are called \emph{presence
+  conditions} following the work on TypeChef. Annotations which are not attached
+but describe possible variants are called \emph{feature expressions}.
 
 This careful design has several desirable properties: the separation between the
 variational aspects of the system and the database engine allows the database
@@ -150,7 +150,7 @@ represented a single time in the database. To realize an element is shared, a
 \ac{sat} solver is called on the presence conditions for that element. For
 example, imagine an attribute that belongs to two variants $\kf{A}$ and
 $\kf{B}$, to encode that this attribute belongs to these two variants is
-expressed in the presence condition as a disjunction: $\kf{A \vee B}$. Thus,
+expressed in the presence condition as a disjunction, $\kf{A \vee B}$. Thus,
 Ataei et al.'s system is a mixed approach; the query language embeds choices to
 explicitly represent local points of variation. The underlying object language
 (the database in this case) lacks a primitive operation to handle variation such
