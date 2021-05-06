@@ -1,4 +1,4 @@
-~\label{section:related-work:variational-systems}
+\label{section:related-work:variational-systems}
 %
 Variational \ac{sat} solving is the latest in a line of work that uses the
 choice calculus to investigate variation as a computational phenomena. This body
@@ -32,7 +32,8 @@ the implementation strategy runtime performance could be affected by as much as
 20\%. Furthermore, the variation in their experiment is coarse grained, \ie{},
 the sharing ratio is high. Thus, Meng et al.\ utilized heuristics (optimizations
 in their paper) which further improved performance for both implementations by
-43\%.
+43\%. Utilizing heuristics was also found to be a successful strategy in
+Meinicke's PhD dissertation which we address below.
 
 The work on variational stacks yields an alternative implementation strategy for
 variational \ac{sat} solvers. We have carefully designed our variational
@@ -127,9 +128,43 @@ speculative mutation testing and automated program repair~\cite{ChuPanThesis}.
 % interesting mutants to test.
 
 Lastly, choice calculus has been successfully applied to databases to construct
-a complete approach to variational databases including a variational database
+a complete approach for variational databases including a variational database
 management system, a variational query language, and variational tables.
-science, such as databases~\citep{ATW17dbpl,ATW18poly},
+\citet{ATW17dbpl,ATW18poly} constructs a variational database in an interesting
+way. Ataei et al. add choices to relational algebra to define a variational
+query language for a variational relational database. The variational query
+language serves as the variational artifact similar to the role of \ac{vpl} in
+the variational \ac{sat} and \ac{smt} solvers. Ataei et al. specifically choose
+to avoid adding choices to variational tables, instead opting to apply
+\emph{annotations} to the table schema, table attributes, and table tuples. The
+annotations are \pl{} formulas and are derived from the dimensions of choices in
+the variational query language. Annotations that are attached to an aspect of
+the database, such as a schema, attribute or tuple are called \emph{presence
+  conditions} following the work on TypeChef. Annotations which are not attached
+but describe possible variants are called \emph{feature expressions}.
+
+This careful design has several desirable properties: the separation between the
+variational aspects of the system and the database engine allows the database
+engine to remain mostly unchanged. Thus, Ataei et al. avoid implementing low
+level details such as a variational \texttt{B+-Tree} or file system. However the
+system is still memory efficient: Elements which are shared between variants are
+represented a single time in the database. To realize an element is shared, a
+\ac{sat} solver is called on the presence conditions for that element. For
+example, imagine an attribute that belongs to two variants $\kf{A}$ and
+$\kf{B}$, to encode that this attribute belongs to these two variants is
+expressed in the presence condition as a disjunction, $\kf{A \vee B}$. Thus,
+Ataei et al.'s system is a mixed approach; the query language embeds choices to
+explicitly represent local points of variation. The underlying object language
+(the database in this case) lacks a primitive operation to handle variation such
+as the \rn{push}/\rn{pop} commands in our work. Hence, Ataei et al. choose to
+\emph{realize} variation in the database through indirection based on
+annotations and \ac{sat} solving. Thereby enabling a full fledged variational
+database without requiring substantive changes to the entire database
+implementation. Therefore, Ataei et al.'s system is more expressive than the
+variational \ac{sat} and \ac{smt} solver's presented in this thesis because it
+can express dependencies between variants through presence conditions, while our
+approach is limited to express dependencies by nesting choices.
+
 
 
 %%% Local Variables:

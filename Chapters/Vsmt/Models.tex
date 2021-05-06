@@ -1,4 +1,4 @@
-~\label{section:vsmt:models}
+\label{section:vsmt:models}
 % %
 We have thus far covered accumulation, evaluation, and choice removal. However,
 to support \ac{smt} theories, variational models must be abstract enough to
@@ -38,7 +38,7 @@ arithmetic theory: $f = ((\chc[A]{\iV{}, 13} - \cV{}) < (\bV + 10)) \rightarrow
 \chc[B]{\aV{}, \cV{} > \iV{}}$. \fV{} contains two unique choices, $\kf{A}$,
 $\kf{B}$, and thus represents four variants. In this case, the expression is
 under-constrained and so each variant will be found satisfiable.
-% 
+%
 \begin{figure}[h]
   \centering
   \input{Figures/Vsmt_plain_models}
@@ -56,7 +56,7 @@ under-constrained and so each variant will be found satisfiable.
 \autoref{fig:vsmt:models:plain} show possible plain models for $\kf{f}$ with the
 corresponding variational \ac{smt} model presented in
 \autoref{fig:vsmt:models:var}. We've added line breaks to emphasize the
-$\kf{then}$ and $\kf{else}$ branches of the $\kf{ite}$ SMTLIB2 primitive. 
+$\kf{then}$ and $\kf{else}$ branches of the $\kf{ite}$ SMTLIB2 primitive.
 
 This formulation maintains the functional requirements and desirable properties
 of the variational \ac{sat} models. The variable $\_Sat$ is used to track the
