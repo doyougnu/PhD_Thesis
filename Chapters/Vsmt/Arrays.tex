@@ -1,5 +1,5 @@
-~\label{section:vsmt:arrays}
-% 
+\label{section:vsmt:arrays}
+%
 With variational \ac{smt} solving fully specified we can reflect on the
 generalization recipe from the previous sections. Say we desired to add the
 \ac{smt} background for \rn{Reals}. Doing so would follow the straightforward
@@ -58,7 +58,7 @@ plain; because $i$ was transformed into a symbolic before the choice was
 configured its declaration still occurs outside the \rn{push}/\rn{pop} block. In
 contrast, $k$ is parameterized by a choice and thus its declaration occurs
 inside a \rn{push}/\rn{pop} block:
-% 
+%
 \begin{lstlisting}[columns=flexible,keepspaces=true,language=SMTLIB,breaklines=true]
 (declare-const $s_{1}$ Int)         ;; literal declarations
 (declare-const $s_{2}$ Int)
@@ -72,7 +72,7 @@ $\vdots{}$
   (< $s_{i}$ $s_{k}$))
 $\vdots{}$
 \end{lstlisting}
-% 
+%
 In this case the ordering of symbolic value generation forced $s_{k}$ to be
 inside the \rn{push} call so that it is removed from the local scope of the
 solver after a \rn{pop} and thus the boundaries between alternatives do not leak
@@ -136,7 +136,7 @@ and thus will be processed by evaluation/accumulation \emph{before} choice
 removal via the \evAndL{} and \evAndR. This may seem problematic as calling a
 \select{} before a \store{} in other paradigms would lead to an error. However
 this will not be the case, consider the compiled \acl{smtlib} script for $f$:
-% 
+%
 \begin{lstlisting}[columns=flexible,keepspaces=true,language=SMTLIB,breaklines=true]
 (declare-const $s_{a}$ (Array Int Int))         ;; variable declarations
 (declare-const $s_{i}$ Int)

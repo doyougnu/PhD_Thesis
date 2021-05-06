@@ -1,5 +1,24 @@
 \label{section:conclusion:applications}
 %
+Variational \ac{sat} and \ac{smt} solving provides an improved user interface
+and possible performance gains for variational \ac{sat} and \ac{smt} problems.
+However, the space of variational \ac{sat} and \ac{smt} problems is largely
+unexplored, as viewing problems as inherently \emph{variational} is only just
+beginning to gain awareness outside of the software product-line community. In
+this section we describe areas for possible applications.
+
+\citet{TTS+:VariVolution19} define two fundamental dimensions of variation:
+variation in \emph{time}, where software is revised over some unit of time with
+the intent that the new version will replace the old version; and variation in
+\emph{space} where variants are meant to co-exist simultaneously. Our approach
+to variational \ac{sat} and \ac{smt} solving is able to express both kinds of
+variation with the caveat that all points of variation are known \emph{before}
+running the solver. Thus, any problem or application that employs a plain
+\ac{sat} solver, negotiates variation in time or space, and does not need to
+discover variation during run-time is a possible application for variational
+\ac{sat} or \ac{smt} solver. Problems in this space include scheduling problems,
+\todo{cite}circuit layout
+%
 Software variability, as explored in this paper, is a natural application domain
 for our work. The variability of SPLs or configurable software is often reduced
 to propositional logic~\citep{B05,CW07,MWCC08} for analysis
