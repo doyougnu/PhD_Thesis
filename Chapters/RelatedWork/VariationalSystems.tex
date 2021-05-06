@@ -116,7 +116,8 @@ operations. Interestingly, Meinicke identifies redundant \ac{sat} calls as a
 major bottleneck in the variational execution framework. Specifically they
 determine redundant \rn{check-sat} calls as the most expensive. To reduce the
 redundant calls the variational execution framework caches calls to the solver
-thus only employing the solver for new queries.
+thus only employing the solver for new queries. Chu-Pan Wong used VarexJ to do
+speculative mutation testing and automated program repair~\cite{ChuPanThesis}.
 
 % Lastly, Meinicke's work was put to use by \citet{ChuPanThesis} to induce
 % \emph{speculative variation} for automatic program repair and mutation testing.
