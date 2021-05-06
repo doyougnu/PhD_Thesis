@@ -165,7 +165,15 @@ variational \ac{sat} and \ac{smt} solver's presented in this thesis because it
 can express dependencies between variants through presence conditions, while our
 approach is limited to express dependencies by nesting choices.
 
-
+Notably, our method variational \ac{sat} and \ac{smt} solving \emph{requires}
+that all points of variation are known \emph{before} the run-time of the solver.
+This is a direct consequence of \ac{vpl}, by construction one can only make a
+\ac{vpl} formula if a point of variation is known. If one does not know, or
+needs to discover the points of variation during runtime then the \ac{vpl}
+formula cannot be constructed. This limitation is a significant difference from
+the aforementioned variational systems. We return to this point in
+\autoref{section:conclusion:future-work}, but using variational \ac{sat} solvers
+effectively in these domains is an open research question.
 
 %%% Local Variables:
 %%% mode: latex
