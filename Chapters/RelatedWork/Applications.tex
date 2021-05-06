@@ -13,10 +13,10 @@ the intent that the new version will replace the old version; and variation in
 \emph{space} where variants are meant to co-exist simultaneously. Our approach
 to variational \ac{sat} and \ac{smt} solving is able to express both kinds of
 variation with the caveat that all points of variation are known \emph{before}
-running the solver. Thus, problems or application that utilize a plain \ac{sat}
-solver, negotiates variation in time or space, and does not need to discover
-variation during run-time is a possible application for variational \ac{sat} or
-\ac{smt} solver.
+running the solver. Thus, applications that utilize a plain \ac{sat} solver, do
+not need to discover variation during run-time and that must negotiate variation
+in time or space are possible applications for variational \ac{sat} or \ac{smt}
+solver.
 
 Problems in this domain include scheduling problems~\cite{BBH+09} which need to
 account for a counterfactual event; for example, one might need to schedule a
@@ -43,9 +43,9 @@ performance gains are possible through the use of a variational \ac{sat} or
 \ac{smt} solver.
 
 %
-Software variability, as explored in this paper, is a natural application domain
-for our work. The variability of SPLs or configurable software is often reduced
-to propositional logic~\citep{B05,CW07,MWCC08} for analysis
+Software variability is a natural application domain for this work. The
+variability of SPLs or configurable software is often reduced to propositional
+logic~\citep{B05,CW07,MWCC08} for analysis
 purposes~\citep{BSRC10,TAK+:CSUR14,GBT+19}. Many analyses have been implemented
 using \ac{sat} solving such as~\cite{TAK+:CSUR14}, including feature-model
 analysis~\citep{BSRC10,GBT+19}, parsing~\citep{KGR+:OOPSLA11}, dead-code

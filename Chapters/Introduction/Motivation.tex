@@ -41,15 +41,16 @@ problem, to future instances in the problem set. Initial attempts focused on
 clauses from one problem in the problem set are propagated forward to future
 problems. Although, modern solvers are based on a major breakthrough that
 occurred with \emph{incremental \ac{sat} under assumptions}, introduced in
-Minisat~\cite{10.1007/978-3-540-24605-3_37}.
+\texttt{Minisat}~\cite{10.1007/978-3-540-24605-3_37}.
 
 Incremental \ac{sat} under assumptions, made two major contributions: a
 performance contribution, where information including learned clauses, restart
 and clause-detection heuristics are carried forward. A usability contribution;
-Minisat exposed an interface that allowed the end-user to directly program the
-solver. Through the interface the user can add or remove clauses and dictate
-which clauses or variables are shared and which are unique to the problem set,
-thus directly addressing the practical use case of \ac{sat} solvers.
+\texttt{Minisat} exposed an interface that allowed the end-user to directly
+program the solver. Through the interface the user can add or remove clauses and
+dictate which clauses or variables are shared and which are unique to the
+problem set, thus directly addressing the practical use case of \ac{sat}
+solvers.
 
 Despite the its success, the incremental interface introduced a programming
 language that required an extra input, the set of \ac{sat} problems, \emph{and}
