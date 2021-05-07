@@ -43,8 +43,18 @@ thus we cannot remove arbitrary variables from a variational core.
 
 In addition to manipulating or storing variational cores, future variational
 solvers might utilize them as a convenient messaging format. Throughout this
-thesis, we have assumed, and only considered execution of all variants occurring
-in a single base solver instance, however this need not be the case.
+thesis, we have assumed and have only considered systems which process all
+variants in a single base solver instance, however this need not be the case.
+Instead, when a choice in is the focus of a the evaluation context (and thus the
+variational core) one might choose to solve the true alternative variants in a
+different solver and all the false alternatives in the same solver. For example,
+a user might know that all true alternative variants have particularly good
+performance characteristics for boolector, while all false variants have good
+characteristics for yices. Since we compile to \acl{smtlib} script such a
+feature is possible with few changes to our method of variational solving. To
+add such a feature a future variational solver would allow the user to select
+particular solvers over the input \vc{} or the configuration for a query
+formula.
 
 \subsection{Further \ac{smt} background theories and tool extensions}
 
