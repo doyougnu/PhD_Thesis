@@ -1,5 +1,57 @@
 \label{section:conclusion:future-work}
 
+There are numerous avenues of future work ranging from novel applications, to
+refining the implementations, to extended the solvers with new features. In this
+section we collect and discuss the most promising future work.
+
+\subsection{Utilization of variational cores}
+Variational cores are an important and foundational concept for the variational
+solver's and consequently for the variationalization recipe. Recall that the
+purpose of variational cores was twofold: First, to condense the query formula
+such that the variational terms were the majority of terms core. Second, to
+simplify the choice removal process by reducing the amount of traversal required
+to process the choices. Third, to enforce sharing between variants as the
+contexts captured by the core were are reused during choice removal.
+
+This last point is key, because variational cores in combination with the
+accumulation and evaluation stores, completely capture the context of a formula
+they can be reused in novel ways. For example, one might serialize a variational
+core and associated stores to disk, thus effectively caching the core for future
+use. Such a feature would enable desirable user facing effects: the solver could
+restart without losing information and thus might be useful for debugging or
+exploration, if the variational cores require a lot of processing time to
+generate this time be amortized, or if the application domain only builds on
+previous versions of the same formulas, then the variational core could be
+reused.
+
+For example, consider the case of a feature model which evolves every month for
+several months, similarly to the \fin{} and \auto{} datasets. Since the feature
+model, and consequently the \ac{vpl} formula evolves over time, the previous
+variational core could be modified to reflect the changes for the new formula.
+Adding new constraints is straightforward; one would simply nest the previous
+variational core in a conjunction context with the new core and reuse the
+previous stores when generating the new core to ensure sharing. A more difficult
+problem is removing constraints or variables in the previous core. Both removing
+constraints and removing variables is problematic as the variable or constraint
+could have been accumulated into a symbol value or several symbolic values. One
+could traverse a dependency graph to find all references of the variable and
+symbolic value, and then seek to replace those references with a unit value,
+such as \tru{} for $\wedge$ or \fls{} for $\vee$. However this immediately leads
+to the problematic case where the variable or symbolic to be removed is in a
+$\neg$ context. There is no unit value where $\neg$ does not have meaning and
+thus we cannot remove arbitrary variables from a variational core.
+
+In addition to manipulating or storing variational cores, future variational
+solvers might utilize them as a convenient messaging format. Throughout this
+thesis, we have assumed, and only considered execution of all variants occurring
+in a single base solver instance, however this need not be the case.
+
+\subsection{Further \ac{smt} background theories and tool extensions}
+
+\subsection{Automatic construction of a \ac{vpl} formula}
+
+\subsection{Abstracting the variationalization recipe to other domains}
+
 
 %%% Local Variables:
 %%% mode: latex
