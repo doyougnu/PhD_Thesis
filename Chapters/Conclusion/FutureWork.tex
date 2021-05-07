@@ -106,6 +106,57 @@ likely to save work for future extensions. The language would be identical to
 would only be enabled with an option), and choices would be included in the
 language just as we have included the for \ac{vpl} and \evpl{}.
 
+Lastly, a promising area of future work is constructing an asynchronous
+variational \ac{sat} and \ac{smt} solver. During our experience bench marking
+the variational prototype solvers we found that the majority of the time spent
+in the base solver is spent querying for a model. Furthermore, each variant
+waits until they can be processed by the base solver. For example, consider the
+formula $\chc[A]{a,b} \wedge{} \chc[B]{c,d}$, solving this formula results in
+solving all four variants. Our prototype solvers choose true alternatives first,
+thus the ordering of the variants in the base solver will be \set{(A,\tru{}),
+  B,\tru{}}, \set{(A,\tru{}), (B, \fls{})}, \set{(A,\fls{}), (B,\tru{})},
+\set{(A, \fls{}), (B, \fls{})}. Notice that all $(A, \fls{})$ variants wait for
+$(A, \tru{})$ variants before being considered. Thus, instead of using \rn{push}
+and \rn{pop} to represent variation we could instead fork a new solver thread
+and solve all $(A, \fls{})$ variants on that solver thread.
+
+We have created three versions of asynchronous prototype solvers but have not
+succeeded in constructing a general sound asynchronous variational solver.
+Constructing an asynchronous solver is relatively straightforward. Since
+variational models form monoids, the order in which models are added to the
+variational model isn't important. Similarly, since variational cores capture
+the evaluation context at a given time transmitting variational cores to other
+solver instances is also straightforward. The problem for asynchronous solvers
+is ensuring that the ordering of alternatives is maintained. For example, a
+simple model might be to have a pool of producers, which derive variational
+cores, and a pool of consumers, which take a variational core and a
+configuration and find the next choice that is not in the configuration or
+generate a model. The two pool model is sufficient in most cases, however a
+subtle bug is now possible. Assume we have a formula with three unique
+dimensions $A$, $B$, and $C$ which will be processed in that order. Since the
+order of alternatives is no longer deterministic we might encounter a case where
+we are either stuck or have mixed variants. For example, assume we have an
+unbalanced number of consumer's and producers. Now consider the case where a
+consumer thread has consumed \set{(A, \tru{}), (B,\fls{})}, then finds a choice
+with a $C$ dimension and waits for a request from a producer thread. The
+consumer observes a request to consume \set{(C,\tru{})}, does so, and produces a
+model for that variant. Now, the consumer will backtrack with a \rn{pop} call
+and wait for another request from a producer for another $\kf{C}$. However, this
+thread may have out paced other threads, and so the only request from the
+producer pool is to consume \set{(B,\tru{})}, and now we are stuck. If the
+consumer accepts the request we will have mixed two variants on this thread
+yielding incorrect results, if the consumer does not take the request then we
+may end in a deadlock. Such an example is contrived but occurs with asynchronous
+communication and must be properly handled. The correct method is for each
+thread to track which variant it has solved and track the ordering of choices.
+We must ensure that the choices are solved in order such that if a request comes
+to solve a \set{(A, \tru{})} variant, and the thread has consumed the
+variational core with \set{(A, \fls{})} then the thread must issue as many
+\rn{pop}s as needed to backtrack. By tracking this information we can avoid
+deadlocks, and malformed variants and still gain the benefits of concurrent
+solving which could be substantial especially for large variational formulas.
+
+
 
 \subsection{Automatic construction of a \ac{vpl} formula}
 
