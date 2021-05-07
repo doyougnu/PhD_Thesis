@@ -57,6 +57,55 @@ particular solvers over the input \vc{} or the configuration for a query
 formula.
 
 \subsection{Further \ac{smt} background theories and tool extensions}
+\ac{sat} and \ac{smt} solvers are attractive targets for research on variational
+languages. As of this writing, designing a language with variational
+side-effects is an open research question. The essential problem is tracking
+effects for particular variants across the interface between a variational-aware
+system and a plain system. For example, imagine writing a file to disk in one
+variant and deleting a different file in another variant. Since the file system
+has no concept of variation or variant the variational system is not able to
+guarantee variants are isolated and therefore variants may interact in
+undesirable and difficult to predict ways. \ac{sat} and \ac{smt} solvers side
+step this limitation as they are side-effect free systems. There is simply no
+way to read a file disc in an \acl{smtlib} script. Similarly, classes of
+run-time errors are not possible. For example, consider an \acl{smtlib} script
+which divides by zero, in this case the script simplify will not unify and an
+\rn{unsat} will be returned.
+
+Due to the attractive properties of \ac{sat} and \ac{smt} solvers for
+variational research, a straightforward avenue of future work is to continue to
+investigate efficient variational folds by further extending the variational
+solvers. Modern \ac{sat} and \ac{smt} solvers allow quantified constraints
+following first-order logic. In this thesis, we have only considered
+unquantified constraints, and thus the interaction of between quantified
+constraints and choices is an open research problem.
+
+Similarly, we have demonstrated extensions for core background theories, but
+there are many features of plain solvers that would be desirable additions to
+variational solvers. Such features include generation of variational
+unsatisfiable-cores. An unsatisfiable core is a subset of constraints that
+prevent the \ac{sat} or \ac{smt} from unifying. Unsatisfiable cores are thus
+desirable for many problems where discovering this information is desirable. For
+example, one might desire to find the clique in a \ac{sat} encoded weighted
+graph which prevents a traversal under some cost limit. Or one might desire to
+find the sub-set of features in a feature model that prevent classes of products
+from being built.
+
+Enabling variational unsatisfiable cores is possible with our approach of
+accumulation, evaluation and choice removal. The key requirement would be to
+ensure that the plain, \rn{get-unsat-core} command occurs inside the
+\rn{push}/\rn{pop} block for a given variant. Thus far we have only seen the
+\rn{get-model} command have this property. Thus a straightforward approach would
+be to create a syntactic category that contains arbitrary plain commands, such
+as \rn{get-model} or \rn{get-unsat-core} to be sent to the base solver once a
+variant has been reduced to \unit{}. Another approach is to create full fledged
+variational \acl{smtlib} language instead of expressions of constraints as we
+have presented here. Constructing such a variational \acl{smtlib} language is
+likely to save work for future extensions. The language would be identical to
+\acl{smtlib} except that \rn{push}/\rn{pop} would not be exposed to the user (or
+would only be enabled with an option), and choices would be included in the
+language just as we have included the for \ac{vpl} and \evpl{}.
+
 
 \subsection{Automatic construction of a \ac{vpl} formula}
 
