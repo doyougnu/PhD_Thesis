@@ -158,6 +158,13 @@ solving which could be substantial especially for large variational formulas.
 
 
 \subsection{Automatic construction of a \ac{vpl} formula}
+Thus far we have only considered a \ac{vpl} or \evpl{} formula as input to a
+variational solver. This format is likely to be inconvienient for end-users who
+consider sets of \ac{sat} problems. Thus, a more complete approach would be to
+input the set of \ac{sat} problems, then synthesize a \ac{vpl} formula with a
+sharing ration that is \emph{good enough} and then run the solver on that
+\ac{vpl} formula. In this section, we discuss an approach to synthesize a
+\ac{vpl} formula
 
 \subsection{Abstracting the variationalization recipe to other domains}
 
