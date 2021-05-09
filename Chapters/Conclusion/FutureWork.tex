@@ -223,7 +223,30 @@ sub-string which might produce metrics that are good enough for reasonable
 sharing ratios.
 
 \subsection{Abstracting the variationalization recipe to other domains}
+Our approach to creating a variation-aware system by using the plain version of
+that system is not specific to satisfiability solvers. The only portion of our
+work that is particular to satisfiability solvers is code generation in the base
+solver. In essence, our method is a variational left-fold over a variational
+language. Thus, one might reuse the ideas of accumulation, evaluation, choice
+removal and variational cores in other domains. In particular, the recipe for
+variationalization of other domains is clear: To variationalize a plain system
+one needs to define the variational artifact for the domain and a method to
+express variation in that system; our variational artifact was \ac{vpl} and we
+chose to use scopes from the \acl{smtlib} standard, although forking solver
+instances is also feasible. One needs a method to express segments of plain
+terms and preserve sharing between variants in the plain system, our approach
+was to define symbolic values and utilize the internal cache of the plain
+solvers to preserve sharing. Lastly, one needs a way to retrieve results from
+the plain system and combine those results in any order, hence we defined
+monoidal variational models.
 
+Using this recipe one can might imagine a variational prolog which reuses the
+work presented in this thesis. For such a language, the variational artifact
+would be a prolog-like programming language with choices. Expressing segments of
+plain terms with symbolic values could be directly reused from this thesis.
+Similarly, the variational result would be nearly identical to the variational
+models presented in \autoref{section:vsat:models}. The only missing and thus
+difficult part is expressing variation in the plain system.
 
 %%% Local Variables:
 %%% mode: latex
