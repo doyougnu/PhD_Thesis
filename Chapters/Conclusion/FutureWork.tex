@@ -157,14 +157,70 @@ deadlocks, and malformed variants and still gain the benefits of concurrent
 solving which could be substantial especially for large variational formulas.
 
 
-\subsection{Automatic construction of a \ac{vpl} formula}
+\subsection{Automated \ac{vpl} formulas}
 Thus far we have only considered a \ac{vpl} or \evpl{} formula as input to a
-variational solver. This format is likely to be inconvienient for end-users who
-consider sets of \ac{sat} problems. Thus, a more complete approach would be to
-input the set of \ac{sat} problems, then synthesize a \ac{vpl} formula with a
-sharing ration that is \emph{good enough} and then run the solver on that
-\ac{vpl} formula. In this section, we discuss an approach to synthesize a
-\ac{vpl} formula
+variational solver. This format is likely to be inconvienient as end-users
+consider sets of \ac{sat} problems. Thus, a useful extension for these users is
+to change the input from a \ac{vpl} formula to a set of \ac{sat} problems the
+user is interested in. With the set of \ac{sat} problems, one could synthesize a
+\ac{vpl} formula with a sharing ratio that is \emph{good enough} and then run
+the solver on that \ac{vpl} formula. For the rest of this section, we'll refer
+to the problem of synthesizing a \emph{good} \ac{vpl} formula from a set of
+\ac{sat} formulas the \emph{synthesis problem}.
+
+There are several considerations to highlight. First, we found that the sharing
+ratio of a formula positively correlates to run-time performance in
+\autoref{chapter:case-studies}, echoing results from previous research on
+variation. Therefore, the synthesis algorithm should try to maximize the sharing
+ratio as it chooses which variants to combine in a choice. Second, minimizing
+the number of choices is high priority for the algorithm. Our results indicate
+that the run-time of the variational solver grows linearly in the number of
+variants to solve (hence exponentially in the number of unique dimensions), thus
+adding a single new choice doubles the number of variants and the expected
+run-time. Rather than provide an algorithm that find the \emph{best} \ac{vpl}
+formula, we instead describe a greedy algorithm that tries to find a reasonable
+\ac{vpl} formula. An algorithm that finds the \emph{best} \ac{vpl} formula,
+\eg{} one which maximizes the sharing ratio while minimizing the number of
+choices is an open research problem. We suspect it is at least NP-hard (likely
+by demonstrating that the Binary Decision Diagram variable ordering problem karp
+reduces to the \ac{vpl} synthesis problem), although we have not begun to
+investigate the problem space.
+
+The synthesis problem is a search problem over a total un-directed graph of
+possible formula combinations. Each node in the graph is a \ac{sat} formula or
+\ac{vpl} formula that can be combined and is connected to every other node.
+Edges represent the possible combinations of two nodes and is weighted with a
+\emph{fitness metric} indicating a good match (and thus high amount of sharing
+between two nodes) or a bad match. Our approach is to traverse the graph and
+greedily select the best combination between two nodes. Combinations mutate the
+graph. The old nodes are replaced with the combined node, all old edges are
+relaxed and new edges connect the combined node to every other node in the
+graph. The algorithm then repeats until only a single node remains in the graph.
+
+There are two sub-procedures in the algorithm: A procedure to combine nodes, and
+a procedure to calculate the fitness metric between two nodes. To combine two
+nodes we generate a unique dimension, nest one node in the true alternative, and
+the other in the false alternative. This simple combination procedure results in
+poor sharing as the choice is always be at the root of the abstract syntax tree.
+Thus to increase the sharing ratio, we attempt to drive the choice towards the
+leaves of the abstract syntax tree of the \ac{vpl} formula using the equivalency
+laws in in \autoref{fig:cc:eqv}.
+
+Next we need a procedure that inputs two \ac{sat} or \ac{vpl} formulas, and
+returns a fitness metric. There are several possible algorithms; ranging from
+string edit distance, to a tree edit distance over the abstract syntax trees of
+the \ac{sat} or \ac{vpl} formulas. String comparison algorithms such Levenshtein
+distance\cite{Levenshtein_SPD66} or Hamming distance~\cite{H:BST50} are
+promising as both have implementations which run in polynomial time, assuming an
+encoding from the \ac{sat} problems to strings is computationally feasible.
+Graph edit distance is a more direct approach but is NP-Complete with an
+approximate solution that is APC-hard~\cite{hardnessOfGraphEditDistance}.
+However, most edit distance algorithms work well in practice, and it is likely
+that the graph comparisons in this domain are simpler than comparisons which
+occur in the worst case, \eg{}, over enormous graphs such as those found in
+social networks. Furthermore there are many heuristics such as longest-common
+sub-string which might produce metrics that are good enough for reasonable
+sharing ratios.
 
 \subsection{Abstracting the variationalization recipe to other domains}
 
