@@ -6,7 +6,11 @@ of this thesis as applying the concept of variation in the domain of
 satisfiability solving to create a variational satisfiability solver. The solver
 must explicitly expresses the concept of variation in a user-facing language and
 must be reasonably performent with respect to the performance of plain
-satisfiability solvers. By this definition we have succeeded.\todo{make sure
+satisfiability solvers. By this definition we have succeeded in demonstrating
+these ideas work in practice in the domain of satisfiability solving. We have
+not only shown that through the application of the choice calculus variation can
+be directly expressed by the end-user, but also that runtime performance may be
+improved because local points of variation are made explicit.\todo{make sure
   this was defined in intro}
 
 In \autoref{chapter:vpl} we formalized a many-valued logic to express
@@ -45,12 +49,13 @@ In \autoref{chapter:case-studies}, we built two prototype variational solvers
 called \vsat{} and \vsmt{}. We evaluated the solvers over two real-world
 datasets. We observed that variational solving does produce speedups over
 standard use of an incremental solver when solving many variants. The
-variational solvers produce this performance speedup by reusing shared terms and
-avoiding redundant computation. We also observed that the base solver does have
-an impact on runtime performance. Therefore an advantage of our method is that
-it is base solver agnostic, and thus implementations can choose whichever
-\acl{smtlib} solver is performent for its problem domain. However, we found that
-outside of its use case---when solving only a single variant---variational
-solving did show a performance overhead that was statistically significant for
-one dataset. Lastly, our finding that the sharing ratio is positively correlated
-to runtime performance repeats similar findings in the variational literature.
+variational solvers produce this speedup by reusing shared terms and avoiding
+redundant computation. We observed that the base solver does have an impact on
+runtime performance. Therefore an advantage of our architecture is that it is
+base solver agnostic, and thus implementations may choose whichever solver is
+performent for its problem domain as long as the solver accepts the \acl{smtlib}
+standard. However, we found that outside of its use case---when solving only a
+single variant---variational solving does show a performance overhead that was
+statistically significant for one dataset. Lastly, our finding that the sharing
+ratio is positively correlated to runtime performance repeats similar findings
+in the variational literature.
