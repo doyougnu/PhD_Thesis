@@ -247,8 +247,11 @@ work presented in this thesis. For such a language, the variational artifact
 would be a prolog-like programming language with choices. Expressing segments of
 plain terms with symbolic values could be directly reused from this thesis.
 Similarly, the variational result would be nearly identical to the variational
-models presented in \autoref{section:vsat:models}. The only missing and thus
-difficult part is expressing variation in the plain system.
+models presented in \autoref{section:vsat:models}. Embedding variation in prolog
+is the hard part. SWI-prolog defines an incremental table \todo{cite} which is a
+promising possible embedding, other embeddings, such as special kinds of
+constraints could be used although the exact details and properties are yet to
+be investigated.
 
 %%% Local Variables:
 %%% mode: latex

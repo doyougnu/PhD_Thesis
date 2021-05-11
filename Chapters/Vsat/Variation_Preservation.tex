@@ -12,5 +12,12 @@ that our method is variation preserving. Variation preserving is a key property
 for variational or variation-aware systems. A system is variation preserving if
 and only if processing the variational artifact produces a variational result
 which upon configuration recovers semantically identical plain results for each
-variant. This statement is summarized in the commuting diagram shown in
-\autoref{vsat:commuting-diagram}.
+variant.
+
+The property of variation preservation is summarized in
+\autoref{vsat:commuting-diagram}. The commuting diagram states that both paths
+in the diagram should be equivalent. That is, for any \ac{vpl} formula $\kf{f}$,
+if we configure $\kf{f}$ to find all possible variants, and then run a plain
+\ac{sat} solver on each variant, then we should find the same number of \ac{sat}
+results if we run the variational solver on \ac{f} and find all variants of the
+variational model.
