@@ -317,12 +317,10 @@ rules below.
 \end{figure}
 
 
-\todo{are the C-AND like rules wrong? Should the $v_{1}$ be in the focus not
-  $v_{2}$}The \crEval\ rule states that $v$ fully evaluates to \unit, then we can
-get the current model from the base solver using the \pmodel\ primitive and
-update our variational model. We use the operation \texttt{Combine} to perform
-the variational model update operation described in
-\autoref{section:vsat:approach}.
+The \crEval\ rule states that $v$ fully evaluates to \unit, then we can get the
+current model from the base solver using the \pmodel\ primitive and update our
+variational model. We use the operation \texttt{Combine} to perform the
+variational model update operation described in \autoref{section:vsat:approach}.
 %
 \todo{is there a missing rule to convert references to symbolic with
   accumulation?}The rest of the choice removal rules are structured so that
@@ -435,9 +433,10 @@ The extra effort over a more direct recursive strategy is necessary to support
 the backtracking pattern implemented by the \crChc\ rule. Whenever we encounter
 a choice in a new dimension, we can simply split the state of the solver to
 explore each alternative. Without evaluation contexts, this would be extremely
-difficult since choices may be deeply nested within a variational formula. We
-would have to somehow remember all of the locations in the term that we must
-backtrack to later and the state of the solver at each of those locations.
+difficult since choices may be deeply and arbitrarily nested within a
+variational formula. We would have to somehow remember all of the locations in
+the term that we must backtrack to later and the state of the solver at each of
+those locations.
 
 %% Local Variables:
 %% mode: latex

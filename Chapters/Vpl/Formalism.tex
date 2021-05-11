@@ -47,7 +47,34 @@ However $\kf{C}$ is not valid with respect to $f$ as $\kf{Dom(C)}\ \cap\
 \kf{Dimensions(\kf{f})\ = \{\kf{E}\}}$, and thus in this case $C$ contains one
 extra binding for $E$, than needed with respect to $f$.
 
-With these functions and definitions we can prove useful lemmas and theorems:
+With these functions and definitions we can prove useful lemmas and theorems.
+%
+We'll begin by proving that the configuration semantics over an \ac{vpl} formula
+is mathematically surjective, or in programming language terminology
+\emph{confluent}, \ie{}, each configuration with respect to a \ac{vpl} formula
+precisely specifies one variant.
+%
+\begin{theorem}[\ensuremath{\sem[C]{f}} is Confluent]
+  \label{thm:vpl:confluent}
+  If $C$ is total then \ensuremath{\semL f \semR_{C}} is confluent
+\end{theorem}
+%
+\begin{proof}
+  By structural induction on the relation \sem[C]{f} proceeding by case
+  analysis. We need to show that given a total configuration $\kf{C}$, only a
+  single variant can result from configuration of $\kf{f}$ with $\kf{C}$. Since
+  $\kf{C}$ is total, $\kf{C : \dim{} \rightarrow \booleans{}}$. The only
+  interesting case is the case for choices, since $\kf{C}$ is total with respect
+  to $\kf{f}$, $\kf{D \in C}$. Furthermore, because of synchronization $C(D)$
+  can only return the same value for each instance of a choice with dimension
+  $\kf{D}$, thus the same alternative is selected and recursively processed by
+  definition of \sem[]. Should the alternative contain a choice with a new
+  dimension $\kf{C'}$ then the same case occurs by assumption that $\kf{C}$ is
+  total. Every other case, such as $\wedge{}$, $\vee$, or $\neg$ is recursive,
+  thus creating smaller derivations until a base case on $\kf{t}$ or a choice.
+\end{proof}
+%
+Similarly, clearly \ac{vpl} reduces to \pl{}:
 %
 \begin{theorem}[\ac{vpl} reducible to \pl{}]
   \label{thm:vpltopl}
@@ -63,6 +90,7 @@ With these functions and definitions we can prove useful lemmas and theorems:
   alternatives is recursively reified for $f$. Then by the definition of
   \ac{vpl} a formula which lacks choices is $\in \pl{}$.
 \end{proof}
+
 
 %%% Local Variables:
 %%% mode: latex
