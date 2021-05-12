@@ -23,14 +23,23 @@ Similarly we define a notion of \emph{cardinality} over \ac{vpl} formulas.
   following notation as shorthand: $\dcardinality{f} = |{\dimensions{f}}|$.
 \end{definition}
 
-Similarly to $\kf{Dimensions}$ another useful function is $\kf{Variants}$:
-
+Similarly to $\kf{Dimensions}$ it is useful to have projects from a \ac{vpl}
+formula to possible variants:
+%
 \begin{definition}[Variants]
   Given a formula $f \in \ac{vpl}$, let $\variants{f}$ be the set of all
-  possible \emph{plain variants} of $f$. Thus, $\variants{f} = \{\ v\ |\ \exists C.\
-  v = \sem[C]{f},\ v \in \pl{} \,\}$
+  possible \emph{variants} of $f$. Thus, $\variants{f} = \{\ v\ |\ \exists
+  C.\ \sem[C]{f} = v,\ v \neq f \,\}$
 \end{definition}
-
+%
+and we can define a projection for all plain variants as well:
+%
+\begin{definition}[\pl{} Variants]
+  Given a formula $f \in \ac{vpl}$, let $\variants*{f}$ be the set of all
+  possible \emph{plain variants} of $f$. Thus, $\variants*{f} = \{\ v\ |\ \exists C.\
+  \sem[C]{f} = v,\ v \in \pl{} \,\}$
+\end{definition}
+%
 Using $\kf{Dimensions}$ we can now define a more precise property on
 configurations.
 %

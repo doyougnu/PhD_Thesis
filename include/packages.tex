@@ -12,23 +12,24 @@
 \usepackage{cases}                   %% better math brackets
 \usepackage{mathpartir}              %%% for inference rules
 \usepackage[nolist]{acronym}
-\usepackage[colorlinks]{hyperref}                %% for auto references
+\usepackage[colorlinks]{hyperref}    %% for auto references
 \usepackage{xpunctuate}              %% for punctuation's after macros
-% \usepackage{cite}                    %% for bibliography ranges
+% \usepackage{cite}                  %% for bibliography ranges
 \usepackage{subcaption}              %% For complex figures with subfigures/subcaptions
 \usepackage{wrapfig}                 %% wrapping figures around text
 \usepackage{listings}                %% for source code lstlisting
-\usepackage[dvipsnames]{xcolor}                  %% For listings
+\usepackage[dvipsnames]{xcolor}      %% For listings
 \usepackage{caption}
 \usepackage[textwidth=35mm,textsize=footnotesize]{todonotes}
 \usepackage{suffix}                  %% star version of commands
 \usepackage{tikz}                    %% assertion stack visualization
-\usepackage[T1]{fontenc}                 %% For escaping special characters in bibtex
+\usepackage[T1]{fontenc}             %% For escaping special characters in bibtex
 \usetikzlibrary{matrix}
 \usetikzlibrary{arrows}
 \usetikzlibrary{positioning}
 \usetikzlibrary{shapes.multipart}
 \usetikzlibrary{automata}
+\usetikzlibrary{cd}                  %% for commuting diagrams
 
 %%%%% Custom
 \usepackage{lib/cc}
@@ -94,6 +95,12 @@
 
 \renewcommand{\chapterautorefname}{Chapter}%
 \renewcommand{\sectionautorefname}{Section}%
+
+% \tikzset{close/.style={near start,outer sep=-20pt}}
+\tikzcdset{
+    every label/.append style = {scale=1.6},
+    cells={nodes={font=\Large}}
+    }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% hacky way to not split footnotes
 \interfootnotelinepenalty=10000

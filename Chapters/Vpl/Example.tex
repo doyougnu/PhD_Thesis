@@ -37,12 +37,12 @@ We begin by combining \pV{} and \rV{} since the differences\todo{section on
   encoding problem}\footnote{There are many ways to assess the difference of two
   formulas. For now the reader may consider it reducible to the Levenshtein
   distance of two strings~\cite{Levenshtein_SPD66}. We return to this discussion
-  in \ldots{}} between the two are smaller than between other pairs of feature
-models in our example. Feature models may be combined in any order as long as
-the variants in the resulting formula correspond to their plain counterparts.
-The only change between \pV{} and \rV{} is the addition of \zV{} and thus we
-wrap the leaf in a choice with dimension \dimR. This yields the following
-variational formula.
+  in \autoref{section:conclusion:future-work}} between the two are smaller than
+between other pairs of feature models in our example. Feature models may be
+combined in any order as long as the variants in the resulting formula
+correspond to their plain counterparts. The only change between \pV{} and \rV{}
+is the addition of \zV{} and thus we wrap the leaf in a choice with dimension
+\dimR. This yields the following variational formula.
 %
 \begin{equation*}
   f_{\pV\rV} = \chc[\dimR]{\zV, \tru{}} \leftrightarrow (a \wedge b \wedge c \wedge e)
@@ -80,9 +80,9 @@ the variants and possible configurations:
 Notice the $\kf{extra}$ variant and that \pV{} and \qV{} are only recovered
 through equivalency laws from propositional logic. While it is undesirable that
 there exists extra variants, the important constraint: $\{ \pV, \qV, \rV \}
-\subseteq \variants{f}$ is satisfied. We'll return to the case of \todo{maybe
-  superfluous?}extra variants in the next chapter as a variational \ac{sat}
-solver must only solve variants end-users are interested in.
+\subseteq \variants*{f}$ is satisfied. We'll return to the case of extra
+variants in the next chapter by showing how to prevent a variational \ac{sat}
+solver from solving these variants.
 
 
 

@@ -123,8 +123,8 @@
 %%%%%%%%%%%%%%% Combinators
 \newcommand{\range}[1]{\ensuremath{\kf{Ra}({#1})}}
 \newcommand{\domain}[1]{\ensuremath{\kf{Dom}({#1})}}
-\newcommand{\with}[2]{\ensuremath{#1^{#2}}}
-\WithSuffix\newcommand\prime*[1]{\ensuremath{\with{#1}{'}}}
+\newcommand{\with}[2]{\ensuremath{\kf{#1^{#2}}}}
+\WithSuffix\newcommand\prime*[1]{\ensuremath{\with{#1}{\prime}}}
 
 %%%%%%%%%%%%%%% shorthand ops for inference rules
 \newcommand{\evpl}{\ensuremath{\kf{\ac{vpl}^{\integers}}}}
@@ -237,6 +237,7 @@
 %%%%%%%%% Proof helpers
 \newcommand{\dcardinality}[1]{\ensuremath{|#1|_{D}}}
 \newcommand{\variants}[1]{\ensuremath{\kf{Variants}(#1)}}
+\WithSuffix\newcommand\variants*[1]{\ensuremath{\kf{Variants}_{\pl}(#1)}}
 \newcommand{\dimensions}[1]{\ensuremath{\kf{Dimensions(#1)}}}
 
 %%%%% VSMT accumulation

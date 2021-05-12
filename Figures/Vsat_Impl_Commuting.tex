@@ -1,16 +1,24 @@
-\begin{tikzpicture}
-  \matrix (m) [matrix of math nodes,row sep=6em,column sep=12em,minimum width=2em]
-  {
-    \kf{f}  & \set{\prime*{f}} \\
-    \vmodel*{f} & \set{\rn{sat}} \\};
-  \path[-stealth]
-  (m-1-1) edge node [left] {$\kf{VSAT(f)}$} (m-2-1)
-  edge [double] node [below] {\setc{\prime*{f}}{\exists C.\ \sem[C]{f} = \prime*{f}, \prime*{f} \in \pl}} (m-1-2)
-  (m-2-1.east|-m-2-2) edge node [below] {todo} (m-2-2)
-  (m-1-2) edge node [right] {$\kf{SAT(\prime*{f})}$} (m-2-2)
-  % edge [dashed,-] (m-2-1)
-  ;
-\end{tikzpicture}
+  \begin{tikzcd}[column sep=8cm,row sep=3cm]
+    \kf{f} \arrow[r, Rightarrow, "\setc{\prime*{f}}{\exists C.\ \sem[C]{f} = \prime*{f},\ \prime*{f} \in\ \pl}"] %\arrow[r, shift left] \arrow[r, shift right]
+    \arrow[d, swap, "VSAT(f)"] &
+    \set{\prime*{f}} \arrow[d, Rightarrow, "SAT(\prime*{f})"]  \\
+    \vmodel*{f}  \arrow[r, Rightarrow, "\setc{\submodel{f}{C}}{\exists C.\ \sem[C]{f} = \prime*{f},\ \prime*{f} \in \pl}"]
+                 % \arrow[r, shift left]
+                 % \arrow[r, shift right]
+    &  \set{\rn{\Large sat}}
+  \end{tikzcd}
+  % \matrix (m) [matrix of math nodes,row sep=6em,column sep=18em,minimum width=2em]
+  % {
+  %   \kf{f}  & \set{\prime*{f}} \\
+  %   \vmodel*{f} & \set{\rn{sat}} \\};
+  % \path[-stealth]
+  % (m-1-1) edge node [left] {$\kf{VSAT(f)}$} (m-2-1)
+  % edge [double] node [below] {\setc{\prime*{f}}{\exists C.\ \sem[C]{f} = \prime*{f}, \prime*{f} \in \pl}} (m-1-2)
+  % (m-2-1.east|-m-2-2) edge node [below] {\setc{\submodel{f}{C}}{\exists C.\ \sem[C]{f} = \prime*{f}, \prime*{f} \in \pl}} (m-2-2)
+  % (m-1-2) edge node [right] {$\kf{SAT(\prime*{f})}$} (m-2-2)
+  % (m-1-1) edge[below] (m-1-2)
+  % % edge [dashed,-] (m-2-1)
+  % ;
 
 
 
