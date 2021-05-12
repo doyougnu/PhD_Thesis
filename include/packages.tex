@@ -5,6 +5,7 @@
 \usepackage{fixltx2e}                %% for \textsubscript command
 \usepackage{amsmath}
 \usepackage{amsthm}                  %% Theorems and definitions
+\usepackage{thmtools}                %% for Theorems tools, allows autoref to work with lemmas
 \usepackage{amssymb}                 %% for more arrows like rightarrowtail
 \usepackage{amsfonts}                %% \mathbb
 \usepackage{mathtools}               %% for coloneqq and others
@@ -51,10 +52,6 @@
   colorlinks = true,
 }
 
-\renewcommand{\chapterautorefname}{Chapter}%
-\renewcommand{\sectionautorefname}{Section}%
-
-
 %%%%%%%%%%%%%%%% Listings config %%%%%%%%%%%%%%%%
 \lstdefinelanguage{SMTLIB}{
     alsoletter={\-},
@@ -94,6 +91,9 @@
 \newtheorem{lemma}[theorem]{Lemma}
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]
+
+\renewcommand{\chapterautorefname}{Chapter}%
+\renewcommand{\sectionautorefname}{Section}%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% hacky way to not split footnotes
 \interfootnotelinepenalty=10000
