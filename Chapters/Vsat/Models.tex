@@ -2,9 +2,13 @@
 %
 Classic \ac{sat} models map variables to Boolean values; variational models map
 variables to variation contexts that record the variants where the variable was
-assigned \tru{}. The variational context for a variable $r$ is denoted as
-\vc{r}, and a variational model reserves a special variable called \SatVar{} to
-track the configurations that were found satisfiable.
+assigned \tru{}. The variational context for a variable $\kf{r}$ in a
+variational model is denoted as \vc{r}. A variational model reserves a special
+variable called \SatVar{} to track the configurations that were found
+satisfiable. We use the notation \vmodel*{f} to mean the variational model
+produced by solving a variational formula $\kf{f}$, and \submodel{f}{C} to mean
+the plain model which results from substitution of a configuration $C$ into the
+variational model \vmodel*{f}.
 %
 \begin{figure}[h]
   \centering
