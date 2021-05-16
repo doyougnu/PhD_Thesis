@@ -88,9 +88,70 @@ mathematical sets as a formal representation of symbolic values.
 \end{proof}
 %
 \begin{theorem}[Accumulation is term preserving]
-  By \autoref{lemma:acc:all-terms}, \autoref{lemma:acc:preserving:choices} and
-  \autoref{lemma:acc:preserving:plain}.
+  \label{thm:accumulation:term-preserving}
+  No terms are lost during accumulation of a formula \fV{}.
 \end{theorem}
+%
+\begin{proof}
+  By \autoref{lemma:acc:all-terms} all terms in a \ac{vpl} formula are visited,
+  by \autoref{lemma:acc:preserving:plain} all plain terms are preserved sure
+  conversion to symbolic values, and by \autoref{lemma:acc:preserving:choices}
+  all choices and thus variants are preserved.
+\end{proof}
+
+Similarly we must show that terms are not lost during evaluation:
+
+\begin{lemma}[\unit{} values are shared]
+  During evaluation, if a term is evaluated to \unit{} then the term is shared
+  among all subsequent variants.
+\end{lemma}
+%
+\begin{proof}
+  By definition if a term is \emph{not} shared, then it is in some variants and
+  not in others and therefore in a choice. By construction, evaluation can only
+  produce \unit{} values from symbolic value, which can only be created by
+  calling accumulation. There are two cases: either a symbolic value is returned
+  by accumulation or an accumulated formula is returned. If a symbolic value is
+  returned, then it can be evaluated to a \unit{} via \evSym{}; placing it on
+  the assertion stack of the base solver and therefore sharing it for all
+  subsequent variants as it is deeper in the stack that future assertions. If an
+  accumulated formula is returned, then there are three cases for the logical
+  connective at the root of the formula: $\neg$, $\vee$ and $\wedge$. Only
+  $\wedge$ allows evaluation to continue, in which case \evSym{} and \evAnd{}
+  proceed until a connective other than $\wedge$ is at the root of the sub-term.
+  By \autoref{thm:accumulation:term-preserving} accumulation preserves terms.
+  Thus for each sub-term which is a symbolic value \evSym{} applies and is
+  therefore shared. For each sub-term which is not a symbolic value, the
+  sub-term is either a choice or an accumulated formula which cannot be further
+  reduced.
+\end{proof}
+
+
+\begin{lemma}[Evaluation progress]
+  \label{lemma:ev:all-terms}
+  Given a \ac{vpl} formula \fV{}, evaluation visits all sub-terms $\tV{} \in
+  \fV{}$ or evaluation calls accumulation .
+\end{lemma}
+%
+\begin{proof}
+  By definition if a term is \emph{not} shared, then it is in some variants and
+  not in others and therefore in a choice. By construction, evaluation can only
+  produce \unit{} values from symbolic value, which can only be created by
+  calling accumulation. There are two cases: either a symbolic value is returned
+  by accumulation or an accumulated formula is returned. If a symbolic value is
+  returned, then it can be evaluated to a \unit{} via \evSym{}; placing it on
+  the assertion stack of the base solver and therefore sharing it for all
+  subsequent variants as it is deeper in the stack that future assertions. If an
+  accumulated formula is returned, then there are three cases for the logical
+  connective at the root of the formula: $\neg$, $\vee$ and $\wedge$. Only
+  $\wedge$ allows evaluation to continue, in which case \evSym{} and \evAnd{}
+  proceed until a connective other than $\wedge$ is at the root of the sub-term.
+  By \autoref{thm:accumulation:term-preserving} accumulation preserves terms.
+  Thus for each sub-term which is a symbolic value \evSym{} applies and is
+  therefore shared. For each sub-term which is not a symbolic value, the
+  sub-term is either a choice or an accumulated formula which cannot be further
+  reduced.
+\end{proof}
 
 
 %%% Local Variables:
