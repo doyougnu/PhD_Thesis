@@ -36,7 +36,20 @@ without gaining any terms during communication.
 We begin by showing that accumulation does not lose any information. We use
 mathematical sets as a formal representation of symbolic values.
 
-\begin{lemma}[Accumulation preserve choices]
+\begin{lemma}[Accumulation progress]
+  \label{lemma:acc:all-terms}
+  Given a \ac{vpl} formula \fV{}, accumulation visits all sub-terms $\tV{} \in
+  \fV{}$.
+\end{lemma}
+%
+\begin{proof}
+  By construction, for any formula \fV{} all terms in \tV{} are reachable by one
+  or repeated applications of the congruence rules \acOrV{}, \acAndV{} and
+  \acNotV{}.
+\end{proof}
+
+\begin{lemma}[Accumulation preserves choices]
+  \label{lemma:acc:preserving:choices}
   For any \ac{vpl} formula $\kf{f}$, and any store \aStore{}, accumulation on
   \fV{} with \aStore{} preserves choices.
 \end{lemma}
@@ -47,7 +60,8 @@ mathematical sets as a formal representation of symbolic values.
   choices.
 \end{proof}
 
-\begin{lemma}[Accumulation preserve plain terms]
+\begin{lemma}[Accumulation preserves plain terms]
+  \label{lemma:acc:preserving:plain}
   For any \ac{vpl} formula \fV, and any store \aStore{}, if a term $\tV{} \in
   \fV$ and \tV{} is not a choice, then $\exists\sV{}\prime*{\aStore{}}\ \forall\prime*{f}.\ \tV
   \in \sV{} \in \prime*{f}$ where \sV{} is a symbolic value, and \prime*{f} is
@@ -72,6 +86,11 @@ mathematical sets as a formal representation of symbolic values.
   application of \por{} we have $\sV$ and $\prime*{\aStore{}}$ under the
   assumption the solver is term preserving.
 \end{proof}
+%
+\begin{theorem}[Accumulation is term preserving]
+  By \autoref{lemma:acc:all-terms}, \autoref{lemma:acc:preserving:choices} and
+  \autoref{lemma:acc:preserving:plain}.
+\end{theorem}
 
 
 %%% Local Variables:
