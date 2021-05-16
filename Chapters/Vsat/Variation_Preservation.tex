@@ -7,18 +7,74 @@
     formula $\kf{f}$.}%
   \label{vsat:commuting-diagram}
 \end{figure}
+%
 We have formalized variational satisfiability solving. In this section we prove
-that our method is variation preserving. Variation preserving is a key property
-for variational or variation-aware systems. A system is variation preserving if
-and only if processing the variational artifact produces a variational result
-which can be used to recover semantically identical plain results for each
-variant. For this work, variation preservation means that the variational solver
-should find the same results as a plain solver that is solving every variant.
+that our method is variation preserving. Variation preservation is a key
+property for variational or variation-aware systems. A system is variation
+preserving if and only if processing the variational artifact produces a
+variational result which can be used to recover semantically identical plain
+results for each variant. For this work, variation preservation means that the
+variational solver should find the same results as a plain solver that is
+solving every variant.
 
 The property of variation preservation is presented in
 \autoref{vsat:commuting-diagram}. The commuting diagram states that for any
 \ac{vpl} formula $\kf{f}$, if we configure $\kf{f}$ to find all possible plain
 variants, and then run a plain \ac{sat} solver on each variant, we should find
-the same number of \ac{sat} results we would find if we ran the variational
-solver on $\kf{f}$, received a variational model, and then substituted every
-total configuration into the model.
+the same number of \rn{sat}/\rn{unsat} results we would find if we ran the
+variational solver on $\kf{f}$, received a variational model, and then
+substituted every total configuration into the model. Note that the models may
+still differ, because a formula may have more than one satisfying model.
+
+To show variation preservation we must show two properties: First, if a variant
+exists then it is found by the variational solver. Second, that if the variant
+is found by the variational solver it is communicated to the base solver without
+\emph{any loss} and without \emph{anything extra}. In other words if a variant
+is found then it is communicated to the base solver without losing any terms and
+without gaining any terms during communication.
+
+We begin by showing that accumulation does not lose any information. We use
+mathematical sets as a formal representation of symbolic values.
+
+\begin{lemma}[Accumulation preserve choices]
+  For any \ac{vpl} formula $\kf{f}$, and any store \aStore{}, accumulation on
+  \fV{} with \aStore{} preserves choices.
+\end{lemma}
+%
+\begin{proof}
+  By construction, for any formula $\kf{f}$ and any store, \aStore{},
+  accumulation can only process choices with the \acChc{} rule which preserves
+  choices.
+\end{proof}
+
+\begin{lemma}[Accumulation preserve plain terms]
+  For any \ac{vpl} formula \fV, and any store \aStore{}, if a term $\tV{} \in
+  \fV$ and \tV{} is not a choice, then $\exists\sV{}\prime*{\aStore{}}\ \forall\prime*{f}.\ \tV
+  \in \sV{} \in \prime*{f}$ where \sV{} is a symbolic value, and \prime*{f} is
+  the accumulated result of \fV{}.
+\end{lemma}
+%
+\begin{proof}
+  By structural induction on \tV{}. The base case is \tV{} is a terminal. If
+  \tV{} is terminal than a computation rule such as \acRef{} will convert it to
+  \sV{} and store it in \aStore{} yielding \prime*{\aStore{}}. If \tV{} is not a
+  terminal then it is a logical connective with one or two children and a root
+  operator. There are three cases for the operator: $\neg$, $\vee$, and
+  $\wedge$, each of which will have a similar proof. We show the remainder of
+  the proof assuming the operator is $\vee$ because it is a more general case
+  than $\neg$ and identical to $\wedge$ in the proof. The induction hypothesis
+  is given the immediate sub-terms $v_{1}$ and $v_{2}$ of \tV{}, accumulation
+  over the sub-terms preserves plain terms. There are two rules to consider:
+  \acOrS{} or \acOrV{}. By assumption \tV{} is plain, and therefore so are
+  $v_{1}$ and $v_{2}$. Thus by \acOrS{} and the induction hypotheses we know
+  that (\aStore{}, $v_1$) \accumulation (\aStore{1}, $s_1$) and (\aStore{1},
+  $v_2$) \accumulation (\aStore{2}, $s_2$) are plain term preserving. Then
+  application of \por{} we have $\sV$ and $\prime*{\aStore{}}$ under the
+  assumption the solver is term preserving.
+\end{proof}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../thesis"
+%%% End:

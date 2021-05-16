@@ -75,27 +75,6 @@ formula precisely specifies one variant:
   deterministic for some $\kf{C}$ and $\kf{f}$.
 \end{proof}
 
-Confluence is given directly by \autoref{lemma:vpl:deterministic} because
-\sem[C]{f} cannot produce different results. We state it here because it is a
-necessary property for the proof of variational preservation in
-\autoref{chapter:vsat}.
-%
-\begin{theorem}[\ensuremath{\sem[C]{f}} is Confluent]
-  \label{thm:vpl:confluent}
-  For any configuration $C$, if \ensuremath{\semL f \semR_{C} = g}, and
-  \ensuremath{\semL f \semR_{C} = h}, then there exists a $\kf{C'}$ and
-  $\kf{f'}$ such that \ensuremath{\semL g \semR_{C'} = f'} and \ensuremath{\semL
-    h \semR_{C'} = f'}
-\end{theorem}
-%
-\begin{proof}
-  By structural induction on the relation \sem[C]{f} proceeding by case
-  analysis. From \autoref{lemma:vpl:deterministic} if \sem[C]{f} = $\kf{g}$ and
-  \sem[C]{f} = $\kf{h}$ then $\kf{h = g}$. Therefore for some \prime*{C} and
-  \prime*{f}, $\sem[C]{f} = \sem[\prime*{C}]{g} = \sem[\prime*{C}]{h} =
-  \prime*{f}$.
-\end{proof}
-%
 Similarly, clearly \ac{vpl} reduces to \pl{}:
 %
 \begin{theorem}[\ac{vpl} reducible to \pl{}]

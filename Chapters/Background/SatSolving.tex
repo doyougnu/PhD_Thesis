@@ -53,11 +53,11 @@ Problem:
 
 While the formal definition of the Boolean Satisfiability Problem requires a
 formula in propositional logic, expressing a \ac{sat} problem in propositional
-logic can be cumbersome. Thus, modern satisfiability solvers programming
-languages to express \ac{sat} problems, communicate the problems to other people
-and dictate the problems to the solver. In recent years these programming
-languages have coalesced into a single standard via an international initiative
-called \acl{smtlib}.
+logic can be cumbersome. Thus, modern satisfiability solvers accept programs
+written in domain specific programming languages to express \ac{sat} problems,
+communicate the problems to other people and dictate the problems to the solver.
+In recent years these programming languages have coalesced into a single
+standard via an international initiative called \acl{smtlib}.
 
 The \acl{smtlib}~\cite{BarFT-SMTLIB} standard formalizes a set of programming
 languages that define interactions with a \ac{sat} or \ac{smt} solver. The
@@ -97,27 +97,30 @@ logic:
 \end{lstlisting}
 %
 Comments begin with a semi-colon (\rn{;}) and end at a new line. The program,
-and every \acl{smtlib} program, is a sequence of \emph{commands} (called
-\emph{statements} in the programming language literature) that interact with the
-solver. For example, the above program consists of five commands, two variable
-declarations, a function definition, an assertion and a command to check
-satisfiability. Each command is formulated as an
-\emph{s-expressions}~\cite{10.1145/367177.367199} to simplify parsing. For our
-purposes, one only needs to understand that commands and functions are called by
-opening parentheses; the first element after the opening parenthesis is the name
-of the command or function symbol and every other element is an argument to that
-command. Thus \lstinline{(declare-const a Bool)} is an s-expression with three
-elements that defines the \pl{} variable \lstinline{a} of \emph{sort} (called
-\emph{type} in programming language literature) \lstinline{Bool}. The first
-element, \lstinline{declare-const} is the command name, the second is the user
-defined name for the variable and the third is its sort. Similarly, the
-s-expression \lstinline{(and a b)} passes the variables \lstinline{a} and
-\lstinline{b} to the function \lstinline{and} which returns the conjunction of
-these two variables. Lastly, the function definition \lstinline{define-fun}
-takes four arguments: the user defined name; \lstinline{peirce-is-ex-middle}, an
+and every \acl{smtlib} program, is a sequence of \emph{commands} that interact
+with the solver. For example, the above program consists of five commands, two
+variable declarations, a function definition, an assertion and a command to
+check satisfiability. Each command is formulated as an
+\emph{s-expressions}~\cite{10.1145/367177.367199} to simplify
+parsing~\cite{BarFT-SMTLIB}. For our purposes, one only needs to understand that
+commands and functions are called by opening parentheses; the first element
+after the opening parenthesis is the name of the command or function symbol, and
+subsequent elements are arguments to that command. Thus
+\lstinline{(declare-const a Bool)} is an s-expression with three elements that
+defines the \pl{} variable \lstinline{a} of \emph{sort} (called \emph{type} in
+programming language literature) \lstinline{Bool}. The first element,
+\lstinline{declare-const} is the command name, the second is the user defined
+name for the variable and the third is its sort. Similarly, the s-expression
+\lstinline{(and a b)} passes the variables \lstinline{a} and \lstinline{b} to
+the function \lstinline{and} which returns the conjunction of these two
+variables. Lastly, the function definition \lstinline{define-fun} takes four
+arguments: the user defined name; \lstinline{peirce-is-ex-middle}, an
 s-expression that defines argument names and their sorts;
 \lstinline{((x Bool) (y Bool))}, a return sort; \lstinline{Bool} and the body of
-the function.
+the function. The command \lstinline{check-sat} begins the solving sub-routine
+to solve the described \ac{sat} or \ac{smt} problem. \lstinline{check-sat} can
+return two values: \rn{sat} or \rn{unsat} which corresponding to finding the
+\ac{sat} or \ac{smt} problem satisfiable or unsatisfiable.
 
 Internally, a compliant solver such as z3~\cite{10.1007/978-3-540-78800-3_24}
 maintains an stack called the \emph{assertion stack} that tracks user provided
