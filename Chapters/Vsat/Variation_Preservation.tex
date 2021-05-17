@@ -126,7 +126,6 @@ Similarly we must show that terms are not lost during evaluation:
   reduced.
 \end{proof}
 
-
 \begin{lemma}[Evaluation progress]
   \label{lemma:ev:all-terms}
   Given a \ac{vpl} formula \fV{}, evaluation visits all sub-terms $\tV{} \in
@@ -153,6 +152,15 @@ Similarly we must show that terms are not lost during evaluation:
   reduced.
 \end{proof}
 
+\begin{lemma}[Evaluation progress]
+  \label{lemma:ev:all-terms}
+  Given a \ac{vpl} formula \fV{}, for any term $\tV{} \in \fV{}$ either
+  evaluation visits \tV{} or calls accumulation on \tV{}.
+\end{lemma}
+%
+\begin{proof}
+  By Construction \ldots{}
+\end{proof}
 
 %%% Local Variables:
 %%% mode: latex
