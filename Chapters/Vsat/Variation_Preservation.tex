@@ -128,38 +128,15 @@ Similarly we must show that terms are not lost during evaluation:
 
 \begin{lemma}[Evaluation progress]
   \label{lemma:ev:all-terms}
-  Given a \ac{vpl} formula \fV{}, evaluation visits all sub-terms $\tV{} \in
-  \fV{}$ or evaluation calls accumulation .
-\end{lemma}
-%
-\begin{proof}
-  By definition if a term is \emph{not} shared, then it is in some variants and
-  not in others and therefore in a choice. By construction, evaluation can only
-  produce \unit{} values from symbolic value, which can only be created by
-  calling accumulation. There are two cases: either a symbolic value is returned
-  by accumulation or an accumulated formula is returned. If a symbolic value is
-  returned, then it can be evaluated to a \unit{} via \evSym{}; placing it on
-  the assertion stack of the base solver and therefore sharing it for all
-  subsequent variants as it is deeper in the stack that future assertions. If an
-  accumulated formula is returned, then there are three cases for the logical
-  connective at the root of the formula: $\neg$, $\vee$ and $\wedge$. Only
-  $\wedge$ allows evaluation to continue, in which case \evSym{} and \evAnd{}
-  proceed until a connective other than $\wedge$ is at the root of the sub-term.
-  By \autoref{thm:accumulation:term-preserving} accumulation preserves terms.
-  Thus for each sub-term which is a symbolic value \evSym{} applies and is
-  therefore shared. For each sub-term which is not a symbolic value, the
-  sub-term is either a choice or an accumulated formula which cannot be further
-  reduced.
-\end{proof}
-
-\begin{lemma}[Evaluation progress]
-  \label{lemma:ev:all-terms}
   Given a \ac{vpl} formula \fV{}, for any term $\tV{} \in \fV{}$ either
-  evaluation visits \tV{} or calls accumulation on \tV{}.
+  evaluation processes \tV{} or calls accumulation on \tV{}.
 \end{lemma}
 %
 \begin{proof}
-  By Construction \ldots{}
+  By structural induction on \tV{}. For every possible connective there is a
+  case in the evaluation inference rules. From \evAnd{} evaluation is
+  propagated over $\wedge$, for $\neg$ and $\vee$ must switch to accumulation to
+  process the term.
 \end{proof}
 
 %%% Local Variables:
