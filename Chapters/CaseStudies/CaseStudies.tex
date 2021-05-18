@@ -18,7 +18,7 @@ over-constrained and it is easy to decide \rn{unsat}, however if there are few
 clauses but many variables then the problem is under-constrained and it is easy
 to decide \rn{sat}. Thus, hard problems rest in a \emph{phase transition} zone
 where the ratio of clauses to variables is neither over-constrained nor
-\todo{cite}under-constrained.
+under-constrained~\cite{Gent94thesat}.
 
 To investigate the performance of our methods, we construct a prototype
 variational solver, \vsat{} in the Haskell programming
@@ -31,11 +31,11 @@ study by~\citet{NMS+:GPCE18} from the \ac{spl} community.
 
 Before we describe the datasets and resulting variational \ac{sat} problems we
 first introduce some terminology from the \ac{spl} community. A software
-product-line is an instance of variational software; \todo{get a source here}or
-more formally it is a set of software-intensive systems that share a common,
-managed set of features satisfying the specific needs of a particular market
-segment or mission and that are developed from a common set of core assets in a
-prescribed way.
+product-line is an instance of variational software, more formally it is a set
+of software-intensive systems that share a common, managed set of features
+satisfying the specific needs of a particular market segment or mission and that
+are developed from a common set of core assets in a prescribed
+way~\cite{ABKS13,CE00,PBL05}.
 
 A good example of a software product-line is the Linux kernel~\cite{linux}. The
 Linux kernel is a set of core assets which devise an operating system, but the
