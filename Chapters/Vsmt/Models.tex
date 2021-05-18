@@ -20,24 +20,23 @@ models.
 
 To maintain these properties and satisfy the functional requirements, our
 strategy for variational \ac{smt} models is to create a mapping of variables to
-\ac{smt} expressions. By virtue of this strategy, variables are disallowed from
-changing types across variants and hence disallowed from changing type as the
-result of a choice. For any variable in the model, we assume the type returned
-by the base solver is correct, and store the satisfying value in a linked list
-constructed \emph{if-statements}\footnote{Also called a church-encoded list}.
-Specifically, we utilize the function $ite : \mathbb{B} \rightarrow T
-\rightarrow T$ from the SMTLIB2 standard to construct the list. All variables
-are initialized as undefined (\undefined) until a value is returned from the
-base solver for a variant. To ensure the correct value of a variable corresponds
-to the appropriate variant, we translate the configuration which determines the
-variant to a variation context, and place the appropriate value in the
-\emph{then} branch.
+\ac{smt} expressions. A variable's type is syntactically ensured to not change
+as variable sets are disjoint. Thus variables are disallowed from changing type
+as the result of a choice. For any variable in the model, we assume the type
+returned by the base solver is correct, and store the satisfying value in a
+linked list constructed of \emph{if-statements}. Specifically, we utilize the
+function $ite : \mathbb{B} \rightarrow T \rightarrow T$ from the SMTLIB2
+standard to construct the list. All variables are initialized as undefined
+(\undefined) until a value is returned from the base solver for a variant. To
+ensure the correct value of a variable corresponds to the appropriate variant,
+we translate the configuration which determines the variant to a variation
+context, and place the appropriate value in the \emph{then} branch.
 
-Consider the following variational \ac{smt} problem extended with an integer
-arithmetic theory: $f = ((\chc[A]{\iV{}, 13} - \cV{}) < (\bV + 10)) \rightarrow
-\chc[B]{\aV{}, \cV{} > \iV{}}$. \fV{} contains two unique choices, $\kf{A}$,
-$\kf{B}$, and thus represents four variants. In this case, the expression is
-under-constrained and so each variant will be found satisfiable.
+Consider the following \evpl{} formula: $f = ((\chc[A]{\iV{}, 13} - \cV{}) <
+(\bV + 10)) \rightarrow \chc[B]{\aV{}, \cV{} > \iV{}}$. \fV{} contains two
+unique choices, $\kf{A}$, $\kf{B}$, and thus represents four variants. In this
+case, the expression is under-constrained and so each variant will be found
+satisfiable.
 %
 \begin{figure}[h]
   \centering
@@ -53,8 +52,8 @@ under-constrained and so each variant will be found satisfiable.
   \label{fig:vsmt:models:var}
 \end{figure}
 
-\autoref{fig:vsmt:models:plain} show possible plain models for $\kf{f}$ with the
-corresponding variational \ac{smt} model presented in
+\autoref{fig:vsmt:models:plain} shows possible plain models for $\kf{f}$ with
+the corresponding variational \ac{smt} model presented in
 \autoref{fig:vsmt:models:var}. We've added line breaks to emphasize the
 $\kf{then}$ and $\kf{else}$ branches of the $\kf{ite}$ SMTLIB2 primitive.
 
@@ -68,7 +67,7 @@ under that configuration. For example, if the user were interested in the value
 of \iV{} in the $\{(\AV{}, \tru{}), (\BV{}, \tru{})\}$ variant they would
 substitute the configuration into the result for \iV{} and recover $2$ from the
 first $\kf{ite}$ case. To find the variants at which a variable has a value, a
-user may employ a \ac{smt} solver, add the entry for \iV{} as a constraint, and
+user may employ an \ac{smt} solver, add the entry for \iV{} as a constraint, and
 query for a model.
 %
 This specification of variational \ac{smt} models does not require knowledge of
@@ -81,7 +80,7 @@ choices.
 However, there are some notable differences. Where variational \ac{sat} models
 clearly compressed results by preventing duplicate values with constant
 variables, the variational \ac{smt} model allows for duplicate values, if those
-values are produced our of order. For example, both models for \iV{} and \cV{}
+values are produced out of order. For example, both models for \iV{} and \cV{}
 contain duplicate values. The \iV{} model has duplicate $-1$ and the \cV{} model
 contains duplicate $0$. However only one: \cV{} is easy to check in \bigOof{1}
 time; each call to \rn{Combine} could check the last immediate value to prevent
@@ -98,9 +97,8 @@ Lastly, the use of \undefined{} may seem unattractive. While all bindings in the
 model end with an \undefined{}, a binding cannot result in an \undefined{} as
 that would imply a variant that was found to be satisfiable but was not
 satisfiable, and hence would be indicative of a bug in the variational solver
-implementation. Thus mathematically inclined readers may observe that the monoid
-variational \ac{smt} models form corresponds to the free monoid formed by
-church-encoded lists.
+implementation. Mathematically inclined readers may observe that the monoid
+variational \ac{smt} models form corresponds to the free monoid formed by lists.
 
 %%% Local Variables:
 %%% mode: latex

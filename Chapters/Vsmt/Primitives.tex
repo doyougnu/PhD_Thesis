@@ -29,7 +29,8 @@
 \end{figure}
 %
 In order to construct a variational \ac{smt} solver we must first extend
-\ac{vpl} to include non-Boolean values. \ac{vpl} included two kinds of
+\ac{vpl} to include non-Boolean values, we call the extended \ac{vpl} \evpl{}
+since its values can range over integers. \ac{vpl} included two kinds of
 relations: relations such as $\neg$ and $\vee$ which required accumulation in
 the presence of variation, and relations such as $\wedge$ which required no
 special handling. Unfortunately, in the presence of variation there are no
@@ -51,9 +52,10 @@ The syntax of the language prevents type errors and expressions that do not
 yield Boolean values. For example, $\chc[D]{1,2} \wedge p$ is syntactically
 invalid.
 %
-Thus, the language is purposefully limited to arithmetic expressions that
-have an inequality at the root of the expression, such as: $\kf{g} =
-(\chc[A]{1, 2} + j \geq 2) \vee a \wedge \chc[A]{c, d}$.
+Similarly, the language only allows arithmetic expressions as children of an
+inequality, for example: $\kf{g} = (\chc[A]{1, 2} + j \geq 2) \vee a \wedge
+\chc[A]{c, d}$ is syntactically valid but $\pV{} \wedge{} (1 + 7 + 2 + 9)$ is
+not.
 %
 Choices in the same dimension are synchronized across Boolean and arithmetic
 sub-expressions, for example, the expression
@@ -76,33 +78,33 @@ From the perspective of the variational solver, operations such as addition,
 division, and subtraction only differ in the primitive operation emitted to the
 base solver. Thus, we define syntactic categories over like operations in
 \autoref{fig:vsmt:categories}. Notice that the categories correspond to the
-respective type of each operation. For example, the boolean categories
-encapsulate operations which take two boolean expressions and return a boolean
+respective type of each operation. For example, the Boolean categories
+encapsulate operations which take two Boolean expressions and return a Boolean
 expression, similarly the inequality category encapsulate operators which take
-numeric expressions and return boolean expressions. Further \ac{smt} extensions
+numeric expressions and return Boolean expressions. Further \ac{smt} extensions
 would directly copy this pattern, that is, defining a syntactic category of
 \rn{FixedSizeBitVector} or \rn{Reals} operators. Similarly, while we present
 only a single arithmetic unary function $-$, other arithmetic unary functions
-would be straightforward to add. For example, to include a modulus operator
-$\kf{mod}$, one would define the wrapped primitive, and add the operator to the
-appropriate syntactic category without requiring any modification to the
-inference rules or intermediate languages.
+would be straightforward to add. For example, to include an absolute value
+operator $\kf{abs}$, one would define the wrapped primitive, and add the
+operator to the appropriate syntactic category without requiring any
+modification to the inference rules or intermediate languages.
 
-Just as \ac{vpl} was extended the intermediate language must be extended. First
+Just as \ac{vpl} was extended, the intermediate language must be extended. First
 we must add cases for inequality operations, and second we must define an
 intermediate language for the arithmetic domain.
 %
 \autoref{fig:vsmt:il} defines the intermediate arithmetic language \eAR, and the
 extended intermediate language \eIL. The syntax of both intermediate languages
-follow directly from \evpl and should be unsurprising. The only important
-difference from IL is that \eAR cannot express a \unit{} value. This is a
+follow directly from \evpl{} and should be unsurprising. The only important
+difference from IL is that \eAR{} cannot express a \unit{} value. This is a
 purposeful design decision; recall that a \unit{} represents a term that has
-been sent to the base solver. Thus if \unit{} were in \eAR then expressions such
-as $\unit{} + 2$ would be expressible in \eAR, however because all arithmetic
-formula's require accumulation the only possible result of
+been sent to the base solver. Thus if \unit{} were in \eAR{} then expressions
+such as $\unit{} + 2$ would be expressible in \eAR{}, however because all
+arithmetic formula's require accumulation the only possible result of
 evaluation/accumulation on arithmetic expressions is either a choice or a
-symbolic term, not a \unit{}. Hence, we syntactically avoid classes bugs by
-eliding the \unit{} value in \eAR.
+symbolic term, not a \unit{}. Hence, we syntactically avoid classes of bugs by
+omitting the \unit{} value in \eAR{}.
 %
 \begin{figure}
   \input{Figures/Vsmt_IL_Syntax}

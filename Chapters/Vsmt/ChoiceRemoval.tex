@@ -31,8 +31,8 @@ form \rn{C-*-InL} \emph{switch} the fold to process the right child of the
 relations, and rules of the form \rn{C-*-InR} call accumulation to reduce the
 relation over symbolic values. We formally specify generalized choice removal in
 \autoref{fig:vsmt:chc}. The heart of choice removal remains the same, the rules
-\crEval, \crChc, \crChcT, and \crChcF are reproduced for the new zipper context
-\zipper but are semantically identical to the specialized versions. The
+\crEval{}, \crChc{}, \crChcT{}, and \crChcF{} are reproduced for the new zipper
+context \zipper{} but are semantically identical to the specialized versions. The
 remaining rules are generalized versions of the \ac{sat} rules to handle each
 syntactic category the variational solver can process.
 
@@ -44,14 +44,14 @@ example \crNot{}, \crBool{}, and \crInEq{} initiate the left fold by storing the
 relation in the zipper and focusing the left child $\eIL*{1}$.
 %
 Second, we define rules which recur down the left child of the relations until a
-symbolic value results from accumulation. For example, \crInEqL{}, \crBoolL{}
+symbolic value results from accumulation. For example, \crInEqL{}, \crBoolL{},
 and \crArithL{} all move the focused symbol value $s$ to the zipper context
 allowing choice removal to proceed to the right children of the same relation.
 %
 Lastly, we have computation rules which perform the fold on the relation by
-calling accumulation. For example, \crUnaryIn, \crArithR and \crInEqR call
-accumulation to process the symbolic value and reduce the given relation. In
-effect, accumulation \emph{encapsulates} the semantics of the relations,
+calling accumulation. For example, \crUnaryIn{}, \crArithR{}, and \crInEqR{}
+call accumulation to process the symbolic value and reduce the given relation.
+In effect, accumulation \emph{encapsulates} the semantics of the relations,
 evaluation propagates accumulation and performs code generation in the base
 solver, and choice removal alters the configuration, maintains evaluation
 contexts, and removes choices introducing new plain terms to the formula.

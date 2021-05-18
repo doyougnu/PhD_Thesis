@@ -5,7 +5,8 @@ example of solving a variational \ac{smt} problem. Consider the query formula
 \newline$\kf{\hV = ((1 + 2 < (i - \chc[A]{k,l})) \wedge a) \wedge
   (\chc[B]{c,\neg b} \vee b)}$ with two choices parameterized by the dimensions
 $A$ and $B$. Derivation of the variational core for $\kf{h}$ begins with all
-evaluation and all stores \aStore{}, \eStore{} initialized to $\emptyset$.
+evaluation contexts and all stores \aStore{}, \eStore{} initialized to
+$\emptyset$.
 
 The root of \hV{} is $\wedge$ and thus \evAnd{} is the only applicable rule.
 From \evAnd{} we have $\eIL*{1} = \kf{((1 + 2 < (i - \chc[A]{k,l})) \wedge a)}$,
@@ -39,8 +40,8 @@ previous store and assert the symbolic value in the base solver with \evSym{}.
 The resulting intermediate term will be $s_{12} < (s_{i} - \chc[A]{k,l}) \wedge
 \unit{}$, with stores $\eStore{}=\set{s_{a}}$, $\aStore{}=\set{(a,s_{a}),(i,
   s_{i}),(s_{1} + s_{2}, s_{12}), (2,s_{2}), (1,s_{1})}$ and will be reduce to
-the final intermediate result $\eIL*{1}_{core} = s_{12} < (s_{i} -
-\chc[A]{k,l})$ with the same stores via application of \evAndR{}.
+the intermediate result $\eIL*{1}_{core} = s_{12} < (s_{i} - \chc[A]{k,l})$ with
+the same stores via application of \evAndR{}.
 
 We have now returned back to the top level call to \evAnd{} with a result for
 the left child and populated stores. Evaluation will proceed on the right child
@@ -71,45 +72,44 @@ storing the right child in the context: $\zipper =
 (s_{i} - \chc[A]{k,l})$ as the focus, the only applicable rule is \crInEq{} due
 to $<$ at the root of the focus. \crInEq{} again recurs left, focusing on the
 sub-term $s_{12}$ with context $\zipper =
-\inInEqL*{\inBoolL*{\inRoot{}}{(\chc[B]{c,\neg b} \vee{} s_{b})}{\wedge}}{(s_{i}
+\inInEqL*{\inBoolL*{\inRoot{}}{(\chc[B]{c,\neg b} \vee{} s_{b})}{\wedge{}}}{(s_{i}
   - \chc[A]{k,l})}{<}$ which states that $s_{12}$ exists in the left child of an
 inequality which also exists in the left child of a conjunction.
 
-We have arrived at the base case with a symbolic value is in focus, and the
+We have arrived at the base case with a symbolic value in focus, and the
 immediate parent in the evaluation context is an inequality. To proceed we need
 to \emph{switch} to begin processing the right child of the inequality; thus we
 must apply \crInEqL{}. \crInEqL{} swaps the symbolic with the un-processed right
 child held in the context, hence we have $(s_{i} - \chc[A]{k,l})$ in focus with
 context $\zipper = \inInEqR*{s_{12}}{\inBoolL*{\inRoot{}}{(\chc[B]{c,\neg b}
-    \vee{} s_{b})}{\wedge}}{<}$. $-$ is a previously unseen relation, when an
-new relation is found choice removal will recur into the left child. In this
-case $- \in \integerFuncs{}$ and so \crArith{} applies. \crArith{} moves $s_{i}$
-into the focus and extend the evaluation context to $\zipper =
-\inArithL*{\inInEqR*{s_{12}}{\inBoolL*{\inRoot{}}{(\chc[B]{c,\neg b} \vee{}
-      s_{b})}{\wedge}}{<}}{\chc[A]{k,l}}{-}$.
+    \vee{} s_{b})}{\wedge}}{<}$. Subtraction, $-$, is a previously unseen
+relation. When a new relation is found, choice removal will recur into the left
+child. In this case $- \in \integerFuncs{}$ and so \crArith{} applies.
+\crArith{} moves $s_{i}$ into the focus and extend the evaluation context to
+$\zipper = \inArithL*{\inInEqR*{s_{12}}{\inBoolL*{\inRoot{}}{(\chc[B]{c,\neg b}
+      \vee{} s_{b})}{\wedge}}{<}}{\chc[A]{k,l}}{-}$.
 
-With $s_{i}$ in the focus we've arrived at another base case, only this time when
-the switch occurs a choice will be in focus. The switch is performed by
+With $s_{i}$ in the focus, we've arrived at another base case, only this time
+when the switch occurs a choice will be in focus. The switch is performed by
 \crArithL{} and yields $\chc[A]{k, l}$ as the focus with context $\zipper =
 \inArithR*{s_{i}}{\inInEqR*{s_{12}}{\inBoolL*{\inRoot{}}{(\chc[B]{c,\neg b}
-      \vee{} s_{b})}{\wedge}}{<}}{-}$. Now we the heart of choice removal
-applies, because we have $\configuration{} = \emptyset$, the only applicable
-rule with a choice in the focus is \crChc. \crChc{} creates two recursive calls,
-one for each alternative using \emph{the same context}, thus we'll have
-$\configuration= \set{(A,\true)}$, with focus $k$, and context $\zipper =
+      \vee{} s_{b})}{\wedge}}{<}}{-}$. Now the heart of choice removal applies,
+because we have $\configuration{} = \emptyset$, the only applicable rule with a
+choice in the focus is \crChc. \crChc{} creates two recursive calls, one for
+each alternative using \emph{the same context}, thus we'll have $\configuration=
+\set{(A,\true)}$, with focus $k$, and context $\zipper =
 \inArithR*{s_{i}}{\inInEqR*{s_{12}}{\inBoolL*{\inRoot{}}{(\chc[B]{c,\neg b}
       \vee{} s_{b})}{\wedge}}{<}}{-}$.
 
 For the remainder of the example we'll continue with only true alternatives; the
-other variants follow similar paths. \todo{make sure this isn't a type
-  error}Accumulation is called on the introduced plain terms, converting $k$ to
-$s_{k}$ and extending the accumulation store to
+other variants follow similar paths. Accumulation is called on the introduced
+plain terms, converting $k$ to $s_{k}$ and extending the accumulation store to
 \newline$\aStore{}=\set{(k,s_{k}),(b, s_{b}),(a,s_{a}),(i, s_{i}),(s_{1} +
   s_{2}, s_{12}), (2,s_{2}), (1,s_{1})}$.
 
-With a symbolic value in the focus, and with the context already switched to the
-right child we have come to a sequence of base cases which perform the folds, in
-this case \crArithR{} applies. \crArithR{} calls accumulation on $s_{i} -
+With a symbolic value in focus, and with the context already switched to the
+right child, we have come to a sequence of base cases which perform the folds,
+in this case \crArithR{} applies. \crArithR{} calls accumulation on $s_{i} -
 s_{k}$. $s_{i} - s_{k}$ has not yet been observed in accumulation and thus the
 new symbolic value $s_{ik}$ will be generated. This yields $s_{ik}$ in the
 focus, with $\aStore{}=\set{(s_{i} - s_{k}, s_{ik}), (k,s_{k}),(b,
@@ -117,9 +117,9 @@ focus, with $\aStore{}=\set{(s_{i} - s_{k}, s_{ik}), (k,s_{k}),(b,
 and $\zipper = \inInEqR*{s_{12}}{\inBoolL*{\inRoot{}}{(\chc[B]{c,\neg b} \vee{}
     s_{b})}{\wedge}}{<}$.
 
-With $s_{ik}$ in the focus we have yet another base case which consumes some
+With $s_{ik}$ in focus, we have yet another base case which consumes some
 context, only this time we consume the inequality using \crInEqR{}. \crInEqR{}
-calls accumulation on $s_{12} < s_{ik}$, similar to the previous call over $-$
+calls accumulation on $s_{12} < s_{ik}$, similar to the previous call over $-$,
 this call produces a new symbolic value and extends the accumulation store.
 Hence, we'll have $s_{12ik}$ in the focus, with $\aStore{}=\set{(s_{12} <
   s_{ik}, s_{12ik}),(s_{i} - s_{k}, s_{ik}), (k,s_{k}),(b, s_{b}),(a,s_{a}),(i,
@@ -161,8 +161,8 @@ Thus we have reached the variant parameterized by
 $\configuration=\set{(B,\true),(A,\true)}$ \crEval{} applies due to $\zipper =
 \inRoot{}$ and the symbolic value in the focus, \evSym{} will yields \unit{}
 with $\zipper = \inRoot{}$, indicating that it is safe to query a model for this
-variant from the base solver. Due to the two application of \crChc three other
-variants will be found during back tracking beginning with the dimension used in
+variant from the base solver. Due to the two application of \crChc{} three other
+variants will be found during backtracking beginning with the dimension used in
 the most recent application. In this case that is the dimension $B$, and thus
 the next variant that will be found is parameterized by
 $\configuration=\set{(B,\false),(A, \true)}$ with context $\zipper =

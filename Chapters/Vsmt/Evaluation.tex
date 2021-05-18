@@ -6,21 +6,20 @@
   \label{fig:vsmt:inf:eval}
 \end{figure}
 %
-\todo{make into subsection or paragraph? Only 1 page long...}Evaluation's
-purpose is to assert symbolic terms in the base solver if it is safe to do so.
-Thus, the extensions to evaluation are minimal as accumulation is performing the
-majority of the work in creating the symbolic terms.
+Evaluation's purpose is to assert symbolic terms in the base solver if it is
+safe to do so. Thus, the extensions to evaluation are minimal as accumulation is
+performing the majority of the work in creating the symbolic terms.
 
 Variational \ac{smt} evaluation is defined in \autoref{fig:vsmt:inf:eval}. The
 only change is the addition of \evInEq{} corresponding to the addition of
 inequalities to \ac{vpl}. Just as \evOr{} skips over un-accumulated
-disjunctions, \evInEq{} skips over un-accumulated inequalities as evaluating
+disjunctions, \evInEq{} skips over un-accumulated inequalities since evaluating
 inside an inequality is unsound in the base solver. Since evaluation calls
-\evAcc{} to accumulate relations if \evAndL, \evAndR, and \evAnd don't apply,
-variational \ac{smt} evaluation simply relies on accumulation to progress. The
-special cases for conjunctions are maintained in order to sequence evaluation
-from left to right to take advantage of the behavior of the assertion stack and
-to propagate accumulation across conjunctions, just as in variational
+\evAcc{} to accumulate relations if \evAndL{}, \evAndR{}, and \evAnd{} don't
+apply, variational \ac{smt} evaluation simply relies on accumulation to
+progress. The special cases for conjunctions are maintained in order to sequence
+evaluation from left to right to take advantage of the behavior of the assertion
+stack and to propagate accumulation across conjunctions, just as in variational
 satisfiability evaluation.
 
 

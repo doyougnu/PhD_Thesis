@@ -21,22 +21,21 @@ sequence of statements in the base solver. Thus, another way to view our
 generalized folding algorithm is as a compiler from the language of variational
 \ac{sat} or \ac{smt} to plain \acl{smtlib} script. The stages of the compiler in
 this interpretation are straightforward: We parse a variational \ac{sat} or
-\ac{smt} problem to a abstract syntax tree in an intermediate language. The
+\ac{smt} problem to an abstract syntax tree in an intermediate language. The
 intermediate language enables optimization passes and is easier to work with
-than the object language. Accumulation and evaluation produce a variational core
-which can be seen as another, further reduced core language, or as a syntax
-object which encapsulates the variational aspects of the input. The core
-language is then operated upon by choice removal which deterministically
-produces the variant syntax objects. Code generation is spread across generation
-of symbolic values in accumulation, assertion of constraints in evaluation, and
-calls to \rn{push} or \rn{pop} during choice removal, specifically during
-\crChc.
+than the object language. Accumulation and evaluation produce a variational
+core, which can be seen as another, further reduced core language, or as a
+syntax object that encapsulates the variational aspects of the input. The core
+language is then operated by choice removal which deterministically produces the
+variant syntax objects. Code generation is spread across generation of symbolic
+values in accumulation, assertion of constraints in evaluation, and calls to
+\rn{push} or \rn{pop} during choice removal, specifically during \crChc.
 
 The exact ordering of the operations in the base solver, or the ordering of code
 generation, is implementation specific. In the prototype solvers that we have
 produced and will discuss further in the next chapter, code generation that
 corresponds to generating symbolic values occurs when the symbolic value becomes
-known to \aStore. When a configuration occurs the \rn{push}/\rn{pop} calls
+known to \aStore. When a configuration occurs, the \rn{push}/\rn{pop} calls
 encapsulate the operator the choice was nested in and any new symbolic values
 which result from the configuration. This ensures sharing of terms that are in
 the same assertion levels. For example, consider the case of $s_{12}$ from
@@ -53,8 +52,8 @@ because it is plain, thus the code which defines it must occur \emph{before} a
 $\vdots{}$
 \end{lstlisting}
 %
-Similarly for terms such as $s_{ik}$ which will be shared twice but are not
-plain; because $i$ was transformed into a symbolic before the choice was
+Similarly for terms such as $s_{ik}$, which will be shared twice but are not
+plain, because $i$ was transformed into a symbolic before the choice was
 configured its declaration still occurs outside the \rn{push}/\rn{pop} block. In
 contrast, $k$ is parameterized by a choice and thus its declaration occurs
 inside a \rn{push}/\rn{pop} block:
@@ -73,20 +72,20 @@ $\vdots{}$
 $\vdots{}$
 \end{lstlisting}
 %
-In this case the ordering of symbolic value generation forced $s_{k}$ to be
+In this case, the ordering of symbolic value generation forced $s_{k}$ to be
 inside the \rn{push} call so that it is removed from the local scope of the
 solver after a \rn{pop} and thus the boundaries between alternatives do not leak
 information. Notice that the inference rules in
-\autoref{section:vsmt:accumulation}, \autoref{section:vsmt:evaluation} and
+\autoref{section:vsmt:accumulation}, \autoref{section:vsmt:evaluation}, and
 \autoref{section:vsmt:choice-removal} guarantee this behavior because symbolic
 value creation is ordered according to levels of variation. For example, plain
-terms are level 0 as no configuration has happened. In a sense they are globally
-scoped and thus become symbolic values or \unit{}'s first. It is only after a
-configuration occurs from \crChc{} that more plain terms are introduced. When a
-configuration occurs a new \rn{push}/\rn{pop} block is entered, and thus any
-calls to accumulation which occur inside it occur inside that block in the base
-solver and correspond to level 1. Furthermore, the level is propagated by the $D
-\in \configuration$ check in \crChcT{} and \crChcF{}.
+terms are level 0 since no configuration has happened. In a sense they are
+globally scoped and thus become symbolic values or \unit{}'s first. It is only
+after a configuration occurs from \crChc{} that more plain terms are introduced.
+When a configuration occurs, a new \rn{push}/\rn{pop} block is entered, and thus
+any calls to accumulation which occur inside it occur inside that block in the
+base solver and correspond to level 1. Furthermore, the level is propagated by
+the $D \in \configuration$ check in \crChcT{} and \crChcF{}.
 
 To demonstrate the generality of this design we now consider the case of adding
 \ac{smt} arrays. To add \ac{smt} arrays we treat arrays as a new kind of
@@ -106,77 +105,79 @@ wrap these operations, add new rules to accumulation to accumulate anything in
 the $a$, $i$, or $e$ positions and then extend \zipper{} such that a context
 could be captured wherever choices may occur. For example we might have:
 %
-\begin{figure}
-  \centering
   \begin{syntax}
-    \zipper & \Coloneqq{} & \inRoot  \\
-    & | & \inNot{\zipper}            \\
-    & | & \inUnary{\zipper}          \\
-    & | & \inBoolL{\zipper}{\,\eIL}   \\
-    & | & \inBoolR{s}{\zipper}       \\
-    & | & \inArithL{\zipper}{\,\eIL}  \\
-    & | & \inArithR{s}{\zipper}      \\
-    & | & \inInEqL{\zipper}{\,\eIL}   \\
-    & | & \inInEqR{s}{\zipper}       \\
-    & | & \inSelectL{s}{s}{\zipper} \\
-    & | & \inSelectM{s}{s}{\zipper} \\
-    & | & \inSelectR{s}{s}{\zipper} \\
-    & | & \inStoreL{s}{\zipper} \\
+    \zipper & \Coloneqq{} & \inRoot  \\[-1.8ex]
+    & | & \inNot{\zipper}            \\[-1.8ex]
+    & | & \inUnary{\zipper}          \\[-1.8ex]
+    & | & \inBoolL{\zipper}{\,\eIL}   \\[-1.8ex]
+    & | & \inBoolR{s}{\zipper}       \\[-1.8ex]
+    & | & \inArithL{\zipper}{\,\eIL}  \\[-1.8ex]
+    & | & \inArithR{s}{\zipper}      \\[-1.8ex]
+    & | & \inInEqL{\zipper}{\,\eIL}   \\[-1.8ex]
+    & | & \inInEqR{s}{\zipper}       \\[-1.8ex]
+    & | & \inSelectL{s}{s}{\zipper}  \\[-1.8ex]
+    & | & \inSelectM{s}{s}{\zipper}  \\[-1.8ex]
+    & | & \inSelectR{s}{s}{\zipper}  \\[-1.8ex]
+    & | & \inStoreL{s}{\zipper}      \\[-1.8ex]
     & | & \inStoreR{s}{\zipper} \\
   \end{syntax}
+%
+  Which is verbose but would work. Now consider a formula which contains a
+  nested choice in an arithmetic expression in the element slot of \select{} but
+  not store: $\kf{f} = (a \equiv \store*{a}{2}{(i - \chc[A]{k,l})}) \wedge (i
+  \equiv \select{a}{2}) \wedge (i \equiv l)$. The conjunctions indicate separate
+  statements in \acl{smtlib} due to the behavior of the assertion stack. The
+  formula is noteworthy because both the \select{} and $i \equiv l$ call are
+  plain and thus will be processed by evaluation/accumulation \emph{before}
+  choice removal via the \evAndL{} and \evAndR. So the formula may seem
+  problematic because calling a \select{} before a \store{} in other paradigms
+  would lead to an error. However this will not be the case, consider the
+  compiled \acl{smtlib} script for $f$ in \autoref{fig:vsmt:arrays:compiled-f}.
+%
+\begin{figure}[h!]
+  \begin{lstlisting}[columns=flexible,keepspaces=true,language=SMTLIB,breaklines=true]
+  (declare-const $s_{a}$ (Array Int Int))         ;; variable declarations
+  (declare-const $s_{i}$ Int)
+  (declare-const $s_{l}$ Int)
+  (declare-const $s_{2}$ Int)
+  (declare-fun $s_{sel}$ () Int                    ;; select
+    (= $s_{i}$ (select $s_{a}$ $s_{2}$)))
+  (declare-fun $s_{il}$ () Int                    ;; equivalency constraint
+    (= $s_{i}$ $s_{l}$))
+  (assert $s_{sel}$)
+  (assert $s_{il}$)
+  (push)                                  ;; push for true alternative of A
+  (declare-const $s_{k}$ Int)
+  (declare-fun $s_{ik}$ () Int
+    (- $s_{i}$ $s_{k}$))
+  (assert (= $s_{a}$ (store $s_{a}$ ($s_{2}$) ($s_{ik}$)))
+  (check-sat)
+  (get-model)                             ;; plain model for true alternative
+  (pop)
+  (push)                                  ;; push for false alternative of A
+  (declare-fun $s_{il}$ () Int
+    (- $s_{i}$ $s_{l}$))
+  (assert (= $s_{a}$ (store $s_{a}$ ($s_{2}$) ($s_{il}$)))
+  (check-sat)
+  (get-model)                             ;; plain model for false alternative
+  (pop)
+  \end{lstlisting}
+  \caption{The \acl{smtlib} output from compiling \fV.}
+  \label{fig:vsmt:arrays:compiled-f}
 \end{figure}
 %
-Which is verbose but would work. Now consider a formula which contains a nested
-choice in an arithmetic expression in the element slot of \select{} but not
-store: $\kf{f} = (a \equiv \store*{a}{2}{(i - \chc[A]{k,l})}) \wedge (i \equiv
-\select{a}{2}) \wedge (i \equiv l)$. The conjunctions indicate separate
-statements in \acl{smtlib} due to the behavior of the assertion stack. The
-formula is noteworthy because both the \select{} and $i \equiv l$ call are plain
-and thus will be processed by evaluation/accumulation \emph{before} choice
-removal via the \evAndL{} and \evAndR. This may seem problematic as calling a
-\select{} before a \store{} in other paradigms would lead to an error. However
-this will not be the case, consider the compiled \acl{smtlib} script for $f$:
-%
-\begin{lstlisting}[columns=flexible,keepspaces=true,language=SMTLIB,breaklines=true]
-(declare-const $s_{a}$ (Array Int Int))         ;; variable declarations
-(declare-const $s_{i}$ Int)
-(declare-const $s_{l}$ Int)
-(declare-const $s_{2}$ Int)
-(declare-fun $s_{sel}$ () Int                    ;; select
-  (= $s_{i}$ (select $s_{a}$ $s_{2}$)))
-(declare-fun $s_{il}$ () Int                    ;; equivalency constraint
-  (= $s_{i}$ $s_{l}$))
-(assert $s_{sel}$)
-(assert $s_{il}$)
-(push)                                  ;; push for true alternative of A
-(declare-const $s_{k}$ Int)
-(declare-fun $s_{ik}$ () Int
-  (- $s_{i}$ $s_{k}$))
-(assert (= $s_{a}$ (store $s_{a}$ ($s_{2}$) ($s_{ik}$)))
-(check-sat)
-(get-model)                             ;; plain model for true alternative
-(pop)
-(push)                                  ;; push for false alternative of A
-(declare-fun $s_{il}$ () Int
-  (- $s_{i}$ $s_{l}$))
-(assert (= $s_{a}$ (store $s_{a}$ ($s_{2}$) ($s_{il}$)))
-(check-sat)
-(get-model)                             ;; plain model for false alternative
-(pop)
-\end{lstlisting}
-%
-We see that evaluation/accumulation did find the plain \select{} and $i \equiv
-l$ constraints and assert them before the choice is processed. However, because
-constraints in the base solver can be unordered---due to the implicit
-conjunction of all assertions in an assertion level---the out of order \select{}
-and constraint $i \equiv l$ are not problematic. Furthermore, we see that the
-\acl{smtlib} snippet has desirable properties: every plain or variational term
-that can be shared, such as $l$ and $i$, is shared. When a \rn{push}/\rn{pop}
+From the compiled output, we see that evaluation/accumulation did find the plain
+\select{} and $i \equiv l$ constraints and assert them before the choice is
+processed. However, because constraints in the base solver can be unordered due
+to the implicit conjunction of all assertions in an assertion level, the out of
+order \select{} and constraint $i \equiv l$ are not problematic. Furthermore, we
+see that the \acl{smtlib} snippet has desirable properties: every plain or
+variational term, such as $l$ and $i$, can be shared. When a \rn{push}/\rn{pop}
 block is entered the block is as small as possible, thus sharing is maximized as
 much as possible. Due to the symbolic values generated by
 accumulation/evaluation, variation does not spread past the immediate relation
-and thus other relations do not suffer from \todo{find a
-  reference or cite kleene}\emph{variational infection}.
+and thus other relations do not suffer from \emph{variational
+  infection}~\cite{Walk14onward}.
 
 We have demonstrated the generality of our approach by extensions with the
 differing domains of arithmetic over integers and arrays. Key to the approach is
