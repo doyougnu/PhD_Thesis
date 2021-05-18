@@ -99,11 +99,15 @@ mathematical sets as a formal representation of symbolic values.
   all choices and thus variants are preserved.
 \end{proof}
 
-Similarly we must show that terms are not lost during evaluation:
+Similarly we must show that terms are not lost during evaluation. To not lose
+terms in evaluation means that any term reduced to a \unit{} is considered for
+future \rn{check-sat} calls as long as the assertions are not removed from the
+assertion stack:
 
 \begin{lemma}[\unit{} values are shared]
   During evaluation, if a term is evaluated to \unit{} then the term is shared
-  among all subsequent variants.
+  among variants in future assertion levels or the variant considered in the
+  current assertion level.
 \end{lemma}
 %
 \begin{proof}
@@ -114,7 +118,7 @@ Similarly we must show that terms are not lost during evaluation:
   by accumulation or an accumulated formula is returned. If a symbolic value is
   returned, then it can be evaluated to a \unit{} via \evSym{}; placing it on
   the assertion stack of the base solver and therefore sharing it for all
-  subsequent variants as it is deeper in the stack that future assertions. If an
+  subsequent variants as it is deeper in the stack than future assertions. If an
   accumulated formula is returned, then there are three cases for the logical
   connective at the root of the formula: $\neg$, $\vee$ and $\wedge$. Only
   $\wedge$ allows evaluation to continue, in which case \evSym{} and \evAnd{}
@@ -138,6 +142,52 @@ Similarly we must show that terms are not lost during evaluation:
   propagated over $\wedge$, for $\neg$ and $\vee$ must switch to accumulation to
   process the term.
 \end{proof}
+
+With these properties we can finally show that choice removal finds all
+variants, and communicates the variants to the base solver without losing or
+gaining terms which do not exist in the variant. For the proofs we do not assume
+an input \vc{}.
+
+\begin{theorem}[Choice removal progress]
+  Given a \ac{vpl} formula \fV{}, choice removal processes all variants $v \in
+  \variants{\fV}$.
+\end{theorem}
+%
+\begin{proof}
+  Given \fV{}, $\exists \prime*{\fV}$ such that \prime*{\fV} is the variational
+  core of \fV{}. Then by structural induction on \prime*{\fV{}}, there are four
+  cases: The base case is \prime*{\fV} is \unit{} with evaluation context
+  \inRoot{}, and thus \crEval{} applies. The inductive cases have a connectives
+  at the root of \prime*{\fV}. If \prime*{\fV} is a choice with evaluation
+  context \zV{} then by structural induction on $C$ either \crChc{}, \crChcT{}
+  or \crChcF{} applies. \crChc{} is the important rule. If \crChc{} applies then
+  $D \notin \domain{C}$ and both variants are recursively processed with the
+  same evaluation context and $\set{D} \cup \domain(C)$. Therefore, the
+  evaluation context is shared between variants and no terms are lost. The
+  \crChcT{} and \crChcF{} rules ensure variants do not cross communicate. Thus,
+  if $D \in \domain{C}$ then either \crChcT{} or \crChcF{} applies and the
+  current variant is recursively processed. If $\neg$, $\vee$ or $\wedge$ are at
+  the root either \crAnd{}, \crOr{} or \crNot{} applies, forcing choice removal
+  to recur into the left child. Since, variational cores are only composed of
+  symbolic values and choices either the left child is a choice or a symbolic.
+  If the left child is a choice then it is processed as described above. If the
+  left child is a symbolic value then only \crAndL{}, \crOrL{} and \crNotIn{}
+  apply, then by structural induction on \zV{} choice removal processes the
+  right child. Once in the right child only \crAndR{}, \crOrR{} apply thereby
+  folding symbolic values using accumulation. Thus, every choice will be
+  reached, by manipulation of the configuration every variant is processed with
+  \crChc{}, and variants are never mixed due to \crChcT{} and \crChcF{}.
+\end{proof}
+
+\begin{theorem}[Choice removal preservation]
+
+\end{theorem}
+%
+\begin{proof}
+
+\end{proof}
+
+
 
 %%% Local Variables:
 %%% mode: latex
