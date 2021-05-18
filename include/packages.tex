@@ -87,6 +87,13 @@
 \reversemarginpar
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Math
+%%%% new environment for sub-proofs
+\newenvironment{subproof}[1][\proofname]{%
+  \renewcommand{\qedsymbol}{\ensuremath{\blacksquare}}%
+  \begin{proof}[#1]%
+}{%
+  \end{proof}%
+}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{corollary}{Corollary}[theorem]
 \newtheorem{lemma}[theorem]{Lemma}

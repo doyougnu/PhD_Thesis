@@ -104,11 +104,12 @@ terms in evaluation means that any term reduced to a \unit{} is considered for
 future \rn{check-sat} calls as long as the assertions are not removed from the
 assertion stack:
 
-\begin{lemma}[\unit{} values are shared]
+\begin{theorem}[\unit{} values are shared]
+  \label{thm:evaluation:term-preserving}
   During evaluation, if a term is evaluated to \unit{} then the term is shared
   among variants in future assertion levels or the variant considered in the
   current assertion level.
-\end{lemma}
+\end{theorem}
 %
 \begin{proof}
   By definition if a term is \emph{not} shared, then it is in some variants and
@@ -163,7 +164,7 @@ an input \vc{}.
   context \zV{} then by structural induction on $C$ either \crChc{}, \crChcT{}
   or \crChcF{} applies. \crChc{} is the important rule. If \crChc{} applies then
   $D \notin \domain{C}$ and both variants are recursively processed with the
-  same evaluation context and $\set{D} \cup \domain(C)$. Therefore, the
+  same evaluation context and $\set{D} \cup \domain{C}$. Therefore, the
   evaluation context is shared between variants and no terms are lost. The
   \crChcT{} and \crChcF{} rules ensure variants do not cross communicate. Thus,
   if $D \in \domain{C}$ then either \crChcT{} or \crChcF{} applies and the
@@ -181,6 +182,7 @@ an input \vc{}.
 \end{proof}
 
 \begin{theorem}[Choice removal preservation]
+  \label{thm:choice-removal:preservation}
   Given a \ac{vpl} formula \fV{}, choice removal does not lose terms during
   processing \fV{} and processed variants do not gain terms.
 \end{theorem}
@@ -193,6 +195,62 @@ an input \vc{}.
   \crChcT{} and \crChcF{} as described in \autoref{thm:choice-removal:progress}.
 \end{proof}
 
+Now we can finally show variation preservation:
+\begin{theorem}[Variational satisfiability solving is variation preserving]
+  \label{thm:variation-preservation}
+  Given a \ac{vpl} formula \fV{}, there exists a set of total configurations
+  $\kf{CS}$ such that $\setc{r}{\submodel{f}{C} = r, \kf{C} \in \kf{CS},
+    \kf{VSAT(f)} = \vmodel*{f}} = \setc{r}{\kf{SAT(\prime*{f}) = r}, C \in
+    \kf{CS}, \sem[C]{f} = \prime*{f}}$.
+\end{theorem}
+%
+\begin{proof}
+  We must show two directions: $\setc{r}{\submodel{f}{C} = r, \kf{C} \in
+    \kf{CS}, \kf{VSAT(f)} = \vmodel*{f}} \subseteq \setc{r}{\kf{SAT(\prime*{f})
+      = r}, C \in \kf{CS}, \sem[C]{f} = \prime*{f}}$ and
+  $\setc{r}{\kf{SAT(\prime*{f}) = r}, C \in \kf{CS}, \sem[C]{f} = \prime*{f}}
+  \subseteq \setc{r}{\submodel{f}{C} = r, \kf{C} \in \kf{CS}, \kf{VSAT(f)} =
+    \vmodel*{f}}$, we refer to these as \emph{plain to variational} and
+  \emph{variational to plain}.
+  \begin{subproof}[Subproof: plain to variational]
+    Assume for contradiction there exists a variant $\prime*{f}$ of \fV{} such
+    that $\kf{SAT(\prime*{f})} = \rV{}$ and $\nexists C. \submodel{\fV}{C} =
+    \rV$. By \autoref{thm:choice-removal:preservation},
+    \autoref{thm:accumulation:term-preserving}, and
+    \autoref{thm:evaluation:term-preserving} terms are not lost nor gained when
+    solving a variant using the variational solver, thus there must exist a
+    configuration \prime*{C} such that \submodel{f}{\prime*{C}} = \rV{}, hence a
+    contradiction.
+  \end{subproof}
+  %
+  \begin{subproof}[Subproof: variational to plain]
+    Assume for contradiction there exists a variant $\prime*{f}$ determined by
+    configuration $\prime*{C}$ such that \submodel{\fV}{\prime*{C}} = \rV{} but
+    $\rV{} \notin \setc{\prime*{r}}{\kf{SAT(\prime*{v}) = \prime*{r}}, C \in
+      \kf{CS}, \sem[C]{f} = \prime*{v}}$. Since \prime*{f} is a variant of \fV{}
+    determined by \prime*{C}, $\prime*{C} \in \kf{CS}$ and therefore $\exists
+    \prime*{r}. \kf{SAT(\prime*{f}) = \prime*{r}}$. We must show that
+    $\prime*{r} = \rV$. For \prime*{r} $\neq$ \rV{} either terms were lost
+    during $\kf{VSAT(f)}$, or gained when \prime*{f} was processed, but by
+    \autoref{thm:choice-removal:preservation},
+    \autoref{thm:accumulation:term-preserving}, and
+    \autoref{thm:evaluation:term-preserving} this cannot be the case. Thus
+    \prime*{r} = \rV{} and therefore $\rV{} \in
+    \setc{\prime*{r}}{\kf{SAT(\prime*{v}) = \prime*{r}}, C \in \kf{CS},
+      \sem[C]{f} = \prime*{v}}$ hence a contradiction.
+  \end{subproof}
+
+  We have shown both $\setc{r}{\submodel{f}{C} = r, \kf{C} \in \kf{CS},
+    \kf{VSAT(f)} = \vmodel*{f}} \subseteq \setc{r}{\kf{SAT(\prime*{f}) = r}, C
+    \in \kf{CS}, \sem[C]{f} = \prime*{f}}$ and $\setc{r}{\kf{SAT(\prime*{f}) =
+      r}, C \in \kf{CS}, \sem[C]{f} = \prime*{f}} \subseteq
+  \setc{r}{\submodel{f}{C} = r, \kf{C} \in \kf{CS}, \kf{VSAT(f)} =
+    \vmodel*{f}}$. Thus we have $\setc{r}{\submodel{f}{C} = r, \kf{C} \in
+    \kf{CS}, \kf{VSAT(f)} = \vmodel*{f}} = \setc{r}{\kf{SAT(\prime*{f}) = r}, C
+    \in \kf{CS}, \sem[C]{f} = \prime*{f}}$. Therefore, regardless of the path in
+  \autoref{vsat:commuting-diagram} the same variant will be considered by the
+  base solver and therefore variational solving is variation preserving.
+\end{proof}
 
 
 %%% Local Variables:
