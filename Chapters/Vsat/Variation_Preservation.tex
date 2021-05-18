@@ -149,6 +149,7 @@ gaining terms which do not exist in the variant. For the proofs we do not assume
 an input \vc{}.
 
 \begin{theorem}[Choice removal progress]
+  \label{thm:choice-removal:progress}
   Given a \ac{vpl} formula \fV{}, choice removal processes all variants $v \in
   \variants{\fV}$.
 \end{theorem}
@@ -180,11 +181,16 @@ an input \vc{}.
 \end{proof}
 
 \begin{theorem}[Choice removal preservation]
-
+  Given a \ac{vpl} formula \fV{}, choice removal does not lose terms during
+  processing \fV{} and processed variants do not gain terms.
 \end{theorem}
 %
 \begin{proof}
-
+  The proof is nearly identical in structure to
+  \autoref{thm:choice-removal:progress}. By
+  \autoref{thm:accumulation:term-preserving} and threading of \aStore{} through
+  choice removal terms are not lost. Terms are not gained in variants due to
+  \crChcT{} and \crChcF{} as described in \autoref{thm:choice-removal:progress}.
 \end{proof}
 
 
