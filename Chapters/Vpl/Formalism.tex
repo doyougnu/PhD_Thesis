@@ -44,18 +44,24 @@ Using $\kf{Dimensions}$ we can define a more precise property on configurations.
 %
 \begin{definition}[Minimal Configuration]
   We say a configuration $\kf{C}$ is minimal with respect to some formula $f \in
-  \ac{vpl}$ if and only if $\domain{C} = \kf{Dimensions(\kf{f})}$.
+  \ac{vpl}$ if and only if $\forall C.\ \sem[C]{f} = v$ where $v \in
+  \variants*{f}$ and $\nexists \prime*{C} .\ \sem[\prime*{C}]{f} = v$
+  and $\cardinality{\prime*{C}} < \cardinality{C}$.
 \end{definition}
 
-Note that a minimal configuration can only be $\varnothing$ for formulas which
-are plain. One may think of a minimal configuration as a total configuration
+Note if \fV{} is plain then $\fV{} = \kf{v}$ and $\kf{C} = \varnothing$ but is
+still minimal. One may think of a minimal configuration as a total configuration
 with \emph{nothing extra}. For example, the configuration $C = \{\kf{(A,\true),
   (B,\false),(E,\true)}\}$ is total with respect to the formula $f =
 \chc[A]{p,q}\wedge\chc[B]{r,s}$ because $C$ eliminates all choices in $f$.
-However $\kf{C}$ is not minimal with respect to $f$ because $\domain{C} =
-\set{A, B, E}$ and $\kf{Dimensions(\kf{f})} = \set{A,B}$, thus $\set{A,B,E} \neq
-\set{A,B}$ since $C$ contains an extra binding for $E$ that is not needed to
-configure $f$.
+However $\kf{C}$ is not minimal with respect to $f$ because there exists a
+configuration $\prime*{C} = \set{(A,\true), (B,\false)}$ that is total, produces
+the same variant and is smaller, \ie{}, $\cardinality{\prime*{C}} <
+\cardinality{C}$. Similarly, consider a formula such as $\chc[A]{\pV{},
+  \chc[B]{\qV{}, \rV{}}}$ where the minimal configuration changes depending on
+the variant. In this case, the configuration $C = \set{(A, \true), (B, \false)}$
+is not minimal for the \set{(A,\true)} variant, however $\kf{C} =
+\set{(A,\true)}$ is, but $\kf{C}$ is minimal for every \set{(A,\false)} variant.
 
 With these functions and definitions we can prove useful lemmas and theorems.
 %
