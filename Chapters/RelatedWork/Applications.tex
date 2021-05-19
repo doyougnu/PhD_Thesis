@@ -23,24 +23,24 @@ account for a counterfactual event; for example, one might need to schedule a
 set of jobs on a number of machines but also account for one or several machines
 being unable to take jobs. Such a problem is directly expressible in \ac{vpl}
 where each dimensions would correspond to a machine being online, or a machine
-being disabled. Another classic \ac{sat} application is \todo{cite}circuit
-layout or hardware verification problems. In this domain, \ac{sat} solvers are
-used as the back-end engine to answer safety and live-ness questions. Questions
-such as a given system can never reach a certain state or a system will always
-reach some given state after a certain state is reached~\cite{BBH+09}. This work
-could be directly applied to such problems; for example one might have two or
-more circuits which share significant regions and yet are distinct products with
-distinct behavior. Performing hardware verification on each circuit would
-produce two related \ac{sat} problems, where the shared portions are redundantly
-calculated. Thus, one can imagine translating the set of \ac{sat} problems to a
-\ac{vpl} formula and solving them with a variational solver. Another direct
-application would be performing hardware verification in the presence of
-patches, one might encode speculative analyses to ensure desirable properties in
-the hardware if regions or elements in the circuit are completely removed,
-significantly patched, or stop operating. The particulars in this domain are
-open research questions, however given the findings in this thesis large
-performance gains are possible through the use of a variational \ac{sat} or
-\ac{smt} solver.
+being disabled. Another classic \ac{sat} application is circuit layout and
+hardware verification problems~\cite{BBH+09}. In this domain, \ac{sat} solvers
+are used as the back-end engine to answer safety and live-ness questions.
+Questions such as a given system can never reach a certain state or a system
+will always reach some given state after a certain state is
+reached~\cite{BBH+09}. This work could be directly applied to such problems; for
+example one might have two or more circuits which share significant regions and
+yet are distinct products with distinct behavior. Performing hardware
+verification on each circuit would produce two related \ac{sat} problems, where
+the shared portions are redundantly calculated. Thus, one can imagine
+translating the set of \ac{sat} problems to a \ac{vpl} formula and solving them
+with a variational solver. Another direct application would be performing
+hardware verification in the presence of patches, one might encode speculative
+analyses to ensure desirable properties in the hardware if regions or elements
+in the circuit are completely removed, significantly patched, or stop operating.
+The particulars in this domain are open research questions, however given the
+findings in this thesis large performance gains are possible through the use of
+a variational \ac{sat} or \ac{smt} solver.
 
 %
 Software variability is a natural application domain for this work. The

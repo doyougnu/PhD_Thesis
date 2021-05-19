@@ -44,7 +44,7 @@ Using $\kf{Dimensions}$ we can define a more precise property on configurations.
 %
 \begin{definition}[Minimal Configuration]
   We say a configuration $\kf{C}$ is minimal with respect to some formula $f \in
-  \ac{vpl}$ iff $\domain{C} = \kf{Dimensions(\kf{f})}$.
+  \ac{vpl}$ if and only if $\domain{C} = \kf{Dimensions(\kf{f})}$.
 \end{definition}
 
 Note that a minimal configuration can only be $\varnothing$ for formulas which
@@ -63,7 +63,7 @@ We'll begin by proving that the configuration semantics over a \ac{vpl} formula
 is \emph{confluent}, \ie{}, each configuration with respect to a \ac{vpl}
 formula precisely specifies one variant:
 %
-\begin{lemma}[\ensuremath{\sem[C]{f}} is deterministic]
+\begin{lemma}[\ensuremath{\sem[C]{f}} is deterministic]%
   \label{lemma:vpl:deterministic}
   For any configuration $C$, if \ensuremath{\semL f \semR_{C} = g}, and
   \ensuremath{\semL f \semR_{C} = h}, then $\kf{g} = \kf{h}$.
@@ -78,7 +78,7 @@ formula precisely specifies one variant:
 
 Similarly, clearly \ac{vpl} reduces to \pl{}:
 %
-\begin{theorem}[\ac{vpl} reducible to \pl{}]
+\begin{theorem}[\ac{vpl} reducible to \pl{}]%
   \label{thm:vpltopl}
   For any configuration $C$ and any formula $f \in \ac{vpl}$, if $C$ is total
   with respect to $f$, then $\sem[C]{f} \in \pl{}$

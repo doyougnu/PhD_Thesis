@@ -248,10 +248,26 @@ would be a prolog-like programming language with choices. Expressing segments of
 plain terms with symbolic values could be directly reused from this thesis.
 Similarly, the variational result would be nearly identical to the variational
 models presented in \autoref{section:vsat:models}. Embedding variation in prolog
-is the hard part. SWI-prolog defines an incremental table \todo{cite} which is a
-promising possible embedding, other embeddings, such as special kinds of
-constraints could be used although the exact details and properties are yet to
-be investigated.
+is the difficult part although there are several possibilities.
+SWI-prolog~\cite{wielemaker:2011:tplp} defines a special kind of predicate
+called \emph{dynamic predicates}. Dynamic predicates indicate to the prolog
+interpreter that the predicate may change during execution. Changing the
+predicate during execution is performed using two primitives, \emph{assertz} and
+\emph{retract}. Thus prolog defines a way to assert a constraint in the
+interpreter and then refine the constraint as needed, and so dynamic predicates
+may serve as a viable primitive for variation in the prolog interpreter. Another
+promising embedding is using delimited continuations. In \autoref{chapter:vsat}
+we hypothesized that because a Heut zipper is used for choice removal, using
+delimited continuations is also feasible as Huet zippers have been shown to be
+isomorphic to delimited continuation~\cite{olegZippers}. Fortunately prolog has
+first class support for delimited
+continuations~\cite{DBLP:journals/tplp/SchrijversDDW13} and thus choice removal
+could be done in the base prolog interpreter rather than at the variational
+level. Using delimited continuations could greatly reducing the complexity of
+creating a variational prolog, and it might be possible to define variational
+prolog as a library rather than a separate entity. The exact details for a
+variational implementation are not clear but creating a variational prolog is
+certainly feasible.
 
 %%% Local Variables:
 %%% mode: latex
