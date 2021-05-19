@@ -23,7 +23,7 @@ Similarly we define a notion of \emph{cardinality} over \ac{vpl} formulas.
   following notation as shorthand: $\dcardinality{f} = |{\dimensions{f}}|$.
 \end{definition}
 
-Similarly to $\kf{Dimensions}$ it is useful to have projects from a \ac{vpl}
+Similarly to $\kf{Dimensions}$ it is useful to have projections from a \ac{vpl}
 formula to possible variants:
 %
 \begin{definition}[Variants]
@@ -40,21 +40,22 @@ and we can define a projection for all plain variants as well:
   \sem[C]{f} = v,\ v \in \pl{} \,\}$
 \end{definition}
 %
-Using $\kf{Dimensions}$ we can now define a more precise property on
-configurations.
+Using $\kf{Dimensions}$ we can define a more precise property on configurations.
 %
 \begin{definition}[Minimal Configuration]
-  We say a configuration $C$ is minimal with respect to some formula $f \in
-  \ac{vpl}$ iff $\domain{C}\ \cap\ \kf{Dimensions(\kf{f})\ \neq \varnothing}$.
+  We say a configuration $\kf{C}$ is minimal with respect to some formula $f \in
+  \ac{vpl}$ iff $\domain{C} = \kf{Dimensions(\kf{f})}$.
 \end{definition}
 
-One may think of a minimal configuration as a total configuration with
-\emph{nothing extra}. For example, the configuration $C = \{\kf{(A,\true),
+Note that a minimal configuration can only be $\varnothing$ for formulas which
+are plain. One may think of a minimal configuration as a total configuration
+with \emph{nothing extra}. For example, the configuration $C = \{\kf{(A,\true),
   (B,\false),(E,\true)}\}$ is total with respect to the formula $f =
 \chc[A]{p,q}\wedge\chc[B]{r,s}$ because $C$ eliminates all choices in $f$.
-However $\kf{C}$ is not minimal with respect to $f$ as $\kf{Dom(C)}\ \cap\
-\kf{Dimensions(\kf{f})\ = \{\kf{E}\}}$, since $C$ contains an extra binding for
-$E$ that is not needed to configure $f$.
+However $\kf{C}$ is not minimal with respect to $f$ because $\domain{C} =
+\set{A, B, E}$ and $\kf{Dimensions(\kf{f})} = \set{A,B}$, thus $\set{A,B,E} \neq
+\set{A,B}$ since $C$ contains an extra binding for $E$ that is not needed to
+configure $f$.
 
 With these functions and definitions we can prove useful lemmas and theorems.
 %
