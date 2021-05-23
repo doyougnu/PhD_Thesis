@@ -20,20 +20,56 @@ ideas work in practice''; this is the project of this thesis, to put the ideas
 of \emph{variation} and \emph{variational programming} to the test in the
 practical domain of \ac{sat}.
 
-The major contribution of this thesis is the formalization of a
-\emph{\ac{vpl}},\todo{this is the place for variational system definition}
-\emph{variational \acl{sat}}, and the construction of a \emph{variational
-  \ac{sat} solver}. In the next section I motivate the use of variation theory
-and variational techniques in \acl{sat}. In addition to work on variational
-\ac{sat} several other contributions are made. The thesis extends variational
-\acl{sat} to variational \ac{smt}. It demonstrates reusable techniques and
-architecture for constructing \emph{variational or variation-aware} systems
+To my knowledge there is no formal definition of a \emph{variation-aware} or
+\emph{variational} system, and the terms are used interchangeably in the
+research literature. For clarity, I provide the following working definitions:
+
+\begin{definition}[Variational Problem]
+  A problem is variational if separate instances of the problem share elements
+  which are critical to solving the instance of the problem, and elements which
+  are not shared are able to be deterministically represented.
+\end{definition}
+%
+For example, a non-variational problem is finding a single sum of a set of
+numbers, such as $\kf{ns} = \set{1,2,3,5,7}$. The problem becomes variational
+when we want to find the sum of $\kf{ns}$ and another sum for a related set
+$\prime*{ns} = \set{1,2,3,13,17}$ which shares three elements $1$, $2$, and $3$.
+$\sum_{n \in{} ns} n$ and $\sum_{n \in{} \prime*{ns}} n$ are separate instances
+of the same problem, the shared elements between them cannot be ignored without
+changing their respective solutions, and the elements which are not in both sets
+can be deterministically represented either by a subset or property: \setc{n}{n
+  \in \kf{ns}, n \notin \prime*{ns}}.
+%
+Now we can define a variational system as a system which exploits these facts to
+solve a variational problem.
+
+\begin{definition}[Variational or variation-aware System]
+  A system is variational or variation-aware if it uses the shared elements of a
+  variational problem to solve all or some instances of the problem.
+\end{definition}
+%
+Thus, a variational summation of $\kf{ns}$ and \prime*{ns} should exploit the
+fact that there are shared elements. For example, a variational summation might
+translate the problem into two sub-problems, one to sum the shared elements and
+one to sum the rest. With this procedure the summation of $\kf{ns}$ is $\sum_{n
+  \in{} ns} n = \sum_{s \in{} \kf{ss}} s + \sum_{n \in{} \kf{ns} \setminus{}
+  \kf{ss}} n$ where $\kf{ss} = \setc{s}{s \in{} \kf{ns} \cap{} \prime*{ns}}$.
+Crucially the summation of the shared elements should only occur once, and then
+be reused for the sum of \prime*{ns}.
+
+The major contributions of this thesis is the formalization of a
+\emph{\acl{vpl}}, \emph{variational \acl{sat}}, and the construction of a
+\emph{variational \ac{sat} solver}. In the next section I motivate the use of
+variation theory and variational techniques in \acl{sat}. In addition to work on
+variational \ac{sat} several other contributions are made. The thesis extends
+variational \acl{sat} to variational \ac{smt}. It presents reusable techniques
+and architecture for constructing \emph{variational or variation-aware} systems
 using the non-variational counterparts of these systems for other domains. It
 shows that, with the concept of variation, the variational \ac{smt} and \ac{sat}
-solvers can be trivially parallelized. Lastly, the thesis provides a general
-algorithm to construct variational strings from a set of non-variational strings
-and argues for the proliferation of variation theory to other domains in
-computer science.
+solvers can be parallelized. Lastly, this thesis is the culmination of many
+conversations, arguments and work from myself and many others over the last five
+years. To honor their contributions I use the first-person plural ``we'', rather
+than ``I'' for the remainder of the thesis.
 
 \section{Motivation and Impact}
 \input{Chapters/Introduction/Motivation}
