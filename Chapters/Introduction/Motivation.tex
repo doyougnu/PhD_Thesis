@@ -67,12 +67,13 @@ track results; which again couples to the input and is therefore difficult to
 reuse.
 
 We argue that solving a set of related \ac{sat} problems \emph{is a variational
-  programming problem} and that by directly addressing the problem's variational
-nature the incremental \ac{sat} interface and performance can be improved. The
+  programming problem}, and by directly addressing the problem's variational
+nature, the incremental \ac{sat} interface and performance can be improved. The
 essence of variational programming is a formal language called the \emph{choice
-  calculus}. With the choice calculus, sets of problems in the \ac{sat} domain
-can be expressed syntactically as a single \emph{variational artifact}. The
-benefits are numerous:
+  calculus}. With the choice calculus, local points of variation are able to be
+explicitly represented. Furthermore, sets of problems in the \ac{sat} domain can
+be expressed syntactically as a single \emph{variational artifact}. The benefits
+are numerous:
 \begin{enumerate}
 \item The side-effectual statements are hidden from the user, recovering the
   declarative nature of non-incremental \ac{sat} solving.
@@ -104,9 +105,9 @@ writing, and to my knowledge, this work is the first to directly use results in
 the variational research community to parallelize a variation unaware tool. Thus
 by directly handling variation, this work demonstrates direct benefits to be
 gained for researchers in other domains and magnifies the impact of any results
-produced by the variational research community. Lastly, the result of my thesis,
-a variational \ac{sat} solver, provides a new logic and tool to reason about
-variation itself.
+produced by the variational research community. Lastly, the result of this
+thesis, a variational \ac{sat} solver, provides a tool to reason about variation
+itself.
 
 %%% Local Variables:
 %%% mode: latex
