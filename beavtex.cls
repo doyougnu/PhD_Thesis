@@ -14,8 +14,8 @@
 %   Compatibility with hyperref
 %
 % Adapted from the version by Deling Ren (deling_ren@lifetime.oregonstate.edu)
-% 	In accordance (hopefully) to the OSU graduate school thesis guide (referred to
-% 	as T.G.): http://oregonstate.edu/dept/grad_school/current/thesis.html
+%   In accordance (hopefully) to the OSU graduate school thesis guide (referred to
+%   as T.G.): http://oregonstate.edu/dept/grad_school/current/thesis.html
 %   Changes from John Metta's version: tons and tons of change.
 %   Several definition generators are defined.
 %   Now (mostly) complies LaTeX2e package writer's guide.
@@ -23,7 +23,7 @@
 %   Options added.
 %
 % Adapted from John Metta's BeavTeX class
-%   John Metta (prev. name: Pennington) 
+%   John Metta (prev. name: Pennington)
 %   <john.pennington@lifetime.oregonstate.edu>
 % Originally thesis.sty
 % -------------------------------------------------------------------------------
@@ -56,7 +56,7 @@
 % an odd page). Date is included in the header, along with the word "Draft". In
 % the submission version, it is assumed that the document will be printed
 % single-sided. Default is submission.
-    
+
 % [seploa]. When [seploa] is set, the appendices do not appear in the main table
 % of contents (except for the entry "appendices" itself). Rather, they are
 % listed in the list of appendices. According to T.G., you need this if you have
@@ -71,7 +71,7 @@
 \DeclareOption{11pt}{\renewcommand{\@ftsize}{11pt}}
 \DeclareOption{12pt}{\renewcommand{\@ftsize}{12pt}}
 
-% Left side margin. 
+% Left side margin.
 % [1.5in], [1.7in]
 % T.G. : the left margin must be at least 1.5 inches (recommend 1.7). default is
 % 1.7, unless [1.5in] is specified.
@@ -154,7 +154,7 @@
 \newcommand{\heading}{\fontsize{14}{18}\selectfont}
 
 %-------------------------------------------------------------------------------
-% Misc commands 
+% Misc commands
 
 % Redefine the default (plain) pagestyle
 \renewcommand{\ps@plain}{%
@@ -247,8 +247,8 @@
   \chaptermark{#1}
   \addtocontents{\ext@figure}{\protect\addvspace{10\p@}}
   \addtocontents{\ext@table}{\protect\addvspace{10\p@}}
-	\ifthenelse{\isundefined{\listofalgorithms}}{}{
-  	\addtocontents{\ext@algorithm}{\protect\addvspace{10\p@}}
+  \ifthenelse{\isundefined{\listofalgorithms}}{}{
+    \addtocontents{\ext@algorithm}{\protect\addvspace{10\p@}}
   }
   \if@twocolumn
     \@topnewpage[\@makechapterhead{#2}]
@@ -336,7 +336,7 @@
   \hfill
   \if\@coadvisor * \@advisor
   \else \@advisor\hfill\@coadvisor
-  \fi 
+  \fi
   \hfill
 }
 
@@ -346,8 +346,8 @@
 % Abstract page
 \newcommand{\abspage}{
   \pagestyle{empty}
-  \begin{doublespacing} 
-    \begin{center} 
+  \begin{doublespacing}
+    \begin{center}
       {\heading AN ABSTRACT OF THE \MakeUppercase{\@doctype} OF}
     \end{center}
     \begin{flushleft}
@@ -417,7 +417,7 @@
   \begin{singlespacing}
     \begin{flushleft}
       \noindent
-      \ulinewithbreaks{\@degree} \MakeLowercase{\@doctype} of \ulinewithbreaks{\@author} 
+      \ulinewithbreaks{\@degree} \MakeLowercase{\@doctype} of \ulinewithbreaks{\@author}
       presented on \uline{\@submitdate}. \\
       \vspace{3em}
       APPROVED:\\
@@ -432,14 +432,14 @@
       \else\hrulefill \\  Co-Major Professor, representing \@twomajor \\
       \vspace{3em}
       \fi
-      \hrulefill \\ 
+      \hrulefill \\
       % major department head
       \@depthead\ of the \@depttype\ of \@department \\
       \vspace{3em}
-      \if\@twodepartment * 
+      \if\@twodepartment *
       \else
       % Here is the second Department
-      \hrulefill \\ 
+      \hrulefill \\
       \@twodepthead\ of the \@twodepttype\ of \@twodepartment \\
       \vspace{3em}
       \fi
@@ -470,6 +470,7 @@
   \clearpage
   \fi
 }
+
 
 % A definition generator for general pretext pages.
 % #1: short name
@@ -507,7 +508,7 @@
 % the page will not be produced. There is no need to check here.
 \newcommand{\pretext}{%
   \pagenumbering{roman}
-  
+
   % Mandatory pages
   \flyleaf           % A. Flyleaf
   \abspage           % B. Abstract
@@ -524,24 +525,24 @@
   \listoffigures          % I.
   \listoftables           % J
 
-	% Algorithm listing
-	\ifthenelse{\isundefined{\listofalgorithms}}{}{
+  % Algorithm listing
+  \ifthenelse{\isundefined{\listofalgorithms}}{}{
   \expandafter\newcommand\csname ps@loaa\endcsname{
   \renewcommand{\@oddhead}{%
   \parbox{\textwidth}{%
-  \centering {\heading LIST OF ALGORITHMS} \\ 
+  \centering {\heading LIST OF ALGORITHMS} \\
   \uline{Algorithm}\hfill\uline{Page}}}
   \renewcommand{\@oddfoot}{}
   \renewcommand{\@evenfoot}{}}
   \expandafter\newcommand\csname ps@loab\endcsname{%
   \renewcommand{\@oddhead}{%
   \parbox{\textwidth}{%
-  \centering {\heading LIST OF ALGORITHMS\ (Continued)} \\ 
+  \centering {\heading LIST OF ALGORITHMS\ (Continued)} \\
   \uline{Algorithm}\hfill\uline{Page}}}
   \renewcommand{\@evenhead}{\@oddhead}
   \renewcommand{\@oddfoot}{}
   \renewcommand{\@evenfoot}{}}
-	\renewcommand{\listalgorithmname}{\pagestyle{loab}\thispagestyle{loaa}\vspace{-1.28in}}
+  \renewcommand{\listalgorithmname}{\pagestyle{loab}\thispagestyle{loaa}\vspace{-1.28in}}
   \listofalgorithms
   }
 
@@ -711,7 +712,7 @@
   \expandafter\newcommand\csname ps@#1a\endcsname{%
     \renewcommand{\@oddhead}{%
       \parbox{\textwidth}{%
-        \centering {\heading #2} \\ 
+        \centering {\heading #2} \\
         \uline{#3}\hfill\uline{Page}
       }
     }
@@ -722,7 +723,7 @@
   \expandafter\newcommand\csname ps@#1b\endcsname{%
     \renewcommand{\@oddhead}{%
       \parbox{\textwidth}{%
-        \centering {\heading #2\ (Continued)} \\ 
+        \centering {\heading #2\ (Continued)} \\
         \uline{#3}\hfill\uline{Page}
       }
     }
