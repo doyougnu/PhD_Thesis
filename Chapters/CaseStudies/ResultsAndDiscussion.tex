@@ -2,8 +2,7 @@
 %
 \begin{figure}
   \includegraphics[width=0.95\textwidth]{Plots/VModel}
-  \caption{Most models found to be unsatisfiable. Only a small portion of
-    features ever flipped to \tru.}%
+  \caption{Ratio of models found to be unsatisfiable.}%
   \label{res:vmodels}
 \end{figure}
 %
@@ -39,7 +38,7 @@ four base solvers. Thus we restrict the sampling as the experiment was not
 feasible with the previous rate of sampling. Our results agree with our former
 work even with the reduced sampling.
 
-\subsection{RQ1: Performance of Variational Solving as Variation Scales}
+\subsection{RQ1: Performance of variational solving as variation scales}
 
 \begin{figure}
   \centering
@@ -111,7 +110,7 @@ variant. By this data, we observed a constant factor speedup. Thus, variational
 solving still grows linearly in the number of variants being solved.
 
 
-\subsection{RQ2: Performance Impact of Base Solver}
+\subsection{RQ2: performance impact of base solver}
 %
 From \resQ{1} we determined that \vTov{} is faster than the baseline algorithms
 and that the difference is statistically significant. We observe from
@@ -137,7 +136,7 @@ use case (\ie{}, heavily exercising the incremental code paths) is peculiar
 and thus selecting a solver based on only its typical performance may not be
 representative of its performance in this use case.
 
-\subsection{RQ3: Performance Impact of Plain Terms}
+\subsection{RQ3: performance impact of plain terms}
 We hypothesize that the ratio of plain terms to total terms should increase the
 variational solver's performance. Specifically, we hypothesize that as sharing
 grows, the query formula's variational core is further reduced. We observe this
@@ -163,13 +162,13 @@ model, or syntactic manipulations to mitigate the occurrence of new features.
 
 \begin{figure}
   \includegraphics[width=0.95\textwidth]{Plots/RQ3}
-  \caption{RQ3: Performance as a function of plain ratio. We observe that
+  \caption{RQ3: performance as a function of plain ratio. We observe that
     sharing positively correlates to speedup only for \vTov{}, where $\texttt{\%
       SpeedUp} = \frac{{\text{Algorithm}}}{{\text{\vTop{}}}}$.}%
   \label{res:speedup}
 \end{figure}
 
-\subsection{RQ4: Overhead of a Plain Query on \vsat{}}
+\subsection{RQ4: overhead of a plain query on \vsat{}}
 %
 \begin{figure}
   \begin{subfigure}[t]{\textwidth}
@@ -206,7 +205,7 @@ statistically different for $V_{1}$ suggests particular formulas may not respond
 well to the reduction engine, although the exact slowdown will be dependent on
 the \ac{sat} problem.
 
-\subsection{Threats to Validity}
+\subsection{Threats to validity}
 Our results are subject to several threats to validity. Notably, we are unable
 to make absolute performance claims because our study, with only two product
 lines, may not be representative. To mitigate this we reused real-world data
@@ -226,20 +225,22 @@ through the library.
 
 We have evinced the scalability claim with RQ1, and shown the translation and
 automation of incremental solving in \autoref{chapter:vsat}. However, our
-results depend on a \ac{vpl} formula as input. We believe that \ac{vpl} formulas
-can be incrementally and automatically constructed in practice, as described in
-\autoref{chapter:vpl}, as new variants occur or become known. However, assessing
-the challenges of \ac{vpl} construction is left to future work.
+results depend on a \ac{vpl} formula as input and thus all points of variation
+must be known before solving. We believe that \ac{vpl} formulas can be
+incrementally and automatically constructed in practice, as new variants occur
+or become known. However, assessing the challenges of \ac{vpl} construction is
+left to future work.
 
-We do not provide a proof of the soundness of the prototype solver. We mitigate
-this threat in several ways: we performed property-based
-testing~\cite{quickcheck} on our prototype and verified that a satisfiable
-variant was found to be satisfiable across all algorithms. In addition, we
-define a property that ensures that for each plain model $p$, found with
-\pTov{}, \vTop{}, and \pTop{}, an identical model $p'$ was found by substituting
-$p$ on the variational model returned from \vsat{}. We performed the
-property-based tests with 3,000 generated \ac{vpl} formulas, finding no
-counter-examples.
+We do not provide a proof of the soundness of the prototype solver, although we
+have showed variation preservation in
+\autoref{section:vsat:variation-preservation}. We mitigate this threat in
+several ways: we performed property-based testing~\cite{quickcheck} on our
+prototype and verified that a satisfiable variant was found to be satisfiable
+across all algorithms. In addition, we define a property that ensures that for
+each plain model $p$, found with \pTov{}, \vTop{}, and \pTop{}, an satisfiable
+model $p'$ was found by substituting $p$ on the variational model returned from
+\vsat{}. We performed the property-based tests with 3,000 generated \ac{vpl}
+formulas, finding no counter-examples.
 
 
 
