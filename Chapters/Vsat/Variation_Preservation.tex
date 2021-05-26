@@ -20,12 +20,16 @@ find \emph{the exact} model that the plain solver finds for a given variant, as
 a variant may have more than one model.
 
 The property of variation preservation is presented in
-\autoref{vsat:commuting-diagram}. The commuting diagram states that for any
-\ac{vpl} formula $\kf{f}$, if we configure $\kf{f}$ to find all possible plain
-variants, and then run a plain \ac{sat} solver on each variant, we should find
-the same number of \rn{sat}/\rn{unsat} results we would find if we ran the
-variational solver on $\kf{f}$, received a variational model, and then
-substituted every total configuration into the model.
+\autoref{vsat:commuting-diagram}. The diagram states that for any \ac{vpl}
+formula $\kf{f}$, if we configure $\kf{f}$ with all total configurations
+$\kf{C}$ then we recover all possible plain variants. If then we run a plain
+\ac{sat} solver on each plain variant, we should find the same number of
+\rn{sat}/\rn{unsat} results that we would find if we ran the variational solver
+on $\kf{f}$, received a variational model, and then substituted every total
+configuration into the model. The fat arrows in the diagram denote multiple
+processes, for example the top most arrow represents configuration of $\kf{f}$
+that will occur \magnitude{\variants*{f}} times, once for each variant
+resulting in \magnitude{\variants*{f}} of \prime*{f}.
 
 To show variation preservation we must show two properties: First, if a variant
 exists then it is found by the variational solver. Second, that if the variant

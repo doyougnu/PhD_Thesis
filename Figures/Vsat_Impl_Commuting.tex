@@ -1,11 +1,11 @@
   \begin{tikzcd}[column sep=8cm,row sep=3cm]
-    \kf{f} \arrow[r, Rightarrow, "\setc{\prime*{f}}{\exists C.\ \sem[C]{f} = \prime*{f},\ \prime*{f}\ \in\ \pl}"] %\arrow[r, shift left] \arrow[r, shift right]
+    \kf{f} \arrow[r, Rightarrow, "\ensuremath{\sem[C]{f} = \prime*{f}}"] %\arrow[r, shift left] \arrow[r, shift right]
     \arrow[d, swap, "VSAT(f)"] &
-    \set{\prime*{f}} \arrow[d, Rightarrow, "SAT(\prime*{f})"]  \\
-    \vmodel*{f}  \arrow[r, Rightarrow, "\setc{\submodel{f}{C}}{\exists C.\ \sem[C]{f} = \prime*{f},\ \prime*{f}\ \in\ \pl}"]
+    \prime*{f} \arrow[d, Rightarrow, "SAT(\prime*{f})"]  \\
+    \vmodel*{f}  \arrow[r, Rightarrow, "\submodel{f}{C}"]
                  % \arrow[r, shift left]
                  % \arrow[r, shift right]
-    &  \set{\rn{\Large sat}}
+    &  \rn{\large sat}
   \end{tikzcd}
   % \matrix (m) [matrix of math nodes,row sep=6em,column sep=18em,minimum width=2em]
   % {
