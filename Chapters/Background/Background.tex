@@ -1,11 +1,14 @@
 \label{chapter:background}
 %
-This section provides background on \ac{sat} and incremental \ac{sat} solving.
-It is intended as a general introduction to these concepts. Specific techniques
-or algorithms are not discussed in detail. All descriptions follow the
-SMT-LIB2~\cite{BarFT-SMTLIB} standard and describe incremental solvers as a
-black box eliding internal details of any specific solver which adheres to the
-standard.
+This section provides background on \ac{sat} and incremental \ac{sat} solving,
+and assumes knowledge of propositional logic. It is intended as an introduction
+to these concepts for a general audience. Specific techniques or algorithms
+behind satisfiability solvers are not discussed in detail. All descriptions
+follow the \acl{smtlib}~\cite{BarFT-SMTLIB}; the standardized language for
+interacting with \ac{sat} solvers and describe incremental solvers as a black
+box. Following the notation from the many-valued logic
+community~\cite{Rescher1969-RESML} we refer to propositional logic as \pl{},
+which denotes a two-valued logic.
 %
 \section{SMTLIB2 and Satisfiability Solving}
 \input{Chapters/Background/SatSolving}
