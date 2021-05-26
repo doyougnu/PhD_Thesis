@@ -26,7 +26,7 @@ The majority of research in the \ac{sat} community focuses on solving a single
 solvers~\cite{silva1997robust,10.1007/3-540-44798-9_4,10.1145/378239.379019,10.1145/1698759.1698762,Een_asingle-instance,een2003temporal,10.5555/1998496.1998520}
 require solving a set of related \ac{sat}
 problems~\cite{10.1007/3-540-44798-9_4, silva1997robust, een2003temporal}. To
-take just one example, \ac{spl} utilizes \ac{sat} solvers for a diverse range of
+take just one example, \acl{spl} utilize \ac{sat} solvers for a diverse range of
 analyses including: automated feature model
 analysis~\cite{useBTRC05,GBT+19,TAK+:CSUR14}, feature model
 sampling~\cite{MKR+:ICSE16,VAT+:SPLC18}, anomaly
@@ -39,8 +39,8 @@ solvers attempt to propagate information from one solving instance, on one
 problem, to future instances in the problem set. Initial attempts focused on
 \ac{cs}~\cite{10.1007/3-540-44798-9_4,10.1145/378239.379019} where learned
 clauses from one problem in the problem set are propagated forward to future
-problems. Although, modern solvers are based on a major breakthrough that
-occurred with \emph{incremental \ac{sat} under assumptions}, introduced in
+problems. Modern solvers are based on a major breakthrough that occurred with
+\emph{incremental \ac{sat} under assumptions}, introduced in
 \texttt{Minisat}~\cite{10.1007/978-3-540-24605-3_37}.
 
 Incremental \ac{sat} under assumptions, made two major contributions: a
@@ -52,19 +52,18 @@ dictate which clauses or variables are shared and which are unique to the
 problem set, thus directly addressing the practical use case of \ac{sat}
 solvers.
 
-Despite the its success, the incremental interface introduced a programming
-language that required an extra input, the set of \ac{sat} problems, \emph{and}
-a program to direct the solver with side-effectual statements. This places
-further burden on the end-user: the system is less-declarative as the user must
-be concerned with the internals of the solver. A new class of errors is possible
-as the input program could misuse the introduced side-effectual statements. By
-requiring the user to direct the solver, the users' solution is specific to the
-exact set of satisfiability problems at hand, thus the programmed solution is
-specific to the problem set and therefore to the solver input. Should the user
-be interested in the assignment of variables under which the problem at hand was
-found to be satisfiable, then the user must create additional infrastructure to
-track results; which again couples to the input and is therefore difficult to
-reuse.
+Despite its success, the incremental interface introduced a programming language
+that required an extra input, the set of \ac{sat} problems, \emph{and} a program
+to direct the solver with side-effectual statements. This placed further burden
+on the end-user: the system is less-declarative as the user must be concerned
+with the internals of the solver. A new class of errors is possible as the input
+program could misuse the introduced side-effectual statements. By requiring the
+user to direct the solver, the users' solution is specific to the exact set of
+satisfiability problems at hand, thus the programmed solution is specific to the
+problem set and therefore to the solver input. Should the user be interested in
+the assignment of variables under which the problem at hand was found to be
+satisfiable, then the user must create additional infrastructure to track
+results; which again couples to the input and is therefore difficult to reuse.
 
 We argue that solving a set of related \ac{sat} problems \emph{is a variational
   programming problem}, and by directly addressing the problem's variational
@@ -98,16 +97,13 @@ researchers in the incremental satisfiability solving community, this work
 serves as an avenue to construct new incremental \ac{sat} solvers which
 efficiently solve classes of problems that deal with variation.
 
-For researchers studying variation the significance and impact is several fold.
+For researchers studying variation, the significance and impact is several fold.
 By utilizing results in variational research, this work adds validity to
-variational theory and serves as an empirical case study. At the time of this
-writing, and to my knowledge, this work is the first to directly use results in
-the variational research community to parallelize a variation unaware tool. Thus
-by directly handling variation, this work demonstrates direct benefits to be
-gained for researchers in other domains and magnifies the impact of any results
-produced by the variational research community. Lastly, the result of this
-thesis, a variational \ac{sat} solver, provides a tool to reason about variation
-itself.
+variational theory and serves as an empirical case study. By directly handling
+variation, this work demonstrates direct benefits to be gained for researchers
+in other domains and magnifies the impact of any results produced by the
+variational research community. Lastly, the result of this thesis, a variational
+\ac{sat} solver, provides a tool to reason about variation itself.
 
 %%% Local Variables:
 %%% mode: latex

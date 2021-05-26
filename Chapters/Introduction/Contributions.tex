@@ -1,10 +1,10 @@
 \label{section:contributions}
 %
-The high-level goal of this thesis is to use variation theory to formalize and
-construct a variational satisfiability solver that understands and can solve
-\ac{sat} problems that contain \emph{variational values} in addition to boolean
-values. It is our desire that the work not only be of theoretical interest but
-of practical use. Thus, the thesis provides numerous examples of variational
+The goal of this thesis is to use variation theory to formalize and construct a
+variational satisfiability solver that understands and can solve \ac{sat}
+problems that contain \emph{variational values} in addition to boolean values.
+It is our desire that the work not only be of theoretical interest but of
+practical use. Thus, the thesis provides numerous examples of variational
 \ac{sat} and variational \ac{smt} problems to motivate and demonstrate the
 solver. The rest of this section outlines the thesis and expands on the
 contributions of each chapter:
@@ -32,30 +32,31 @@ contributions of each chapter:
     \emph{variant}, \emph{configuration} and \emph{variational artifact}.
     Lastly, the section proves theorems that are required to prove the soundness
     of variational satisfiability solving. Major portions of this section are
-    adapted from previous work~\cite{YWT:SPLC20}.
+    adapted from published peer-reviewed work~\cite{YWT:SPLC20}.
 
   \item \autoref{chapter:vsat} (\emph{Variational Satisfiability Solving}) makes
     the central contribution of the thesis. In this chapter we define the
-    general approach and architecture of a variational \acl{sat}. The general
-    approach is the second presentation of the aforementioned recipe; in this
-    case using a \ac{sat} solver rather than propositional logic. This section
-    has been expanded from previous work~\cite{YWT:SPLC20}, provides a rationale
-    for our design and makes several important contributions:
+    general approach and architecture of a variational \ac{sat} solver. The
+    general approach is the second presentation of the aforementioned recipe; in
+    this case, using a \ac{sat} solver rather than propositional logic. This
+    section is an expanded version of published peer-reviewed
+    work~\cite{YWT:SPLC20}. It provides a rationale for our design and makes
+    several important contributions:
     \begin{enumerate}
     \item A formal semantics of variational satisfiability solving. A
-      variational \ac{sat} problem is a description of the problem in
-      variational propositional logic that is translated to an incremental
-      \ac{sat} program which is suitable for execution on an incremental
-      \ac{sat} solver.
-    \item A formal definition of concepts such as a \emph{variational core}
-      which are transferable to domains other than \ac{sat}. Variational cores
-      are key to our approach, specifically preserving shared terms between
-      variants.
+      variational \ac{sat} problem is an encoding of the problem in variational
+      propositional logic that is translated to an incremental \ac{sat} program
+      which is suitable for execution on an incremental \ac{sat} solver.
+    \item A formal definition of several concepts such as a \emph{variational
+        core} which are transferable to domains other than \ac{sat}. Variational
+      cores are key to our approach, and enable the preservation of shared terms
+      between variants.
     \item A definition of a \emph{variational compiler}. The compiler is defined
       as a variational fold which is the basis for the performance gains
       presented in the thesis. The folding algorithm has three phases to ensure
-      that non-variational terms are shared across \ac{sat} problems and thus
-      redundant computation is mitigated.
+      non-variational terms are shared across \ac{sat} problems and plain terms
+      are processed before variational terms, thus mitigating redundant
+      computation.
     \item A definition of the variational output that is returned to the user.
       The output presents several unique challenges that must be overcome while
       still being useful for the end user. We present and consider these
@@ -79,13 +80,13 @@ contributions of each chapter:
     review~\cite{VSATJournal}.
 
   \item \autoref{chapter:related-work} (\emph{Related Work}) is split into two
-    sections. First, this thesis is situated into a lineage of recent
-    variational-aware systems, thus this section collects this research and
-    provides a comparison of our method to create a variational-aware system
-    with previous methods. Second, this work is related to numerous \ac{sat}
+    sections. First, this work is related to numerous \ac{sat}
     solvers that attempt to reuse information, solve sets of \ac{sat} problems
     and implement incremental \ac{sat} solving. We situate this work in the
-    context of these solvers and compare their methods.
+    context of these solvers. Second, this thesis is situated into a lineage of recent
+    variational-aware systems, thus this section collects this research and
+    provides a comparison of our method to create a variational-aware system
+    with previous methods.
 
   \item \autoref{chapter:conclusion} (\emph{Conclusion and Future Work})
     summarizes the contributions of the thesis and relates the work to the
