@@ -28,8 +28,10 @@ $\kf{C}$ then we recover all possible plain variants. If then we run a plain
 on $\kf{f}$, received a variational model, and then substituted every total
 configuration into the model. The fat arrows in the diagram denote multiple
 processes, for example the top most arrow represents configuration of $\kf{f}$
-that will occur \magnitude{\variants*{f}} times, once for each variant
-resulting in \magnitude{\variants*{f}} of \prime*{f}.
+that will occur \magnitude{\variants*{f}} times, once for each variant resulting
+in \magnitude{\variants*{f}} of \prime*{f}. Thus, we slightly abuse notation as
+\prime*{f} and \rn{sat} denote a set of variants, and their corresponding result
+from a satisfiability solver, \eg{}, \rn{sat} or \rn{unsat}.
 
 To show variation preservation we must show two properties: First, if a variant
 exists then it is found by the variational solver. Second, that if the variant
