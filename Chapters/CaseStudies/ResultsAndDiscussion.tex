@@ -31,12 +31,7 @@ increased from 50\% to 80\%.
 The experiment required 7 days, 6 hours and 21 minutes to complete. Due to the
 amount of time required to generate the data, we limited the number of raw
 measurements to 3. Thus, each data point presented in our results is a
-bootstrapped average of 3 raw measurements. In contrast, the conference version
-of this work used 56 raw measurements per data point. This experiment quadruples
-the run time of the conference version, because we repeat the experiment with
-four base solvers. Thus we restrict the sampling as the experiment was not
-feasible with the previous rate of sampling. Our results agree with our former
-work even with the reduced sampling.
+bootstrapped average of 3 raw measurements.
 
 \subsection{RQ1: Performance of Variational Solving as Variation Scales}
 
@@ -67,8 +62,8 @@ work even with the reduced sampling.
       \auto{}    & 3.29      & 3.51 & 3.20  & 2.62 \\
       \fin{}     & 2.44      & 2.51 & 2.50  & 2.16 \\
     \end{tabular}
-    \caption{Speedup by solver for the most variational case; 16 variants for
-      \auto{}, 1024 for \fin{}.}%
+    \caption{Speedup by solver for the maximum variant case; 16 for \auto{},
+      1024 for \fin{}.}%
     \label{tab:rq1:speedup}
   \end{subtable}
   \hfill
@@ -229,7 +224,8 @@ results depend on a \ac{vpl} formula as input and thus all points of variation
 must be known before solving. We believe that \ac{vpl} formulas can be
 incrementally and automatically constructed in practice, as new variants occur
 or become known. However, assessing the challenges of \ac{vpl} construction is
-left to future work.
+left to future work, which we return to in
+\autoref{section:conclusion:future-work}.
 
 We do not provide a proof of the soundness of the prototype solver, although we
 have showed variation preservation in

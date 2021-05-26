@@ -15,7 +15,9 @@ preserving if and only if processing the variational artifact produces a
 variational result which can be used to recover semantically identical plain
 results for each variant. For this work, variation preservation means that the
 variational solver should find the same results as a plain solver that is
-solving every variant.
+solving every variant. Note that this does not mean the variational solver will
+find \emph{the exact} model that the plain solver finds for a given variant, as
+a variant may have more than one model.
 
 The property of variation preservation is presented in
 \autoref{vsat:commuting-diagram}. The commuting diagram states that for any
@@ -23,8 +25,7 @@ The property of variation preservation is presented in
 variants, and then run a plain \ac{sat} solver on each variant, we should find
 the same number of \rn{sat}/\rn{unsat} results we would find if we ran the
 variational solver on $\kf{f}$, received a variational model, and then
-substituted every total configuration into the model. Note that the models may
-still differ, because a formula may have more than one satisfying model.
+substituted every total configuration into the model.
 
 To show variation preservation we must show two properties: First, if a variant
 exists then it is found by the variational solver. Second, that if the variant
@@ -240,14 +241,14 @@ Now we can finally show variation preservation:
       \sem[C]{f} = \prime*{v}}$ hence a contradiction.
   \end{subproof}
 
-  We have shown both $\setc{r}{\submodel{f}{C} = r, \kf{C} \in \kf{CS},
+  We have shown both \newline$\setc{r}{\submodel{f}{C} = r, \kf{C} \in \kf{CS},
     \kf{VSAT(f)} = \vmodel*{f}} \subseteq \setc{r}{\kf{SAT(\prime*{f}) = r}, C
-    \in \kf{CS}, \sem[C]{f} = \prime*{f}}$ and $\setc{r}{\kf{SAT(\prime*{f}) =
+    \in \kf{CS}, \sem[C]{f} = \prime*{f}}$ and \newline$\setc{r}{\kf{SAT(\prime*{f}) =
       r}, C \in \kf{CS}, \sem[C]{f} = \prime*{f}} \subseteq
   \setc{r}{\submodel{f}{C} = r, \kf{C} \in \kf{CS}, \kf{VSAT(f)} =
-    \vmodel*{f}}$. Thus we have $\setc{r}{\submodel{f}{C} = r, \kf{C} \in
-    \kf{CS}, \kf{VSAT(f)} = \vmodel*{f}} = \setc{r}{\kf{SAT(\prime*{f}) = r}, C
-    \in \kf{CS}, \sem[C]{f} = \prime*{f}}$. Therefore, regardless of the path in
+    \vmodel*{f}}$. Thus we have \setc{r}{\submodel{f}{C} = r, \kf{C} \in
+    \kf{CS}, \kf{VSAT(f)} = \vmodel*{f}} $=$ \newline\setc{r}{\kf{SAT(\prime*{f}) = r}, C
+    \in \kf{CS}, \sem[C]{f} = \prime*{f}}. Therefore, regardless of the path in
   \autoref{vsat:commuting-diagram} the same variant will be considered by the
   base solver and therefore variational solving is variation preserving.
 \end{proof}
