@@ -227,16 +227,15 @@ or become known. However, assessing the challenges of \ac{vpl} construction is
 left to future work, which we return to in
 \autoref{section:conclusion:future-work}.
 
-We do not provide a proof of the soundness of the prototype solver, although we
-have showed variation preservation in
-\autoref{section:vsat:variation-preservation}. We mitigate this threat in
-several ways: we performed property-based testing~\cite{quickcheck} on our
-prototype and verified that a satisfiable variant was found to be satisfiable
-across all algorithms. In addition, we define a property that ensures that for
-each plain model $p$, found with \pTov{}, \vTop{}, and \pTop{}, a satisfiable
-model \prime*{p} was found by substituting $p$ on the variational model returned
-from \vsat{}. We performed the property-based tests with 3,000 generated
-\ac{vpl} formulas, finding no counter-examples.
+We do not provide a proof of the soundness of the prototype solver. We mitigate
+this threat in several ways: we performed property-based
+testing~\cite{quickcheck} on our prototype and verified that a satisfiable
+variant was found to be satisfiable across all algorithms. In addition, we
+define a property that ensures that for each plain model $p$, found with
+\pTov{}, \vTop{}, and \pTop{}, a satisfiable model \prime*{p} was found by
+substituting $p$ on the variational model returned from \vsat{}. We performed
+the property-based tests with 3,000 generated \ac{vpl} formulas, finding no
+counter-examples.
 
 
 

@@ -1,12 +1,17 @@
 \label{chapter:vsat}
 
-This chapter presents the variational satisfiability solving algorithm.
-\autoref{section:vsat:approach} provides an overview of the algorithm and
-introduces the notion of \emph{variational models} as solutions to variational
-satisfiability problems. \autoref{section:vsat:formalization} provides the
-formal specification. We conclude the chapter by proving that the variational
-solving algorithm has the property of variation preservation, and is therefore
-sound up to the soundness of the underlying incremental \ac{sat} solver.
+This chapter presents the variational satisfiability solving algorithm as a
+compiler. First we present a general overview of the solving algorithm in
+\autoref{section:vsat:approach}. \autoref{section:vsat:approach} describes the
+algorithm in terms of communication between four subsystems, introduces the
+concept of \emph{variational cores}, and the intermediate language that each
+subsystem operates on. Each of these subsystems process the intermediate
+representation in a combination of phases which are covered in detail in the
+following sections, including examples of the compiled \acl{smtlib} output. We
+conclude the chapter with \autoref{section:vsat:formalization}.
+\autoref{section:vsat:formalization} presents inference rules to specify the
+behavior of an abstract variational satisfiability solver by formalizing the
+interplay between these phases, and thus the interplay between the subsystems.
 
 \section{General Approach}
 \input{Chapters/Vsat/Approach}
@@ -23,8 +28,11 @@ sound up to the soundness of the underlying incremental \ac{sat} solver.
 \section{Formalization}
 \input{Chapters/Vsat/Formalization}
 
-\section{Variation Preservation}
-\input{Chapters/Vsat/Variation_Preservation}
+% \section{Variation Preservation}
+% \input{Chapters/Vsat/Variation_Preservation}
+%
+% Cutting the proof of variation preservation, it needs another pass between
+% Eric and I and there just isn't time
 
 %%% Local Variables:
 %%% mode: latex
