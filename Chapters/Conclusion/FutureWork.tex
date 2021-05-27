@@ -8,70 +8,70 @@ satisfiability solving.
 
 \subsection{Utilization of Variational Cores}
 Variational cores are an important and foundational concept for the variational
-solver's and consequently for the variationalization recipe. Recall that the
-purpose of variational cores was twofold: First, to condense the query formula
-such that the variational terms were the majority of terms core. Second, to
-simplify the choice removal process by reducing the amount of traversal required
-to process the choices. Third, to enforce sharing between variants as the
-contexts captured by the core were are reused during choice removal.
+solver and consequently for the variationalization recipe. Recall that the
+purpose of variational cores was threefold: First, to condense the query formula
+such that the variational terms were the majority of terms in the core. Second,
+to simplify the choice removal process by reducing the amount of traversal
+required to process the choices. Third, to enforce sharing between variants as
+the contexts captured by the core were are reused during choice removal.
 
 This last point is key, because variational cores in combination with the
 accumulation and evaluation stores, completely capture the context of a formula
 they can be reused in novel ways. For example, one might serialize a variational
-core and associated stores to disk, thus effectively caching the core for future
-use. Such a feature would enable desirable user facing effects: the solver could
+core and associated stores to disk, effectively caching the core for future use.
+Such a feature would enable desirable user facing features: the solver could
 restart without losing information and thus might be useful for debugging or
 exploration, if the variational cores require a lot of processing time to
-generate this time be amortized, or if the application domain only builds on
-previous versions of the same formulas, then the variational core could be
-reused.
+generate this time would be amortized, or if the application domain only builds
+on previous versions of the same formulas, then the variational core could be
+consistently reused for every new version.
 
 For example, consider the case of a feature model which evolves every month for
 several months, similarly to the \fin{} and \auto{} datasets. Since the feature
 model, and consequently the \ac{vpl} formula evolves over time, the previous
 variational core could be modified to reflect the changes for the new formula.
 Adding new constraints is straightforward; one would simply nest the previous
-variational core in a conjunction context with the new core and reuse the
-previous stores when generating the new core to ensure sharing. A more difficult
-problem is removing constraints or variables in the previous core. Both removing
-constraints and removing variables is problematic as the variable or constraint
-could have been accumulated into a symbol value or several symbolic values. One
-could traverse a dependency graph to find all references of the variable and
-symbolic value, and then seek to replace those references with a unit value,
-such as \tru{} for $\wedge$ or \fls{} for $\vee$. However this immediately leads
-to the problematic case where the variable or symbolic to be removed is in a
-$\neg$ context. There is no unit value where $\neg$ does not have meaning and
-thus we cannot remove arbitrary variables from a variational core.
+variational core in a conjunction context (\inAndL{\kf{core}}{\kf{~new}}) with
+the new core and reuse the previous stores when generating the new core to
+ensure sharing. A more difficult problem is removing constraints or variables in
+the previous core. Both removing constraints and removing variables is
+problematic as the variable or constraint could have been accumulated into a
+symbol value or several symbolic values. One could traverse a dependency graph
+to find all references of the variable and symbolic value, and then seek to
+replace those references with a unit value, such as \tru{} for $\wedge$ or
+\fls{} for $\vee$. However this immediately leads to the problematic case where
+the variable or symbolic to be removed is in a $\neg$ context. There is no unit
+value where $\neg$ does not have meaning and thus we cannot remove arbitrary
+variables from a variational core.
 
 In addition to manipulating or storing variational cores, future variational
 solvers might utilize them as a convenient messaging format. Throughout this
 thesis, we have assumed and have only considered systems which process all
 variants in a single base solver instance, however this need not be the case.
-Instead, when a choice in is the focus of a the evaluation context (and thus the
-variational core) one might choose to solve the true alternative variants in a
-different solver and all the false alternatives in the same solver. For example,
-a user might know that all true alternative variants have particularly good
-performance characteristics for boolector, while all false variants have good
-characteristics for yices. Since we compile to \acl{smtlib} script such a
-feature is possible with few changes to our method of variational solving. To
-add such a feature a future variational solver would allow the user to select
-particular solvers over the input \vc{} or the configuration for a query
-formula.
+Instead, when a choice in focus during choice removal one might choose to solve
+the true alternative variants in a different solver and all the false
+alternatives in the same solver. For example, a user might know that all true
+alternative variants have particularly good performance characteristics for
+boolector, while all false variants have good characteristics for yices. Since
+we compile to \acl{smtlib} script such a feature is possible with few changes to
+our method of variational solving. To add such a feature, a future variational
+solver would allow the user to select particular solvers over the input \vc{} or
+the configuration for a query formula.
 
 \subsection{Further \ac{smt} background Theories and Tool Extensions}
 \ac{sat} and \ac{smt} solvers are attractive targets for research on variational
 languages. As of this writing, designing a language with variational
-side-effects is an open research question. The essential problem is tracking
+side-effects is an open research problem. The essential problem is tracking
 effects for particular variants across the interface between a variational-aware
 system and a plain system. For example, imagine writing a file to disk in one
 variant and deleting a different file in another variant. Since the file system
-has no concept of variation or variant the variational system is not able to
-guarantee variants are isolated and therefore variants may interact in
+has no concept of variation or variant, the variational system is not able to
+guarantee variants are isolated, and therefore variants may interact in
 undesirable and difficult to predict ways. \ac{sat} and \ac{smt} solvers side
 step this limitation as they are side-effect free systems. There is simply no
-way to read a file disc in an \acl{smtlib} script. Similarly, classes of
-run-time errors are not possible. For example, consider an \acl{smtlib} script
-which divides by zero, in this case the script simplify will not unify and an
+way to read a file from disc in an \acl{smtlib} script. Similarly, classes of
+traditional run-time errors, such as dividing by zero, are not possible. If a
+script divides by zero then the script will not simply not unify and an
 \rn{unsat} will be returned.
 
 Due to the attractive properties of \ac{sat} and \ac{smt} solvers for
@@ -86,77 +86,84 @@ Similarly, we have demonstrated extensions for core background theories, but
 there are many features of plain solvers that would be desirable additions to
 variational solvers. Such features include generation of variational
 unsatisfiable-cores. An unsatisfiable core is a subset of constraints that
-prevent the \ac{sat} or \ac{smt} from unifying. Unsatisfiable cores are thus
-desirable for many problems where discovering this information is desirable. For
-example, one might desire to find the clique in a \ac{sat} encoded weighted
-graph which prevents a traversal under some cost limit. Or one might desire to
-find the sub-set of features in a feature model that prevent classes of products
-from being built.
+prevent the \ac{sat} or \ac{smt} from unifying. Unsatisfiable cores are
+desirable for many problems. For example, one might desire to find the clique in
+a \ac{sat} encoded weighted graph which prevents a traversal under some cost
+limit. Or one might desire to find the sub-set of features in a feature model
+that prevent classes of products from being built.
 
 Enabling variational unsatisfiable cores is possible with our approach of
 accumulation, evaluation and choice removal. The key requirement would be to
 ensure that the plain, \rn{get-unsat-core} command occurs inside the
 \rn{push}/\rn{pop} block for a given variant. Thus far we have only seen the
-\rn{get-model} command have this property. Thus a straightforward approach would
-be to create a syntactic category that contains arbitrary plain commands, such
-as \rn{get-model} or \rn{get-unsat-core} to be sent to the base solver once a
-variant has been reduced to \unit{}. Another approach is to create full fledged
-variational \acl{smtlib} language instead of expressions of constraints as we
-have presented here. Constructing such a variational \acl{smtlib} language is
-likely to save work for future extensions. The language would be identical to
-\acl{smtlib} except that \rn{push}/\rn{pop} would not be exposed to the user (or
-would only be enabled with an option), and choices would be included in the
-language just as we have included the for \ac{vpl} and \evpl{}.
+\rn{get-model} command have this property. So a straightforward extension is to
+create a syntactic category that contains useful plain commands in this context,
+such as \rn{get-model} or \rn{get-unsat-core}, which would be issued to the base
+solver once a variant has been reduced to \unit{}. Another approach is to create
+full fledged variational \acl{smtlib} language, instead of expressions of
+variational constraints as we have presented here. Constructing such a
+variational \acl{smtlib} language is likely to save work for future extensions.
+The language would be identical to \acl{smtlib} except that \rn{push}/\rn{pop}
+would not be exposed to the user (or would only be enabled with an option), and
+choices would be included in the language just as we have included the for
+\ac{vpl} and \evpl{}.
 
 Lastly, a promising area of future work is constructing an asynchronous
-variational \ac{sat} and \ac{smt} solver. During our experience bench marking
+variational \ac{sat} and \ac{smt} solver. During our experience bench-marking
 the variational prototype solvers we found that the majority of the time spent
 in the base solver is spent querying for a model. Furthermore, each variant
 waits until they can be processed by the base solver. For example, consider the
-formula $\chc[A]{a,b} \wedge{} \chc[B]{c,d}$, solving this formula results in
-solving all four variants. Our prototype solvers choose true alternatives first,
-thus the ordering of the variants in the base solver will be \set{(A,\tru{}),
-  B,\tru{}}, \set{(A,\tru{}), (B, \fls{})}, \set{(A,\fls{}), (B,\tru{})},
+formula $\kf{\chc[A]{a,b} \wedge{} \chc[B]{c,d}}$, this formula has four
+satisfiable variants. Our prototype solvers choose true alternatives first, thus
+the ordering of the variants in the base solver will be \set{(A,\tru{}),
+  (B,\tru{})}, \set{(A,\tru{}), (B, \fls{})}, \set{(A,\fls{}), (B,\tru{})},
 \set{(A, \fls{}), (B, \fls{})}. Notice that all $(A, \fls{})$ variants wait for
-$(A, \tru{})$ variants before being considered. Thus, instead of using \rn{push}
-and \rn{pop} to represent variation we could instead fork a new solver thread
-and solve all $(A, \fls{})$ variants on that solver thread.
+$(A, \tru{})$ variants before being considered, because the solver must
+backtrack to solve the false variants of $\kf{A}$. Thus, instead of using
+\rn{push} and \rn{pop} to represent variation, we could instead fork a new
+solver thread and solve all $(A, \fls{})$ variants on that solver thread.
 
 We have created three versions of asynchronous prototype solvers but have not
-succeeded in constructing a general sound asynchronous variational solver.
-Constructing an asynchronous solver is relatively straightforward. Since
-variational models form monoids, the order in which models are added to the
-variational model isn't important. Similarly, since variational cores capture
-the evaluation context at a given time transmitting variational cores to other
-solver instances is also straightforward. The problem for asynchronous solvers
-is ensuring that the ordering of alternatives is maintained. For example, a
-simple model might be to have a pool of producers, which derive variational
-cores, and a pool of consumers, which take a variational core and a
-configuration and find the next choice that is not in the configuration or
-generate a model. The two pool model is sufficient in most cases, however a
-subtle bug is now possible. Assume we have a formula with three unique
-dimensions $A$, $B$, and $C$ which will be processed in that order. Since the
-order of alternatives is no longer deterministic we might encounter a case where
-we are either stuck or have mixed variants. For example, assume we have an
-unbalanced number of consumer's and producers. Now consider the case where a
-consumer thread has consumed \set{(A, \tru{}), (B,\fls{})}, then finds a choice
-with a $C$ dimension and waits for a request from a producer thread. The
-consumer observes a request to consume \set{(C,\tru{})}, does so, and produces a
-model for that variant. Now, the consumer will backtrack with a \rn{pop} call
-and wait for another request from a producer for another $\kf{C}$. However, this
-thread may have out paced other threads, and so the only request from the
-producer pool is to consume \set{(B,\tru{})}, and now we are stuck. If the
-consumer accepts the request we will have mixed two variants on this thread
-yielding incorrect results, if the consumer does not take the request then we
-may end in a deadlock. Such an example is contrived but occurs with asynchronous
-communication and must be properly handled. The correct method is for each
-thread to track which variant it has solved and track the ordering of choices.
-We must ensure that the choices are solved in order such that if a request comes
-to solve a \set{(A, \tru{})} variant, and the thread has consumed the
-variational core with \set{(A, \fls{})} then the thread must issue as many
-\rn{pop}s as needed to backtrack. By tracking this information we can avoid
-deadlocks, and malformed variants and still gain the benefits of concurrent
-solving which could be substantial especially for large variational formulas.
+succeeded in constructing a general sound asynchronous variational solver, and
+do not provide a formalization. Constructing an asynchronous solver is
+relatively straightforward. Since variational models form monoids, the order in
+which plain models are added to the variational model isn't important.
+Similarly, since variational cores capture the evaluation context at a given
+time transmitting variational cores to other solver instances is also
+straightforward.
+
+The problem for asynchronous solvers is ensuring that the ordering of
+alternatives is maintained. For example, a simple model might be to have a pool
+of producers, which derive variational cores, and a pool of consumers, which
+take a variational core and a configuration and find the next choice that is not
+in the configuration or generate a model. The two pool model is sufficient in
+most cases, however a subtle bug is introduced.
+
+Assume we have a formula with three unique dimensions $A$, $B$, and $C$ which
+will be processed in that order. Since the order of alternatives is no longer
+deterministic we might encounter a case where we are either stuck or have mixed
+variants. Consider the case where there are an unbalanced number of consumers
+and producers. Now consider a scenario where a consumer thread has consumed the
+\set{(A, \tru{}), (B,\fls{})} variant, then finds a choice with a $C$ dimension
+and waits for a request from a producer thread. The consumer observes a request
+to consume \set{(C,\tru{})}, does so, and produces a model for that variant.
+Now, the consumer will backtrack with a \rn{pop} call and wait for another
+request from a producer for another $\kf{C}$. However, this thread may have out
+paced other threads, and so the only request from the producer pool is to
+consume \set{(B,\tru{})}, and now we are stuck. If the consumer accepts the
+request we will have mixed two variants on this thread yielding incorrect
+results, if the consumer does not take the request then we may end in a
+deadlock.
+
+Such an example is contrived but occurs with asynchronous communication and must
+be accounted for. The correct method is for each thread to track which variant
+it has solved and track the ordering of choices. We must ensure that the choices
+are solved in order such that if a request comes to solve a \set{(A, \tru{})}
+variant, and the thread has consumed the variational core with \set{(A, \fls{})}
+then the thread must issue as many \rn{pop}s as needed to backtrack. By tracking
+this information we can avoid deadlocks, and malformed variants and still gain
+the benefits of concurrent solving which could be substantial especially for
+large variational formulas.
 
 
 \subsection{Automated \ac{vpl} Formulas}
@@ -188,25 +195,26 @@ by demonstrating that the Binary Decision Diagram variable ordering problem karp
 reduces to the \ac{vpl} synthesis problem), although we have not begun to
 investigate the problem space.
 
-The synthesis problem is a search problem over a total un-directed graph of
-possible formula combinations. Each node in the graph is a \ac{sat} formula or
-\ac{vpl} formula that can be combined and is connected to every other node.
-Edges represent the possible combinations of two nodes and is weighted with a
-\emph{fitness metric} indicating a good match (and thus high amount of sharing
-between two nodes) or a bad match. Our approach is to traverse the graph and
-greedily select the best combination between two nodes. Combinations mutate the
-graph. The old nodes are replaced with the combined node, all old edges are
-relaxed and new edges connect the combined node to every other node in the
-graph. The algorithm then repeats until only a single node remains in the graph.
+The synthesis problem is a search problem over a total undirected graph of
+possible formula combinations. Each vertex in the graph is a \ac{sat} formula or
+\ac{vpl} formula that can be combined and is connected to every other vertex.
+Edges represent the possible combinations of two vertices and is weighted with a
+\emph{fitness metric} indicating a good or bad match. Good or bad in this domain
+indicates a high degree of sharing between two vertices. Our approach is to
+traverse the graph and greedily select the best combination between two
+vertices. Combinations mutate the graph. The old vertices are replaced with the
+combined vertex, the old edges of the combined vertices are relaxed and new
+edges connect the combined vertex to every other vertex in the graph. The
+algorithm then repeats until only a single vertex remains in the graph.
 
-There are two sub-procedures in the algorithm: A procedure to combine nodes, and
-a procedure to calculate the fitness metric between two nodes. To combine two
-nodes we generate a unique dimension, nest one node in the true alternative, and
-the other in the false alternative. This simple combination procedure results in
-poor sharing as the choice is always be at the root of the abstract syntax tree.
-Thus to increase the sharing ratio, we attempt to drive the choice towards the
-leaves of the abstract syntax tree of the \ac{vpl} formula using the equivalency
-laws in in \autoref{fig:cc:eqv}.
+There are two sub-procedures in the algorithm: A procedure to combine vertices,
+and a procedure to calculate the fitness metric between two vertices. To combine
+two vertices we generate a unique dimension, nest one vertex in the true
+alternative, and the other in the false alternative. This simple combination
+procedure results in poor sharing as the choice will always be at the root of
+the abstract syntax tree of the resulting \ac{vpl} formula. Thus to increase the
+sharing ratio, we drive the choice towards the leaves of the abstract syntax
+tree of the \ac{vpl} formula using the equivalency laws in \autoref{fig:cc:eqv}.
 
 Next we need a procedure that inputs two \ac{sat} or \ac{vpl} formulas, and
 returns a fitness metric. There are several possible algorithms; ranging from
@@ -222,7 +230,8 @@ that the graph comparisons in this domain are simpler than comparisons which
 occur in the worst case, \eg{}, over enormous graphs such as those found in
 social networks. Furthermore there are many heuristics such as longest-common
 sub-string which might produce metrics that are good enough for reasonable
-sharing ratios.
+sharing ratios. The exact design of the informal algorithm described here is
+left as an open research problem.
 
 \subsection{Abstracting the Variationalization Recipe to Other Domains}
 Our approach to creating a variation-aware system by using the plain version of
@@ -231,24 +240,24 @@ work that is particular to satisfiability solvers is code generation in the base
 solver. In essence, our method is a variational left-fold over a variational
 language. Thus, one might reuse the ideas of accumulation, evaluation, choice
 removal and variational cores in other domains. In particular, the recipe for
-variationalization of other domains is clear: To variationalize a plain system
-one needs to define the variational artifact for the domain and a method to
-express variation in that system; our variational artifact was \ac{vpl} and we
-chose to use scopes from the \acl{smtlib} standard, although forking solver
-instances is also feasible. One needs a method to express segments of plain
-terms and preserve sharing between variants in the plain system, our approach
-was to define symbolic values and utilize the internal cache of the plain
-solvers to preserve sharing. Lastly, one needs a way to retrieve results from
-the plain system and combine those results in any order, hence we defined
+variationalization to other domains is clear: To variationalize a plain system
+one needs to define the variational artifact for the domain, and a method to
+express variation in that system. Our variational artifact was a \ac{vpl}
+formula and we chose to use scopes from the \acl{smtlib} standard to express
+variation in the plain \ac{sat} solver. Then, one needs a method to express
+segments of plain terms and preserve sharing between variants in the plain
+system, our approach was to define symbolic values and utilize the internal
+cache of the plain solvers to preserve sharing. Lastly, one needs a way to
+retrieve results and combine plain results in any order, just as we defined
 monoidal variational models.
 
-Using this recipe one can might imagine a variational prolog which reuses the
-work presented in this thesis. For such a language, the variational artifact
-would be a prolog-like programming language with choices. Expressing segments of
-plain terms with symbolic values could be directly reused from this thesis.
-Similarly, the variational result would be nearly identical to the variational
-models presented in \autoref{section:vsat:models}. Embedding variation in prolog
-is the difficult part although there are several possibilities.
+Using this recipe one can imagine a variational prolog which reuses the work
+presented in this thesis. For such a language, the variational artifact would be
+a prolog-like programming language with choices. Expressing segments of plain
+terms with symbolic values could be directly reused from this thesis. Similarly,
+the variational result would be nearly identical to the variational models
+presented in \autoref{section:vsat:models}. Embedding variation in prolog is the
+difficult part although there are several possibilities.
 SWI-prolog~\cite{wielemaker:2011:tplp} defines a special kind of predicate
 called \emph{dynamic predicates}. Dynamic predicates indicate to the prolog
 interpreter that the predicate may change during execution. Changing the
@@ -262,12 +271,12 @@ delimited continuations is also feasible as Huet zippers have been shown to be
 isomorphic to delimited continuation~\cite{olegZippers}. Fortunately prolog has
 first class support for delimited
 continuations~\cite{DBLP:journals/tplp/SchrijversDDW13} and thus choice removal
-could be done in the base prolog interpreter rather than at the variational
+could be done in the base prolog interpreter rather than at the variation-aware
 level. Using delimited continuations could greatly reducing the complexity of
-creating a variational prolog, and it might be possible to define variational
-prolog as a library rather than a separate entity. The exact details for a
-variational implementation are not clear but creating a variational prolog is
-certainly feasible.
+creating a variational prolog, so much so that it might be possible to define
+variational prolog as a library rather than a separate entity. The exact details
+for a variational implementation are not clear but creating a variational prolog
+is a promising avenue of future work.
 
 %%% Local Variables:
 %%% mode: latex

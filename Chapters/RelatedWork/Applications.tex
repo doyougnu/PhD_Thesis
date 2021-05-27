@@ -4,8 +4,9 @@ Variational \ac{sat} and \ac{smt} solving provides an improved user interface
 and possible performance gains for variational \ac{sat} and \ac{smt} problems.
 However, the space of variational \ac{sat} and \ac{smt} problems is largely
 unexplored, as viewing problems as inherently \emph{variational} is only just
-beginning to gain awareness outside of the software product-line community. In
-this section we describe areas for possible applications.
+beginning to gain awareness outside of the software product-line and variational
+programming languages communities. In this section we describe areas for
+possible applications.
 
 \citet{TTS+:VariVolution19} define two fundamental dimensions of variation:
 variation in \emph{time}, where software is revised over some unit of time with
@@ -19,28 +20,28 @@ in time or space are possible applications for variational \ac{sat} or \ac{smt}
 solver.
 
 Problems in this domain include scheduling problems~\cite{BBH+09} which need to
-account for a counterfactual event; for example, one might need to schedule a
-set of jobs on a number of machines but also account for one or several machines
-being unable to take jobs. Such a problem is directly expressible in \ac{vpl}
-where each dimensions would correspond to a machine being online, or a machine
-being disabled. Another classic \ac{sat} application is circuit layout and
-hardware verification problems~\cite{BBH+09}. In this domain, \ac{sat} solvers
-are used as the back-end engine to answer safety and live-ness questions.
-Questions such as a given system can never reach a certain state or a system
-will always reach some given state after a certain state is
-reached~\cite{BBH+09}. This work could be directly applied to such problems; for
-example one might have two or more circuits which share significant regions and
-yet are distinct products with distinct behavior. Performing hardware
-verification on each circuit would produce two related \ac{sat} problems, where
-the shared portions are redundantly calculated. Thus, one can imagine
-translating the set of \ac{sat} problems to a \ac{vpl} formula and solving them
-with a variational solver. Another direct application would be performing
-hardware verification in the presence of patches, one might encode speculative
-analyses to ensure desirable properties in the hardware if regions or elements
-in the circuit are completely removed, significantly patched, or stop operating.
-The particulars in this domain are open research questions, however given the
-findings in this thesis large performance gains are possible through the use of
-a variational \ac{sat} or \ac{smt} solver.
+account for a counterfactual event; for example, scheduling a set of jobs on a
+number of machines but also accounting for one or several machines being unable
+to take jobs. Such a problem is directly expressible in \ac{vpl} where each
+dimensions corresponds to a machine being online, or a machine being disabled.
+Another classic \ac{sat} application is circuit layout and hardware verification
+problems~\cite{BBH+09}. In this domain, \ac{sat} solvers are used as the
+back-end engine to answer safety and live-ness questions; questions such as a
+given system can never reach a certain state or a system will always reach some
+given state after a certain state is reached~\cite{BBH+09}. This work could be
+directly applied to such problems; for example one might have two or more
+circuits which share significant regions and yet are distinct products with
+distinct behavior. Performing hardware verification on each circuit would
+produce two related \ac{sat} problems, where the shared portions are redundantly
+calculated. Thus, one can imagine translating the set of \ac{sat} problems to a
+\ac{vpl} formula and solving them with a variational solver. Another direct
+application would be performing hardware verification in the presence of
+patches, one might encode speculative analyses to ensure desirable properties in
+the hardware if regions or elements in the circuit are completely removed,
+significantly patched, or stop operating. The particulars in this domain are
+open research questions, however given the findings in this thesis large
+performance gains are possible through the use of a variational \ac{sat} or
+\ac{smt} solvers.
 
 %
 Software variability is a natural application domain for this work. The

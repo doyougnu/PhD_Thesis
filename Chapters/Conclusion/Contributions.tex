@@ -1,10 +1,11 @@
 \label{section:conclusion:cont-summary}
 
-The main contribution of this work is the formalization of variational
-satisfiability solver.
-
+The main contribution of this work is the formalization of a method of
+variational satisfiability solving using non-variational incremental \ac{sat}
+solvers.
+%
 In \autoref{chapter:vpl} we formalized a many-valued logic to express
-variational \ac{sat} problems, demonstrated an application of the choice
+variational \ac{sat} problems, and demonstrated an application of the choice
 calculus with propositional logic as the object language. We defined the
 denotational semantics of configuration over the logic, and fundamental concepts
 such as variants and synchronization.
@@ -17,35 +18,37 @@ accumulation, evaluation, and choice removal cleanly separate concerns. The
 sharing of plain terms is guaranteed between variants because we use a zipper to
 capture evaluation contexts. Since our design integrates plain base solvers, our
 variational solver can take advantage of advances made by the \ac{sat} and
-\ac{smt} communities. Lastly, we proved that our design is confluent, thereby
-showing that the variational solver is variation-preserving and thus sound.
+\ac{smt} communities. Lastly, we proved that our design is variation preserving,
+thereby showing that the variational solver is sound up to the soundness of the
+base solver.
 
 In \autoref{chapter:vsmt} we extended the architecture to handle non-Boolean
 constraints. We saw that extensions over the term language follow a pattern: One
 wraps the primitive base solver operations to handle symbolic values, then
 defines a congruence rule to process the recur on the left child of the
 relation, and finally defines a computation rule that calls the wrapped
-primitive to combine two symbolic values thereby producing a fold over the
+primitive to combine two symbolic values, thereby producing a fold over the
 relation. We presented two extensions; one over integer constraints, and one
 over array based constraints. Since, symbolic values are untyped, we carefully
 constructed the extended logic to make type errors inexpressible, we could have
 otherwise chose to employ a simple type system as the \acl{smtlib} standard
 does. Lastly, we saw that this extension pattern works even for background
 theories that seem difficult, because our architecture processes plain terms
-before variational terms due to the ordering between accumulation and choice
-removal.
+before variational terms due to the ordering between evaluation, accumulation
+and choice removal.
 
 In \autoref{chapter:case-studies}, we built two prototype variational solvers
 called \vsat{} and \vsmt{}. We evaluated the solvers over two real-world
 datasets. We observed that variational solving does produce speedups over
-standard use of an incremental solver when solving many variants. The
-variational solvers produce this speedup by reusing shared terms and avoiding
-redundant computation. We observed that the base solver does have an impact on
-runtime performance. Therefore an advantage of our architecture is that it is
-base solver agnostic, and thus implementations may choose whichever solver is
-performent for its problem domain as long as the solver accepts the \acl{smtlib}
-standard. However, we found that outside of its use case---when solving only a
-single variant---variational solving does show a performance overhead that was
-statistically significant for one dataset. Lastly, our finding that the sharing
-ratio is positively correlated to runtime performance repeats similar findings
-in the variational literature.
+standard use of an incremental solver when solving many variants for these
+datasets. The variational solvers produce this speedup by reusing shared terms
+and avoiding redundant computation. Furthermore, we observed that the base
+solver does have an impact on runtime performance. Therefore an advantage of our
+architecture is that it is base solver agnostic, and implementations may choose
+whichever solver is performent for its problem domain as long as the solver
+accepts the \acl{smtlib} standard. However, we found that outside of its use
+case---when solving only a single variant---variational solving does show a
+performance overhead that was statistically significant for one dataset. Lastly,
+our finding that the sharing ratio is positively correlated to runtime
+performance repeats similar findings in the variational literature as described
+in \autoref{chapter:related-work}.
