@@ -30,10 +30,10 @@ traction was \texttt{SATIRE} created by \citet{10.1145/378239.379019}.
 Just two years later, \citet{10.1007/978-3-540-24605-3_37} made a major advance
 in incremental \ac{sat} with \texttt{MiniSat} by defining, documenting, and
 popularizing the implementation techniques required for an incremental \ac{sat}
-solver. \texttt{MiniSat} was the result of work on two other solver's called
-\texttt{SATZOO} and \texttt{SATNIK}, and seemed to hit a sweet spot in the
-design space. It simplified the existing notions of incrementality from the
-state of the art incremental solvers \texttt{SATIRE} and
+solver. \texttt{MiniSat} was the result of lessons learned from work on two
+other solver's called \texttt{SATZOO} and \texttt{SATNIK}. \texttt{MiniSat}
+simplified the existing notions of incrementality from the state of the art
+incremental solvers \texttt{SATIRE} and
 \texttt{PBS}~\cite{10.1145/774572.774638} and combined propagation strategies
 from the \texttt{Chaff}~\cite{Moskewicz:2001:CEE:378239.379017} solver such as
 conflict-driven backtracking\cite{Zhang:2001:ECD:603095.603153} and dynamic
@@ -50,20 +50,24 @@ in that both choices and facets syntactically demarcate terms in an object
 language that must be specially handled, and yet must also operate with terms
 outside of the choice or facet. Facets are very similar to choices, facets use a
 label to determine branches (or alternatives in our language), facets are
-synchronized by these labels, facets are treated as tree-data structures, and
-facets are similarly treated as undetermined until they are reified.
+synchronized by these labels and are treated as tree-data structures; similar to
+our use of choices and the tag-tree representation of the choice
+calculus~\cite{Walk13thesis}. Lastly, facets are similarly undetermined until
+they are reified.
 
 \citet{10.1145/3243734.3243806} define the faceted secure execution framework
-\texttt{Multef}, which tries to avoid repeated execution of non-faceted values
+\texttt{Multref}, which tries to avoid repeated execution of non-faceted values
 just as this work tries to gain performance through avoiding repeated execution
 of plain values. \texttt{Multref} does this by forking executions threads when a
 novel facet is encountered. This strategy avoids redundant execution before the
-facet is found but still has redundant or repeated computations inside the fork.
-In contrast, our methods of accumulation, evaluation, and utilization's of a
-zipper succeeds in only evaluating plain terms a single time and reusing that
-information across variants. The facets have been employed to policy-agnostic
-programming models and information flow control~\cite{IFC}, thus our methods
-might leak too much information to be useful in that domain.
+facet is found but still has redundant or repeated computations of plain terms
+while inside the fork. In contrast, our methods of accumulation, evaluation, and
+utilization's of a zipper succeeds in only evaluating plain terms a single time
+and reusing that information across variants as a variational core and store
+could be transmitted to the forked thread. Facets have been employed to
+policy-agnostic programming models and information flow control~\cite{IFC}, thus
+it is possible that our methods might leak too much information via the shared
+stores to be useful in that domain.
 
 However, there are other striking similarities, \citet{optimisingFacets}
 improves the performance of \texttt{Multref} by defining rewrite rules which
@@ -71,7 +75,7 @@ manipulate facets similarly to the equivalence laws presented for choices in
 \autoref{fig:cc:eqv}. For example, Algehed et al. removes redundant facets
 through a rewrite rule called \texttt{Choice Irrelevance}, which is isomorphic
 to the \rn{IDemp} rule in \autoref{fig:cc:eqv}. Another case is definition of
-\emph{Squashes} which finds dead branches in nested facets. Squashes are
+\emph{Squashes} which find dead branches in nested facets. Squashes are
 similarly isomorphic to our discussion of \emph{dominating choices} in
 \autoref{section:vpl:semantics}.
 
