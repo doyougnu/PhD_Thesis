@@ -18,9 +18,11 @@ accumulation, evaluation, and choice removal cleanly separate concerns. The
 sharing of plain terms is guaranteed between variants because we use a zipper to
 capture evaluation contexts. Since our design integrates plain base solvers, our
 variational solver can take advantage of advances made by the \ac{sat} and
-\ac{smt} communities. Lastly, we proved that our design is variation preserving,
-thereby showing that the variational solver is sound up to the soundness of the
-base solver.
+\ac{smt} communities.
+%
+% Lastly, we proved that our design is variation preserving,
+% thereby showing that the variational solver is sound up to the soundness of the
+% base solver.
 
 In \autoref{chapter:vsmt} we extended the architecture to handle non-Boolean
 constraints. We saw that extensions over the term language follow a pattern: One
