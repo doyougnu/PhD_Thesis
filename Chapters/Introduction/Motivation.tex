@@ -46,7 +46,7 @@ problems. Modern solvers are based on a major breakthrough that occurred with
 Incremental \ac{sat} under assumptions, made two major contributions: a
 performance contribution, where information including learned clauses, restart
 and clause-detection heuristics are carried forward. A usability contribution;
-\texttt{Minisat} exposed an interface that allowed the end-user to directly
+\texttt{Minisat} exposed an interface that allowed the user to directly
 program the solver. Through the interface the user can add or remove clauses and
 dictate which clauses or variables are shared and which are unique to the
 problem set, thus directly addressing the practical use case of \ac{sat}
@@ -55,7 +55,7 @@ solvers.
 Despite its success, the incremental interface introduced a programming language
 that required an extra input, the set of \ac{sat} problems, \emph{and} a program
 to direct the solver with side-effectual statements. This placed further burden
-on the end-user: the system is less-declarative as the user must be concerned
+on the user: the system is less-declarative as the user must be concerned
 with the internals of the solver. A new class of errors is possible as the input
 program could misuse the introduced side-effectual statements. By requiring the
 user to direct the solver, the users' solution is specific to the exact set of
@@ -78,10 +78,10 @@ are numerous:
   declarative nature of non-incremental \ac{sat} solving.
 \item Malformed programs built around the control flow operators become
   syntactically impossible.
-\item The end-user's programmed solution is decoupled from the specific problem
+\item The user's programmed solution is decoupled from the specific problem
   set, increasing software reuse.
 \item The solver has enough syntactic information to produce results which
-  previously required extra infrastructure constructed by the end-user.
+  previously required extra infrastructure constructed by the user.
 \item Previously difficult optimizations can be syntactically detected and
   applied before the runtime of the solver.
 \end{enumerate}
