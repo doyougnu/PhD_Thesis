@@ -3,62 +3,63 @@
 
 A satisfiability solver is a software system that solves the Boolean
 Satisfiability Problem~\cite{russelNorvig}. One of the oldest problems in
-computer science\footnote{see~\citet{BBH+09} for a complete history from the
+computer science\footnote{See~\citet{BBH+09} for a complete history from the
   ancients, through to George Boole to the modern day.} and famously
 NP-complete~\cite{10.1145/800157.805047}, the Boolean satisfiability problem is
 the problem of determining if a formula (sometimes called a sentence) in
 propositional logic has an assignment of Boolean values to variables, such that
-under substitution the formula evaluates to \tru{}. We formalize the problem and
-terms in the following definitions:
+under substitution the formula evaluates to true (\tru{}). We formalize the
+problem and terms in the following definitions:
 
 \begin{definition}[Model]
-  Given a formula in propositional logic: $\kf{f} \in \pl{}$, which contains a
+  Assume a formula in propositional logic, $\kf{f} \in \pl{}$, which contains a
   set of Boolean variables $\kf{vs}$. A model, $\kf{m}$, is a set of assignments
   of Boolean values to variables in $\kf{f}$ such that $\kf{f}$ evaluates to
   \tru{}.
 \end{definition}
 
 \begin{definition}[Satisfiable]
-  Given a formula in propositional logic, $\kf{f}$, which contains a set of
+  Assume a formula in propositional logic, $\kf{f}$, which contains a set of
   Boolean variables $vs$. If there exists a model for $\kf{f}$, then we say
   $\kf{f}$ is \emph{satisfiable}.
 \end{definition}
 %
-\begin{corollary}[Validity]
+\begin{definition}[Validity]
   In propositional logic a formula or sentence is \emph{valid} if it is true in
   \emph{all} possible models~\cite{russelNorvig}. That is, a valid formula or
   sentence is also a tautology.
-\end{corollary}
+\end{definition}
 
 
 For example, we can show that the formula $\kf{good = (a \wedge b) \vee c}$ is
-satisfiable with the model: $\{\kf{(a \assign{} \tru{}), (b \assign{} \tru{}),
-  (c \assign{} \fls{})}\}$, because $(\tru{} \wedge{} \tru{}) \vee{} \fls{}$
+satisfiable with the model $\{\kf{(a \assign{} \tru{}), (b \assign{} \tru{}), (c
+  \assign{} \fls{})}\}$, because $(\tru{} \wedge{} \tru{}) \vee{} \fls{}$
 results in \tru{}. However, a formula such as $\kf{bad = (a \vee b) \wedge
   \fls{}}$ is not satisfiable as no assignment of \fls{} or \tru{} to the
 variables $\kf{a}$ and $\kf{b}$ would allow $\kf{bad}$ to evaluate to \tru{}.
-With these preliminaries, we can define the Boolean Satisfiability Problem:
+With these preliminaries, we can define the Boolean Satisfiability Problem.
 
 \begin{definition}[Boolean Satisfiability Problem]
-  Given a formula in propositional logic, $\kf{f}$, determine if $\kf{f}$ is
-  satisfiable.
+  Assume a formula in propositional logic, $\kf{f}$, determine if $\kf{f}$ is
+  satisfiable.~\cite{russelNorvig}
 \end{definition}
 
 While the formal definition of the Boolean Satisfiability Problem requires a
-formula in propositional logic, expressing a \ac{sat} problem in propositional
-logic can be cumbersome. Modern satisfiability solvers accept programs written
-in domain specific programming languages. These programming languages serve
-three purposes: to succinctly express \ac{sat} problems, to communicate these
-problems to other people, and to dictate the problems to the solver. Due to the
-proliferation of solver specific languages, an international initiative has
-coalesced competing solver languages into a single standard called \acl{smtlib}.
+formula in propositional logic, expressing a \ac{sat} problem in a
+representation suitable to a \ac{sat} solver can be cumbersome. Modern
+satisfiability solvers accept programs written in domain specific programming
+languages. These programming languages serve three purposes: to succinctly
+express \ac{sat} problems, to communicate these problems to other people, and to
+dictate the problems to the solver. Due to the proliferation of solver specific
+languages, an international initiative has coalesced competing solver languages
+into a single standard called \acl{smtlib}.
 
 The \acl{smtlib} standard~\cite{BarFT-SMTLIB} formalizes a set of programming
 languages that define interactions with a \ac{sat} or \ac{smt} solver. The
 standard defines four languages, of which only two are used throughout this
-thesis: a \emph{term} language; which is a language for defining variables,
-functions and formulas in propositional and first-order logic. The
-\emph{command} language; which is a programming language to interact with the
+thesis: a \emph{term} language, which is a language for defining variables,
+functions, and formulas in propositional and first-order logic. The
+\emph{command} language, which is a programming language to interact with the
 solver. The command language is used to add or remove formulas, query the solver
 for a model or check for satisfiability, and other side-effectual interactions
 such as printing output.
@@ -67,8 +68,8 @@ For the remainder of this section we provide informal examples and cover only
 the commands and concepts required for subsequent sections of the thesis. For a
 full language specification please see \citet{BarFT-SMTLIB}.
 
-Consider this \acl{smtlib} program which verifies peirce's law implies the law
-of excluded middle for propositional logic:
+Below is an \acl{smtlib} program that verifies that peirce's law implies the law
+of the excluded middle for propositional logic:
 %
 \begin{lstlisting}[columns=flexible,keepspaces=true,language=SMTLIB]
 (declare-const a Bool)                       ;; variable declarations
@@ -76,7 +77,7 @@ of excluded middle for propositional logic:
 (define-fun ex-middle ((x Bool)) Bool        ;; excluded middle: $\color{Gray}x \vee \neg x$
   (or x
       (not x)))
-(define-fun peirce ((x Bool) (y Bool)) Bool  ;; peirce's law: $\color{Gray}((x \rightarrow y) \rightarrow x) \rightarrow x$
+(define-fun peirce ((x Bool) (y Bool)) Bool  ;; Peirce's law: $\color{Gray}((x \rightarrow y) \rightarrow x) \rightarrow x$
   (=>
     (=> (=> x y)
         x)
@@ -91,58 +92,60 @@ of excluded middle for propositional logic:
 Comments begin with a semi-colon (\rn{;}) and end at a new line. The program,
 and every \acl{smtlib} program, is a sequence of \emph{commands} that interact
 with the solver. For example, the above program consists of seven commands, two
-variable declarations, three function definition, an assertion and a command to
+variable declarations, three function definitions, an assertion and a command to
 check satisfiability. Each command is an
 \emph{s-expressions}~\cite{10.1145/367177.367199} to simplify
 parsing~\cite{BarFT-SMTLIB}. For our purposes, one only needs to understand that
 commands and functions are called by opening parentheses. The first element
-after the opening parenthesis is the name of the command or function symbol, and
-subsequent elements are arguments to that command. For example,
+after the opening parenthesis is the name of the command or function, and
+subsequent elements are arguments to that command or function. For example,
 \lstinline{(declare-const a Bool)} is an s-expression with three elements that
 defines the \pl{} variable \lstinline{a} of \emph{sort} (or \emph{type} in
-programming language literature) \lstinline{Bool}. The first element,
+programming language terms) \lstinline{Bool}. The first element,
 \lstinline{declare-const} is the command name, the second is the user defined
 name for the variable and the third is its sort. Similarly, the s-expression
 \lstinline{(and a b)} passes the variables \lstinline{a} and \lstinline{b} to
-the function \lstinline{and} which returns the conjunction of these two
+the function \lstinline{and}, which returns the conjunction of these two
 variables. Consider a more complicated example; the function definition
-\lstinline{define-fun} takes four arguments: the user defined name;
-\lstinline{peirce-is-ex-middle}, an s-expression that defines argument names and
-their sorts; \lstinline{((x Bool) (y Bool))}, a return sort; \lstinline{Bool},
+\lstinline{define-fun} takes four arguments: the user defined name,
+\lstinline{peirce-is-ex-middle}; an s-expression that defines argument names and
+their sorts, \lstinline{((x Bool) (y Bool))}; a return sort, \lstinline{Bool};
 and the body of the function. The command \lstinline{check-sat} begins the
 solving sub-routine to solve the described \ac{sat} or \ac{smt} problem.
-\lstinline{check-sat} can return two values: \rn{sat} or \rn{unsat} which
+\lstinline{check-sat} can return two values, \rn{sat} or \rn{unsat}, which
 corresponding to finding the \ac{sat} or \ac{smt} problem satisfiable or
 unsatisfiable.
 
-Internally, an \acl{smtlib} compliant solver such as z3~\cite{10.1007/978-3-540-78800-3_24}
-maintains an stack called the \emph{assertion stack} that tracks user provided
-variable and formula declarations and definitions. The elements of the assertion
-stack are called \emph{levels} and are sets of \emph{assertions}.
+Internally, an \acl{smtlib} compliant solver such as
+z3~\cite{10.1007/978-3-540-78800-3_24} maintains a stack called the
+\emph{assertion stack} that tracks user provided variable and formula
+declarations and definitions. The elements of the assertion stack are called
+\emph{levels} and are sets of \emph{assertions}.
 %
 An assertion is a logical formula, a declaration of a sort, or a definition of a
 function symbol. Sets of assertions are placed on the stack via the
-\lstinline{assert} command. The assert command takes a term as input\footnote{by
-  the standard this is a \emph{well-sorted term} of type \emph{Bool}, however we
-  elide this description for simplicity}, collects all associated definitions
-and declarations and places the assertion set on the assertion stack. Thus, the
-above example only has a single level on the assertion stack with an assertion
-set that contains the variable declarations, and the function definitions.
+\lstinline{assert} command. The assert command takes a term as input\footnote{By
+  the standard, this is a \emph{well-sorted term} of type \emph{Bool}. However,
+  we elide this description for simplicity.}, collects all associated
+definitions and declarations and places the assertion set on the assertion
+stack. Thus, the above example only has a single level on the assertion stack
+with an assertion set that contains the variable declarations and the function
+definitions.
 
 The example demonstrates a common verification pattern in \ac{sat} and \ac{smt}
 solving. In the example, we construct a constraint that asserts
 \lstinline{(not peirce-is-ex-middle)} rather than
-\lstinline{peirce-is-ex-middle} because we need to verify that peirce's law
+\lstinline{peirce-is-ex-middle} because we need to verify that Peirce's law
 implies the law of excluded middle \emph{for all} possible models. Had we elided
 the \lstinline{not} then the first model which satisfied the theorem would be
 returned, thus providing a \emph{single} model where the theorem holds. However,
 to prove the theorem we need to show that it holds \emph{for all} possible
-models. The \lstinline{not} negates the assertion thus asking the solver to
+models. The \lstinline{not} negates the assertion, thus asking the solver to
 discover a counter-example to the theorem. If such a model exists, then the
 solver has discovered a counter-example to the theorem. If no such model
-exists---that is \rn{unsat} is returned by the solver---then the negated theorem
-always evaluates to \fls{} and the theorem always evaluates to \tru{} and hence
-is logically valid.
+exists---that is, \rn{unsat} is returned by the solver---then the negated
+theorem always evaluates to \fls{} and the theorem always evaluates to \tru{}
+and hence is logically valid.
 
 % Satisfiability and logical validity are closely related. Conceptually,
 % satisfiability attempts to find a model that solves the constraints of a
