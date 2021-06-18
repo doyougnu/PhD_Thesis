@@ -26,11 +26,11 @@ Boolean, arithmetic and inequality relations using the syntactic categories
 defined in \autoref{fig:vsmt:categories}.
 %
 Conceptually, choice removal remains a variational left fold that builds the
-zipper context until a symbolic value is the focus. at which point rules of the
+zipper context until a symbolic value is the focus, at which point rules of the
 form \rn{C-*-InL} \emph{switch} the fold to process the right child of the
 relations, and rules of the form \rn{C-*-InR} call accumulation to reduce the
 relation over symbolic values. We formally specify generalized choice removal in
-\autoref{fig:vsmt:chc}. The heart of choice removal remains the same, the rules
+\autoref{fig:vsmt:chc}. The heart of choice removal remains the same; the rules
 \crEval{}, \crChc{}, \crChcT{}, and \crChcF{} are reproduced for the new zipper
 context \zipper{} but are semantically identical to the specialized versions. The
 remaining rules are generalized versions of the \ac{sat} rules to handle each

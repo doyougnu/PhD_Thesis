@@ -1,11 +1,11 @@
 \label{section:vsmt:arrays}
 %
 With variational \ac{smt} solving fully specified we can reflect on the
-generalization recipe from the previous sections. Say we desired to add the
+generalization recipe from the previous sections. Say we want to add the
 \ac{smt} background for \rn{Reals}. Doing so would follow the straightforward
 recipe demonstrated with \rn{Ints}: From the \acl{smtlib} standard we have a set
 of primitive operators, we would define wrapped primitive versions for each
-operator. Using these wrapped operators we would define new cases for
+operator. Using these wrapped operators, we would define new cases for
 accumulation and a base case for evaluation indicating that the new operator
 requires accumulation. Then we would add the new domain to the syntactic
 categories in \autoref{fig:vsmt:categories}. Choice removal would be extended
@@ -15,21 +15,22 @@ value is in the focus, and a rule that performs the fold by combining two
 symbolic values and thus consuming some of the context.
 
 In essence, we have a recipe for a generalized variational folding algorithm
-over binary relations, that forces reuse of shared terms and is applied to the
+over binary relations that forces reuse of shared terms and is applied to the
 domain of \ac{sat} and \ac{smt} solvers. Recall that a symbolic value is a
 sequence of statements in the base solver. Thus, another way to view our
 generalized folding algorithm is as a compiler from the language of variational
 \ac{sat} or \ac{smt} to plain \acl{smtlib} script. The stages of the compiler in
-this interpretation are straightforward: We parse a variational \ac{sat} or
-\ac{smt} problem to an abstract syntax tree in an intermediate language. The
-intermediate language enables optimization passes and is easier to work with
-than the object language. Accumulation and evaluation produce a variational
-core, which can be seen as another, further reduced core language, or as a
-syntax object that encapsulates the variational aspects of the input. The core
-language is then operated by choice removal which deterministically produces the
-variant syntax objects. Code generation is spread across generation of symbolic
-values in accumulation, assertion of constraints in evaluation, and calls to
-\rn{push} or \rn{pop} during choice removal, specifically during \crChc.
+this interpretation are straightforward: First, we parse a variational \ac{sat}
+or \ac{smt} problem to an abstract syntax tree in an intermediate language.
+Second, the intermediate language enables optimization passes and is easier to
+work with than the object language. Third, accumulation and evaluation produce a
+variational core, which can be seen as another, further reduced core language,
+or as a syntax object that encapsulates the variational aspects of the input.
+Fourth, the core language is operated by choice removal which deterministically
+produces the variant syntax objects. Code generation is spread across generation
+of symbolic values in accumulation, assertion of constraints in evaluation, and
+calls to \rn{push} or \rn{pop} during choice removal, specifically during
+\crChc{}.
 
 The exact ordering of the operations in the base solver, or the ordering of code
 generation, is implementation specific. In the prototype solvers that we have
@@ -122,10 +123,10 @@ could be captured wherever choices may occur. For example we might have:
     & | & \inStoreR{s}{\zipper} \\
   \end{syntax}
 %
-  Which is verbose but would work. Now consider a formula which contains a
-  nested choice in an arithmetic expression in the element slot of \select{} but
-  not store: $\kf{f} = (a \equiv \store*{a}{2}{(i - \chc[A]{k,l})}) \wedge (i
-  \equiv \select{a}{2}) \wedge (i \equiv l)$. The conjunctions indicate separate
+  This is verbose but would work. Now consider a formula which contains a nested
+  choice in an arithmetic expression in the element slot of \select{} but not
+  store: $\kf{f} = (a \equiv \store*{a}{2}{(i - \chc[A]{k,l})}) \wedge (i \equiv
+  \select{a}{2}) \wedge (i \equiv l)$. The conjunctions indicate separate
   statements in \acl{smtlib} due to the behavior of the assertion stack. The
   formula is noteworthy because both the \select{} and $i \equiv l$ call are
   plain and thus will be processed by evaluation/accumulation \emph{before}
@@ -181,7 +182,7 @@ and thus other relations do not suffer from \emph{variational
 
 We have demonstrated the generality of our approach by extensions with the
 differing domains of arithmetic over integers and arrays. Key to the approach is
-the indirection with symbolic values, and the use of a zipper to construct a
+the indirection with symbolic values and the use of a zipper to construct a
 generalized variational folding algorithm over any unary, binary, or ternary
 relation. Thus, with just what has been presented here we can support the rest
 of the core theories in \acl{smtlib} using the aforementioned extension recipe.

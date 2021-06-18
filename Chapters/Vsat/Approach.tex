@@ -7,7 +7,7 @@
     \label{impl:overview}
 \end{figure}
 
-\ac{vpl} formulas are solved recursively; decoupling the handling of plain terms
+\ac{vpl} formulas are solved recursively, decoupling the handling of plain terms
 from the handling of variational terms.
 %
 The intuition behind the algorithm is to first process as many plain terms as
@@ -18,12 +18,12 @@ the variational core and processing the new plain terms produced by
 configuration until the entire term has been consumed.
 %
 A variant in of the original \ac{vpl} formula is found every time the entire
-term is consumed, since all choices will have been configured. Once a variant
-has been found the algorithm queries the underlying solver to obtain a model,
-then backtracks to solve a different variant by configuring the same choices
+term is consumed since all choices will have been configured. Once a variant has
+been found the algorithm queries the underlying solver to obtain a model, then
+backtracks to solve a different variant by configuring the same choices
 differently. The models for each variant are combined into a single
 \emph{variational model} that captures the result of solving all variants of the
-original \ac{vpl} formula. Crucially building a variational model is
+original \ac{vpl} formula. Crucially, building a variational model is
 associative, and thus the order the variants' models are found is not important
 to the correctness of the final model.
 

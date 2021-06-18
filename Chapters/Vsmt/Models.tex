@@ -1,22 +1,22 @@
 \label{section:vsmt:models}
 % %
 We have thus far covered accumulation, evaluation, and choice removal. However,
-to support \ac{smt} theories, variational models must be abstract enough to
+to support \ac{smt} theories, variational models must be general enough to
 handle values other than Booleans. Functionally, variational \ac{smt} models
-must satisfy several constraints: the variational \ac{smt} model must be more
-memory efficient than storing all models returned by the solver naively. The
-variational model must allow users to find satisfying values for a variant. The
-model must allow users to find all variants in which a variable has a particular
-value or range of values.
+must satisfy several constraints: First, the variational \ac{smt} model must be
+more memory efficient than storing all models returned by the solver naively.
+Second, the variational model must allow users to find satisfying values for a
+variant. Third, the model must allow users to find all variants in which a
+variable has a particular value or range of values.
 
 Furthermore, several useful properties of variational models should be
-maintained: The model is non-variational; the user should not need to understand
-the choice calculus to understand their results. The model produces results that
-can be fed into a plain \ac{sat} or \ac{smt} solver. The model can be built
-incrementally and without regard to the ordering of results. Variational
-\ac{sat} models guaranteed this last constraint by forming commutative monoid
-under $\vee$; a technique which we cannot replicate for variational \ac{smt}
-models.
+maintained: First, the model is non-variational; the user should not need to
+understand the choice calculus to understand their results. Second, the model
+produces results that can be fed into a plain \ac{sat} or \ac{smt} solver.
+Third, the model can be built incrementally and without regard to the ordering
+of results. Variational \ac{sat} models guaranteed this last constraint by
+forming commutative monoid under $\vee$, a technique which we cannot replicate
+for variational \ac{smt} models.
 
 To maintain these properties and satisfy the functional requirements, our
 strategy for variational \ac{smt} models is to create a mapping of variables to
@@ -73,7 +73,7 @@ query for a model.
 This specification of variational \ac{smt} models does not require knowledge of
 choice calculus or variation, it is still monoidal---although not a commutative
 monoid---and can be built in any order as long as there are no duplicate
-variants; a scenario that is impossible by the property of synchronization on
+variants, a scenario that is impossible by the property of synchronization on
 choices.
 
 
@@ -81,24 +81,25 @@ However, there are some notable differences. Where variational \ac{sat} models
 clearly compressed results by preventing duplicate values with constant
 variables, the variational \ac{smt} model allows for duplicate values, if those
 values are produced out of order. For example, both models for \iV{} and \cV{}
-contain duplicate values. The \iV{} model has duplicate $-1$ and the \cV{} model
-contains duplicate $0$. However only one: \cV{} is easy to check in \bigOof{1}
-time; each call to \rn{Combine} could check the last immediate value to prevent
-duplicate branches. In contrast, the duplicate $-1$'s for \iV{} occur in
-variants that are likely to occur with several other plain models between them,
-namely the models for the $C_{\tru\fls}$ and $C_{\fls\fls}$ variants. Hence, a
-check during \rn{Combine} would require \bigOof{n} time, where $n$ is the number
-of satisfiable variants that \iV{} occurs in. While such a case is easily
-avoided in an implementation by tracking the values a variable has been
-previously assigned, we provide only a minimum specification and thus leave the
-details to an implementation.
+contain duplicate values. The \iV{} model has duplicate $-1$'s for the
+\set{(\AV{}, \tru{}), (\BV{}, \tru{})} and \set{(\AV{}, \fls{}), (\BV{},
+  \fls{})} variants. The \cV{} model demonstrates the worst case, where the
+variational model has naively duplicated $0$'s for every variant. However only
+\cV{} is easy to check in \bigOof{1} time; each call to \rn{Combine} could check
+the last immediate value to prevent duplicate branches. In contrast, the
+duplicate $-1$'s for \iV{} occur in variants that are likely to occur out of
+order, \ie{}, with other plain models between them, namely the models for the
+$C_{\tru\fls}$ and $C_{\fls\fls}$ variants. Hence, a check during \rn{Combine}
+would require \bigOof{n} time, where $n$ is the number of satisfiable variants
+that \iV{} occurs in. While such a case is easily avoided in an implementation
+by tracking the values a variable has been previously assigned, we provide only
+a minimum specification and thus leave the details to an implementation.
 %
 Lastly, the use of \undefined{} may seem unattractive. While all bindings in the
 model end with an \undefined{}, a binding cannot result in an \undefined{} as
 that would imply a variant that was found to be satisfiable but was not
 satisfiable, and hence would be indicative of a bug in the variational solver
-implementation. Mathematically inclined readers may observe that the monoid
-variational \ac{smt} models form corresponds to the free monoid formed by lists.
+implementation.
 
 %%% Local Variables:
 %%% mode: latex
