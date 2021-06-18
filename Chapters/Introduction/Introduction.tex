@@ -4,18 +4,18 @@ Controlling complexity is a central goal of any programming language, especially
 as software written in that language grows. The burgeoning field of
 \emph{variation theory} and \emph{variational
   programming}~\cite{EW11gttse,EW11tosem,HW16fosd,CEW16ecoop,Walk14onward}
-attempt to control a kind of complexity which is induced into software when many
+attempt to control a kind of complexity which arises in software when many
 \emph{similar yet distinct} kinds of the same software must coexist. For
 example, software is ported to other platforms, creating similar, yet distinct
 instances of that software which must be maintained. Such instances of variation
 are ubiquitous: Web applications are tested on multiple servers; programming
 languages maintain backwards compatibility and so do software libraries;
-databases evolve over time, locale and data; and device drivers must work with
+databases evolve over time, locale, and data; and device drivers must work with
 varying processors and architectures. Variation theory and variational
-programming have been successful in small
-systems~\cite{ES18diagrams,SE17fosd,MMWWK17vamos}, but have not been tested in
-a performance demanding practical domain. In the words of Joe
-Armstrong\cite{armstrongThesis}, ``No theory is complete without proof that the
+programming have been successful in specific
+systems~\cite{ES18diagrams,SE17fosd,MMWWK17vamos}, but have not been tested in a
+performance demanding general domain. In the words of Joe
+Armstrong~\cite{armstrongThesis}, ``No theory is complete without proof that the
 ideas work in practice''; this is the project of this thesis, to put the ideas
 of \emph{variation} and \emph{variational programming} to the test in the
 practical domain of \acl{sat}.
@@ -34,16 +34,16 @@ Consider the non-variational problem of finding the sum of a set of numbers,
 such as $\kf{ns} = \set{1,2,3,5,7}$. The problem becomes variational when we
 want to find the sum of $\kf{ns}$ and another sum for a related set $\prime*{ns}
 = \set{1,2,3,13,17}$. \prime*{ns} shares three elements $1$, $2$, and $3$ with
-$\kf{ns}$, and so finding the sum of each is a related but distinct instances of
+$\kf{ns}$, and so finding the sum of each is a related but distinct instance of
 the non-variable problem. The shared elements cannot be ignored, as this would
 change the solution for each set, and the elements which are not in both sets
 can be deterministically represented either by a subset or property: \setc{n}{n
   \in \kf{ns}, n \notin \prime*{ns}}.
 %
-Now we can define variational systems as as systems which exploits these facts
-to solve variational problems.
+Now we can define variational systems as systems that exploit these facts to
+solve variational problems.
 
-\begin{definition}[Variational or variation-aware System]
+\begin{definition}[Variational or variation-aware system]
   A system is variational or variation-aware if it uses the shared elements of a
   variational problem to solve all or some instances of the problem.
 \end{definition}
@@ -63,11 +63,11 @@ problem as a \emph{variational} problem.
 The major contribution of this thesis is the formalization of a
 \emph{variational satisfiability solver}, that is, a satisfiability solver which
 exploits shared terms between sets of related \acl{sat} problems to solve some
-or all of those problems efficiently. In search of this goal the thesis
-additionally formalizes \emph{\acl{vpl}}, and constructs a \emph{variational
+or all of those problems efficiently. In search of this goal, the thesis
+additionally formalizes \emph{\acl{vpl}} and constructs a \emph{variational
   \ac{sat} solver}. In the next section I motivate the use of variation theory
 and variational techniques in \acl{sat}. In addition to work on variational
-\ac{sat} several other contributions are made. The thesis extends variational
+\ac{sat}, several other contributions are made. The thesis extends variational
 \acl{sat} to variational \ac{smt}. It presents reusable techniques and
 architecture for constructing \emph{variational or variation-aware} systems
 using the non-variational counterparts of these systems for other domains. It

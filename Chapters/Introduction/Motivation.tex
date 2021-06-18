@@ -14,11 +14,11 @@ has been one of the largest success stories in computer science over the last
 two decades. Although \ac{sat} solving is known to be
 NP-complete~\cite{10.1145/800157.805047}, \ac{sat} solvers based on
 \ac{cdcl}~\cite{Marques-Silva:1999:GSA:304491.304506,Silva:1997:GNS:244522.244560,10.5555/1867406.1867438}
-have been able to solve boolean formulae with millions variables quickly enough
-for use in real-world applications~\cite{10.5555/1557461}. Leading to their
-proliferation into several fields of scientific inquiry ranging from software
-engineering to
-Bioinformatics~\cite{10.1007/11814948_16,10.1007/978-3-642-31612-8_12}.
+have been able to solve boolean formulae with millions of variables quickly
+enough for use in real-world applications~\cite{10.5555/1557461}. This has led
+to their proliferation in several fields of scientific inquiry ranging from
+software engineering to
+bioinformatics~\cite{10.1007/11814948_16,10.1007/978-3-642-31612-8_12}.
 
 The majority of research in the \ac{sat} community focuses on solving a single
 \ac{sat} problem as fast as possible, yet many practical applications of
@@ -45,25 +45,26 @@ problems. Modern solvers are based on a major breakthrough that occurred with
 
 Incremental \ac{sat} under assumptions, made two major contributions: a
 performance contribution, where information including learned clauses, restart
-and clause-detection heuristics are carried forward. A usability contribution;
-\texttt{Minisat} exposed an interface that allowed the user to directly
-program the solver. Through the interface the user can add or remove clauses and
-dictate which clauses or variables are shared and which are unique to the
-problem set, thus directly addressing the practical use case of \ac{sat}
-solvers.
+and clause-detection heuristics are carried forward; and a usability
+contribution; where \texttt{Minisat} exposed an interface that allowed the user
+to directly program the solver. Through the interface, the user can add or
+remove clauses and dictate which clauses or variables are shared and which are
+unique to the problem set, thus directly addressing the practical use case of
+\ac{sat} solvers.
 
-Despite its success, the incremental interface introduced a programming language
-that required an extra input, the set of \ac{sat} problems, \emph{and} a program
-to direct the solver with side-effectual statements. This placed further burden
-on the user: the system is less-declarative as the user must be concerned
-with the internals of the solver. A new class of errors is possible as the input
-program could misuse the introduced side-effectual statements. By requiring the
-user to direct the solver, the users' solution is specific to the exact set of
-satisfiability problems at hand, thus the programmed solution is specific to the
-problem set and therefore to the solver input. Should the user be interested in
-the assignment of variables under which the problem at hand was found to be
-satisfiable, then the user must create additional infrastructure to track
-results; which again couples to the input and is therefore difficult to reuse.
+Despite its success, the incremental interface introduces a programming language
+that requires an extra input, the set of \ac{sat} problems, \emph{and} a program
+to direct the solver with side-effectual statements. This places further burden
+on the user. First, the system is less-declarative as the user must be concerned
+with the internals of the solver. Second, a new class of errors is possible as
+the input program could misuse the introduced side-effectual statements. Third,
+by requiring the user to direct the solver, the users' solution is specific to
+the exact set of satisfiability problems at hand, thus the programmed solution
+is specific to the problem set and therefore to the solver input. Finally,
+should the user be interested in the assignment of variables under which the
+problem at hand is found to be satisfiable, then the user must create additional
+infrastructure to track results, which again couples to the input and is
+therefore difficult to reuse.
 
 We argue that solving a set of related \ac{sat} problems \emph{is a variational
   programming problem}, and by directly addressing the problem's variational
@@ -83,12 +84,12 @@ are numerous:
 \item The solver has enough syntactic information to produce results which
   previously required extra infrastructure constructed by the user.
 \item Previously difficult optimizations can be syntactically detected and
-  applied before the runtime of the solver.
+  applied before running the solver.
 \end{enumerate}
 
 
 This work is applied programming language theory in the domain of satisfiability
-solvers. Due to the ubiquity of satisfiability solvers estimating the impact is
+solvers. Due to the ubiquity of satisfiability solvers, estimating the impact is
 difficult although the surface area of possible applications is large. For
 example, many analyses in the software product-lines community use incremental
 \ac{sat} solvers. By creating a variational \ac{sat} solver such analyses
@@ -103,7 +104,7 @@ variational theory and serves as an empirical case study. By directly handling
 variation, this work demonstrates direct benefits to be gained for researchers
 in other domains and magnifies the impact of any results produced by the
 variational research community. Lastly, the result of this thesis, a variational
-\ac{sat} solver, provides a tool to reason about variation itself.
+\ac{sat} solver provides a tool to reason about variation itself.
 
 %%% Local Variables:
 %%% mode: latex
