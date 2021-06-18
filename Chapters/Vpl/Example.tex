@@ -1,11 +1,11 @@
 \label{section:vpl:example}
 %
 To demonstrate the application of \ac{vpl} and conclude the chapter, we encode
-the incremental example from \autoref{chapter:background}. Our goal is to
-construct a single variational formula that encodes the related plain formulas
-\pV{}, \qV{}, \rV{}. Ideally, this variational formula should maximize sharing
-among the plain formulas in order to avoid redundant analyses during a
-variational solving. We reproduce the formulas below for the convenience:
+the incremental solving example from \autoref{chapter:background}. Our goal is
+to construct a single variational formula that encodes the related plain
+formulas \pV{}, \qV{}, \rV{}. Ideally, this variational formula should maximize
+sharing among the plain formulas in order to avoid redundant analyses during
+variational solving. We reproduce the formulas below for convenience:
 %
 \begin{align*}
   p =\ a \wedge b \wedge c \wedge e && q=\ a \wedge (b \vee \neg \iV{}) \wedge c \wedge (\gV{} \rightarrow c) && r =~z \leftrightarrow (a \wedge b \wedge c \wedge e)
@@ -37,9 +37,9 @@ We begin by combining \pV{} and \rV{} since the differences\footnote{There are
   many ways to assess the difference of two formulas. For now the reader may
   consider it reducible to the Levenshtein distance of two
   strings~\cite{Levenshtein_SPD66}. We return to this discussion in
-  \autoref{section:conclusion:future-work}} between the two are smaller than
-between other pairs of feature models in our example. Feature models may be
-combined in any order as long as the variants in the resulting formula
+  \autoref{section:conclusion:future-work}.} between the two are smaller than
+between other pairs of propositions in our example. Propositional formulas may
+be combined in any order as long as the variants in the resulting formula
 correspond to their plain counterparts. The only change between \pV{} and \rV{}
 is the addition of \zV{} and thus we wrap the leaf in a choice with dimension
 \dimR. This yields the following variational formula.

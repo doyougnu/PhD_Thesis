@@ -18,9 +18,9 @@ For example, \dimensions{\chc[A]{p,q}\wedge\chc[B]{r,s}} = $\{\kf{A,B}\}$ and
 Similarly we define a notion of \emph{cardinality} over \ac{vpl} formulas.
 %
 \begin{definition}[Dimension-cardinality]
-  The dimension-cardinality or d-cardinality of a formula $f \in \ac{vpl}$ is
-  the cardinality of the set of unique dimensions in a formula. We use the
-  following notation as shorthand: $\dcardinality{f} = |{\dimensions{f}}|$.
+  The dimension-cardinality of a formula $f \in \ac{vpl}$ is the cardinality of
+  the set of unique dimensions in a formula. We use the following notation as
+  shorthand: $\dcardinality{f} = |{\dimensions{f}}|$.
 \end{definition}
 
 Similarly to $\kf{Dimensions}$ it is useful to have projections from a \ac{vpl}
@@ -29,7 +29,7 @@ formula to possible variants:
 \begin{definition}[Variants]
   Given a formula $f \in \ac{vpl}$, let $\variants{f}$ be the set of all
   possible \emph{variants} of $f$. Thus, $\variants{f} = \{\ v\ |\ \exists
-  C.\ \sem[C]{f} = v,\ v \neq f \,\}$
+  C.\ \sem[C]{f} = v \,\}$
 \end{definition}
 %
 and we can define a projection for all plain variants as well:
@@ -44,7 +44,7 @@ Using $\kf{Dimensions}$ we can define a more precise property on configurations.
 %
 \begin{definition}[Minimal Configuration]
   We say a configuration $\kf{C}$ is minimal with respect to some formula $f \in
-  \ac{vpl}$ if and only if $\forall C.\ \sem[C]{f} = v$ where $v \in
+  \ac{vpl}$ if and only if $ \sem[C]{f} = v$ where $v \in
   \variants*{f}$ and $\nexists \prime*{C} .\ \sem[\prime*{C}]{f} = v$
   and $\cardinality{\prime*{C}} < \cardinality{C}$.
 \end{definition}
@@ -63,26 +63,8 @@ the variant. In this case, the configuration $C = \set{(A, \true), (B, \false)}$
 is not minimal for the \set{(A,\true)} variant, however $\kf{C} =
 \set{(A,\true)}$ is, but $\kf{C}$ is minimal for every \set{(A,\false)} variant.
 
-With these functions and definitions we can prove useful lemmas and theorems.
-%
-We'll begin by proving that the configuration semantics over a \ac{vpl} formula
-is \emph{confluent}, \ie{}, each configuration with respect to a \ac{vpl}
-formula precisely specifies one variant:
-%
-\begin{lemma}[\ensuremath{\sem[C]{f}} is deterministic]%
-  \label{lemma:vpl:deterministic}
-  For any configuration $C$, if \ensuremath{\semL f \semR_{C} = g}, and
-  \ensuremath{\semL f \semR_{C} = h}, then $\kf{g} = \kf{h}$.
-\end{lemma}
-%
-\begin{proof}
-  As shown in \autoref{fig:cc:cfg}, there is only one applicable case for each
-  relation in \ac{vpl}. Furthermore, by the property of synchronization, each
-  choice must be configured to the same alternative, thus \sem[C]{f} is
-  deterministic for some $\kf{C}$ and $\kf{f}$.
-\end{proof}
-
-Similarly, clearly \ac{vpl} reduces to \pl{}:
+With these functions and definitions we can prove that \ac{vpl} reduces to
+\pl{}:
 %
 \begin{theorem}[\ac{vpl} reducible to \pl{}]%
   \label{thm:vpltopl}
