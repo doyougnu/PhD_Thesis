@@ -20,9 +20,13 @@ ideas work in practice''; this is the project of this thesis, to put the ideas
 of \emph{variation} and \emph{variational programming} to the test in the
 practical domain of \acl{sat}.
 
-To my knowledge there is no formal definition of a \emph{variation-aware} or
-\emph{variational} system, and the terms are used interchangeably in the
-research literature. For clarity, I provide the following working definitions:
+The work of \citet{SPLRefinementThoery} provides a formal definition of a
+variational system in the domain of software product-lines which they call
+\emph{a theory of software-product line refinement}. Unfortunately this
+formalism is tightly coupled to software-product lines. Furthermore the terms
+\emph{variation-aware} and \emph{variational} system are used interchangeably in
+the research literature. For clarity, I provide the following working
+definitions:
 
 \begin{definition}[Variational Problem]
   A problem is variational if separate instances of the problem share elements
@@ -35,10 +39,10 @@ such as $\kf{ns} = \set{1,2,3,5,7}$. The problem becomes variational when we
 want to find the sum of $\kf{ns}$ and another sum for a related set $\prime*{ns}
 = \set{1,2,3,13,17}$. \prime*{ns} shares three elements $1$, $2$, and $3$ with
 $\kf{ns}$, and so finding the sum of each is a related but distinct instance of
-the non-variable problem. The shared elements cannot be ignored, as this would
-change the solution for each set, and the elements which are not in both sets
-can be deterministically represented either by a subset or property: \setc{n}{n
-  \in \kf{ns}, n \notin \prime*{ns}}.
+the non-variational problem. The shared elements cannot be ignored, as this
+would change the solution for each set, and the elements which are not in both
+sets can be deterministically represented either by a subset or property:
+\setc{n}{n \in \kf{ns}, n \notin \prime*{ns}}.
 %
 Now we can define variational systems as systems that exploit these facts to
 solve variational problems.
