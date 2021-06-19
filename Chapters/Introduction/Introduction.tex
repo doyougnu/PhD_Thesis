@@ -21,12 +21,12 @@ of \emph{variation} and \emph{variational programming} to the test in the
 practical domain of \acl{sat}.
 
 The work of \citet{SPLRefinementThoery} provides a formal definition of a
-variational system in the domain of software product-lines which they call
-\emph{a theory of software-product line refinement}. Unfortunately this
-formalism is tightly coupled to software-product lines. Furthermore the terms
+variational system in the domain of software product lines which they call
+\emph{a theory of software product line refinement}. Unfortunately this
+formalism is tightly coupled to software product lines. Furthermore the terms
 \emph{variation-aware} and \emph{variational} system are used interchangeably in
-the research literature. For clarity, I provide the following working
-definitions:
+the research literature. For clarity, we provide the following working
+definitions for this thesis:
 
 \begin{definition}[Variational Problem]
   A problem is variational if separate instances of the problem share elements
@@ -69,18 +69,15 @@ The major contribution of this thesis is the formalization of a
 exploits shared terms between sets of related \acl{sat} problems to solve some
 or all of those problems efficiently. In search of this goal, the thesis
 additionally formalizes \emph{\acl{vpl}} and constructs a \emph{variational
-  \ac{sat} solver}. In the next section I motivate the use of variation theory
+  \ac{sat} solver}. In the next section we motivate the use of variation theory
 and variational techniques in \acl{sat}. In addition to work on variational
 \ac{sat}, several other contributions are made. The thesis extends variational
 \acl{sat} to variational \ac{smt}. It presents reusable techniques and
 architecture for constructing \emph{variational or variation-aware} systems
 using the non-variational counterparts of these systems for other domains. It
 shows that, with the concept of variation, the variational \ac{smt} and \ac{sat}
-solvers can be parallelized, although I do not formalize the parallelization
-leaving it to future work. Lastly, this thesis is the culmination of many
-conversations, arguments and work from myself and many others over the last five
-years. To honor their contributions I use the first-person plural ``we'', rather
-than ``I'' for the remainder of the thesis.
+solvers can be parallelized, although we do not formalize the parallelization
+leaving it to future work.
 
 \section{Motivation and Impact}
 \input{Chapters/Introduction/Motivation}

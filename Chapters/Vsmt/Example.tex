@@ -6,7 +6,7 @@ example of solving a variational \ac{smt} problem. Consider the query formula
   (\chc[B]{c,\neg b} \vee b)}$ with two choices parameterized by the dimensions
 $A$ and $B$. Derivation of the variational core for $\kf{h}$ begins with all
 evaluation contexts and all stores \aStore{}, \eStore{} initialized to
-$\emptyset$.
+$\varnothing$.
 
 The root of \hV{} is $\wedge$ and thus \evAnd{} is the only applicable rule.
 From \evAnd{} we have $\eIL*{1} = \kf{((1 + 2 < (i - \chc[A]{k,l})) \wedge a)}$,
@@ -94,7 +94,7 @@ when the switch occurs a choice will be in focus. The switch is performed by
 \crArithL{} and yields $\chc[A]{k, l}$ as the focus with context $\zipper =
 \inArithR*{s_{i}}{\inInEqR*{s_{12}}{\inBoolL*{\inRoot{}}{(\chc[B]{c,\neg b}
       \vee{} s_{b})}{\wedge}}{<}}{-}$. Now the heart of choice removal applies,
-because we have $\configuration{} = \emptyset$, the only applicable rule with a
+because we have $\configuration{} = \varnothing$, the only applicable rule with a
 choice in the focus is \crChc. \crChc{} creates two recursive calls, one for
 each alternative using \emph{the same context}, thus we'll have $\configuration=
 \set{(A,\true)}$, with focus $k$, and context $\zipper =
