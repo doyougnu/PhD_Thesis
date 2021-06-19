@@ -28,7 +28,7 @@ For example, the change from $V_{7}$ to $V_{8}$ (128 to 256 Variants) of \fin{}
 clearly constrained the feature model as the number of unsatisfiable models
 increased from 50\% to 80\%.
 
-The experiment required 7 days, 6 hours and 21 minutes to complete. Due to the
+The experiment required 7 days, 6 hours, and 21 minutes to complete. Due to the
 amount of time required to generate the data, we limited the number of raw
 measurements to 3. Thus, each data point presented in our results is a
 bootstrapped average of 3 raw measurements.
@@ -124,7 +124,7 @@ Cvc4 is also noteworthy; cvc4 benefited the most from \vTov{} for both
 datasets with a speedup 3.51x (\auto{}) and 2.51 (\fin{}). The cvc4 case is
 interesting as it implies that a base solver which shows poor performance with
 in the typical use case (\vTop{}; \ac{sat} calls occur in an incremental
-constext, and solver is kept alive) may greatly benefit from the variational
+context, and solver is kept alive) may greatly benefit from the variational
 solving algorithm we've presented. Although the exact reasons behind this
 behavior will be particular to the base solver, these results imply that our
 use case (\ie{}, heavily exercising the incremental code paths) is peculiar
@@ -208,8 +208,11 @@ from \nieke{}'s previous study~\citep{NMS+:GPCE18} and chose dissimilar product
 lines. We inherit encoding-based threats to validity by reusing \nieke{}'s
 formulas but ensured each algorithm experienced identical ordering of plain
 terms as described in \autoref{section:case-studies:experimental-methodology}.
-Furthermore our results, and our prototype solver are based on the widely used
-Haskell library sbv. However, we believe this is a likely to be a common
+
+Our results and our prototype solver are based on the widely used Haskell
+library sbv. While sbv is widely used it is still possibly that our performance
+results are influenced by sbv and thus we inherit threats from the particulars
+of the library. However, we believe this is a likely to be a common
 implementation strategy for a variational solver (\ie{}, a solver built using a
 library rather than a foreign function interface, similar to tools built on top
 of sat4j~\citep{LP:JSAT10}) it is nonetheless a threat to validity as our
@@ -218,7 +221,7 @@ maintained the same version of sbv throughout the experiment, employed it's
 interface to interoperate for each base solver, and enforced the same code paths
 through the library.
 
-We have evinced the scalability claim with RQ1, and shown the translation and
+We have evinced the scalability claim with RQ1 and shown the translation and
 automation of incremental solving in \autoref{chapter:vsat}. However, our
 results depend on a \ac{vpl} formula as input and thus all points of variation
 must be known before solving. We believe that \ac{vpl} formulas can be
@@ -228,7 +231,7 @@ left to future work, which we return to in
 \autoref{section:conclusion:future-work}.
 
 We do not provide a proof of the soundness of the prototype solver. We mitigate
-this threat in several ways: we performed property-based
+this threat in several ways. We performed property-based
 testing~\cite{quickcheck} on our prototype and verified that a satisfiable
 variant was found to be satisfiable across all algorithms. In addition, we
 define a property that ensures that for each plain model $p$, found with

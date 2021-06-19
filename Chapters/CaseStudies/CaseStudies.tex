@@ -30,22 +30,21 @@ realistic conditions as possible we utilize real-world data from a previous
 study by~\citet{NMS+:GPCE18} from the \ac{spl} community.
 
 Before we describe the datasets and resulting variational \ac{sat} problems we
-first introduce some terminology from the \ac{spl} community. A software
-product-line is an instance of variational software, more formally it is a set
-of software-intensive systems that share a common, managed set of features
-satisfying the specific needs of a particular market segment or mission and that
-are developed from a common set of core assets in a prescribed
-way~\cite{ABKS13,CE00,PBL05}.
+first introduce some terminology from the \ac{spl} community. A \ac{spl} is an
+instance of variational software, a set of software-intensive systems that share
+a common, managed set of features satisfying the specific needs of a particular
+market segment or mission and that are developed from a common set of core
+assets in a prescribed way~\cite{ABKS13,CE00,PBL05}.
 
-A good example of a software product-line is the Linux kernel~\cite{linux}. The
-Linux kernel is a set of core assets which devise an operating system, but the
-assets are parameterized by \emph{features} which, in this case, are the Boolean
-conditions of conditional-compilation statements such as \cpp{ifdef}s. To select
-the particular kind of kernel to build, the Linux kernel uses the
+A good example of a \ac{spl} is the Linux kernel~\cite{linux}. The Linux kernel
+is a set of core assets which devise an operating system, but the assets are
+parameterized by \emph{features} which, in this case, are the Boolean conditions
+of conditional-compilation statements such as \cpp{ifdef}s. To select the
+particular kind of kernel to build, the Linux kernel uses the
 \texttt{KConfig}~\cite{kconfig} tool to enable or disable features and thus
 specify the exact kernel to build. The set of features and their dependencies
 which determine the product, or in this case determine the kernel that is built
-is call a \emph{feature model}\cite{KCHNP90}.
+is call a \emph{feature model}~\cite{KCHNP90}.
 
 It is common to express feature models as a \ac{sat} formula where variables are
 features, and dependencies are expressed using logical connectives. Thus,
@@ -57,8 +56,7 @@ feature must be \tru{} (or enabled in the \ac{spl} terminology) for every viable
 product. Conceptually in this domain, if a \rn{sat} is returned from the solver
 then the resulting model is an assignment of features which specifies a viable
 product. If an \rn{unsat} is returned than no viable product exists given the
-constraints on the feature model for the software product-line. Further analysis
-on the product line are
+constraints on the feature model for the software product line.
 
 \section{Experimental Methodology}
 \input{Chapters/CaseStudies/Experimental_Methodology}
