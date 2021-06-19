@@ -9,42 +9,41 @@ problems, many variational or variation-aware systems employ \ac{sat} and
 variational data structures.
 
 There is relatively little work on variational data structures.
-\citet{EWC13fosd} describes a general strategy for constructing a variational
-data structure. \citet{Walk14onward} expands on this strategy and explore the
-trade-offs made in ad-hoc implementations used in variational systems such as
-TypeChef~\cite{KKHL:FOSD10} and SuperC~\cite{GG:PLDI12}. For this section we
+\citet{EWC13fosd} describes variational sets and graphs. \citet{Walk14onward}
+advocate for research on variational data structures and explore the trade-offs
+made in ad-hoc implementations used in variational systems such as
+TypeChef~\cite{KKHL:FOSD10} and SuperC~\cite{GG:PLDI12}. For this section, we
 focus on recent advancements implementing performent variational stacks and
-lists. The goal for variational data structures is to construct a data structure
-which describes a set of non-variational data structures efficiently. The
-variational artifact is the implementation of the variational data structure,
-and the variants in this domain are the plain versions of the data structure or
-plain values that result from operating on the data structure. The challenge is
-to devise a variational data structure that describes and contains the
-variation, and provides a set of operations to manipulate the data structure
-that are as close to the performance of their plain counterparts as possible.
+lists. The goal of variational data structures is to construct a data structure
+which describes a set of non-variational data structures and supports efficient
+variational operations. The variational artifact is the implementation of the
+variational data structure, and the variants in this domain are the plain
+versions of the data structure or plain values that result from operating on the
+data structure. The challenge is to devise a variational data structure that
+describes and contains the variation, and provides a set of operations to
+manipulate the data structure that are as close to the performance of their
+plain counterparts as possible.
 
 A fundamental tension in this domain is exemplified by work on variational
-stacks by~\citet{MMWWK17vamos}. Meng et al.\ identify two kinds of variational
-stacks depending on the location of variation, one may have either: a stack of
-choices, or a choice of stacks. Unfortunately, their analysis on a general
-implementation strategy was inconclusive, rather they found that depending on
-the implementation strategy runtime performance could be affected by as much as
+stacks by~\citet{MMWWK17vamos}. Meng et al.\ defined two kinds of variational
+stacks: a stack of choices, or a choice of stacks. Their analysis on a general
+implementation strategy was inconclusive. They found that depending on the
+implementation strategy runtime performance could be affected by as much as
 20\%. Furthermore, the variation in their experiment is coarse grained, \ie{},
-the sharing ratio is high. Thus, Meng et al.\ utilized heuristics (optimizations
-in their paper) which further improved performance for both kinds of variational
-stacks by 43\%. Utilizing heuristics was also found to be a successful strategy
-in Meinicke's PhD dissertation which we address below.
+the sharing ratio is high. Thus, Meng et al.\ used heuristics (optimizations in
+their paper) which further improved performance for both kinds of variational
+stacks by 43\%. Using heuristics was also found to be a successful strategy in
+Meinicke's PhD dissertation which we address below.
 
 The work on variational stacks yields an alternative implementation strategy for
 variational \ac{sat} solvers. We have carefully designed our variational
-\ac{sat} and \ac{smt} solvers with a goal to utilize a plain base solver. We
-could have done otherwise and implemented a variational solver directly. With
-variational stacks the variational solver could utilize a variational assertion
-stack and we would avoid the need for a zipper in choice removal. Such an
-implementation is worth considering although by developing an independent solver
-we lose any benefits brought by the \ac{sat}/\ac{smt} communities and lose the
-general recipe for constructing a variation-aware system \emph{using} its plain
-counterpart.
+\ac{sat} and \ac{smt} solvers to use a plain base solver. We could have done
+otherwise and implemented a variational solver directly. With variational stacks
+the variational solver could use a variational assertion stack and we would
+avoid the need for a zipper in choice removal. Such an implementation is worth
+considering although by developing an independent solver we lose any benefits
+brought by the \ac{sat}/\ac{smt} communities and lose the general recipe for
+constructing a variation-aware system \emph{using} its plain counterpart.
 
 Similar to variational stacks, \citet{SE17fosd} successfully implemented
 variational lists. Smeltzer and Erwig devise six implementations of variational
@@ -62,9 +61,8 @@ or a sequence of plain elements. This idea should sound familiar, as
 accumulation and symbolic values are essentially pointers to sequences of plain
 terms. Smeltzer and Erwig also observe that the sharing ratio has a measurable
 impact on performance (a finding we also observed) and thus minimizing or
-manipulating choices to increase the ratio is important; a result that has also
-been observed in software product-lines by~\citet{ARW+:ICSE13}
-and~\citet{KRE+:FOSD12}.
+manipulating choices to increase the ratio is important, a result that has also
+been observed in \ac{spl} by~\citet{ARW+:ICSE13} and~\citet{KRE+:FOSD12}.
 
 In addition to data structures there has been research on applications of the
 choice calculus to graphics~\citep{ES18diagrams}, type
@@ -73,43 +71,42 @@ messages~\citep{CES17jvlc,CE14popl,CEW12icfp,CES14hcc}. For the remainder of
 this section we focus on variational or variation-aware systems.
 
 This work is not the first to construct a variational or variation-aware system.
-Notably, \citet{KKHL:FOSD10} produced TypeChef, which used the choice calculus
-and variational data structures to type check every possible Linux kernel. Thus
-constructing a variational parsing~\cite{KGR+:OOPSLA11}, a variational
+Notably, \citet{LKA+:ESECFSE13} produced TypeChef, which used the choice
+calculus and variational data structures to type check every possible Linux
+kernel. Constructing a variational parsing~\cite{KGR+:OOPSLA11}, a variational
 lexer~\cite{Kastner11partialpreprocessing}, type
-system\cite{LKA+:ESECFSE13,KOE:OOPSLA12} and control-flow and data-flow
-analyses\cite{LKA+:ESECFSE13}. Similarly, \citet{GG:PLDI12} variationally parse
-the Linux kernel by utilizing variational data structures and \emph{choice
-  nodes} in the abstract syntax tree. TypeChef is notable for several reasons:
-its implementation is a direct inspiration for our baseline algorithm \vTop{}
-which uses an incremental \ac{sat} solver but only exhibits sharing
-\emph{before} a choice is discovered. This kind of sharing, called \emph{prefix
-  sharing} by \citet{SE17fosd} is the de-facto standard in software product-line
-applications which employ incremental \ac{sat} solvers. Given the results of
-this thesis, large performance gains are possible if our results are
-representative with the use of a variational \ac{sat} or \ac{smt} solver.
-TypeChef is also notable for its two step approach, first it parses source code
-to find \cpp{if-def} annotations, and stores these in files called
-\emph{presence conditions}. Presence conditions are isomorphic to variation
-contexts, both are \pl{} formula's over dimensions (or conditions of the
-\cpp{if-def}) which determine a variant. Using the presence conditions, TypeChef
-annotates choice nodes to determine which variant the leaves of the choice node
-belong. Then TypeChef extends the symbol table of a C program to contain types
-which are conditional based on the presence conditions. This allows a variable's
-type to change from one variant to another. Each type checking operation is then
-lifted to handle the variational cases and then type checking checks the
-variation-aware types to ensure every each variant type checks. Similar to our
-use of variation contexts, TypeChef allows a \emph{variability model} which
-specifies variants that should be type checked by conjoining the model with the
-presence conditions.
+system~\cite{LKA+:ESECFSE13,KOE:OOPSLA12} and control-flow and data-flow
+analyses~\cite{LKA+:ESECFSE13}. Similarly, \citet{GG:PLDI12} variationally parse
+the Linux kernel by using variational data structures and \emph{choice nodes} in
+the abstract syntax tree. TypeChef is notable for several reasons: its
+implementation is a direct inspiration for our baseline algorithm \vTop{} which
+uses an incremental \ac{sat} solver but only exhibits sharing \emph{before} a
+choice is discovered. This kind of sharing, called \emph{prefix sharing} by
+\citet{SE17fosd} is the de-facto standard in software product-line applications
+which employ incremental \ac{sat} solvers. Given the results of this thesis,
+large performance gains are possible if our results are representative with the
+use of a variational \ac{sat} or \ac{smt} solver. TypeChef is also notable for
+its two step approach, first it parses source code to find \cpp{ifdef}
+annotations, and stores these in files called \emph{presence conditions}.
+Presence conditions are isomorphic to variation contexts, both are \pl{}
+formula's over dimensions (or conditions of the \cpp{ifdef}) which determine a
+variant. Using the presence conditions, TypeChef annotates choice nodes to
+determine which variant the leaves of the choice node belong. Then TypeChef
+extends the symbol table of a C program to contain types which are conditional
+based on the presence conditions. This allows a variable's type to change from
+one variant to another. Each type checking operation is then lifted to handle
+the variational cases and then type checking checks the variation-aware types to
+ensure every each variant type checks. Similar to our use of variation contexts,
+TypeChef allows a \emph{variability model} which specifies variants that should
+be type checked by conjoining the model with the presence conditions.
 
 In his PhD dissertation, \citet{M14,JensDebugging} constructs a variational
 interpreter called VarexJ and a variational bytecode transformer called VarexC,
 to achieve a variational execution and debugging framework. The framework tries
-to maximize sharing in two ways: It directly utilizes the choice calculus to
-represent local points of variation and achieves a \emph{fine-grained approach},
-this allows the framework to share program states and keep a unified heap.
-Additionally, the framework achieves instruction-level sharing among
+to maximize sharing in two ways: First, it directly utilizes the choice calculus
+to represent local points of variation and achieves a \emph{fine-grained
+  approach}, this allows the framework to share program states and keep a
+unified heap. Second, the framework achieves instruction-level sharing among
 control-flows between variants. It achieves this by implementing a variational
 scheduler, which seeks to order the execution of program statements to optimize
 sharing. We achieve this same effect through the interaction between
@@ -123,7 +120,7 @@ technique proved effective for their domain and effectively eliminated the
 bottleneck. Lastly, in his PhD dissertation Chu-Pan Wong used VarexJ to do
 speculative mutation testing and automated program repair~\cite{ChuPanThesis}.
 While not a variational system, Wong's work is notable for using a variational
-system, defining variational expectation traces, and employing \ac{sat} solver
+system, defining variational expectation traces, and employing a \ac{sat} solver
 to find interesting mutants to test.
 
 % Lastly, Meinicke's work was put to use by \citet{ChuPanThesis} to induce
@@ -136,20 +133,20 @@ to find interesting mutants to test.
 Lastly, choice calculus has been successfully applied to databases to construct
 a complete approach for variational databases including a variational database
 management system, a variational query language, and variational tables.
-\citet{ATW17dbpl,ATW18poly} constructs a variational database in an interesting
-way. Ataei et al. add choices to relational algebra to define a variational
-query language for a variational relational database. The variational query
-language serves as the variational artifact similar to the role of \ac{vpl} in
-the variational \ac{sat} and \ac{smt} solvers. Ataei et al. specifically choose
-to avoid adding choices to variational tables, instead opting to apply
-\emph{annotations} to the table schema, table attributes, and table tuples. The
-annotations are \pl{} formulas and are derived from the dimensions of choices in
-the variational query language. Annotations that are attached to an aspect of
-the database, such as a schema, attribute or tuple are called \emph{presence
-  conditions} following the work on TypeChef. Annotations which are not attached
-but describe possible variants are called \emph{feature expressions}.
+\citet{ATW17dbpl,ATW18poly} add choices to relational algebra to define a
+variational query language for a variational relational database. The
+variational query language serves as the variational artifact similar to the
+role of \ac{vpl} in the variational \ac{sat} and \ac{smt} solvers. Ataei et al.
+specifically choose to avoid adding choices to variational tables, instead
+opting to apply \emph{annotations} to the table schema, table attributes, and
+table tuples. The annotations are \pl{} formulas and are derived from the
+dimensions of choices in the variational query language. Annotations that are
+attached to an aspect of the database, such as a schema, attribute, or tuple are
+called \emph{presence conditions} following the work on TypeChef. Annotations
+which are not attached but describe possible variants are called \emph{feature
+  expressions}.
 
-This careful design has several desirable properties: the separation between the
+This careful design has several desirable properties: The separation between the
 variational aspects of the system and the database engine allows the database
 engine to remain mostly unchanged. Thus, Ataei et al. avoid implementing low
 level details such as a variational \texttt{B+-Tree} or file system. However the
@@ -172,14 +169,14 @@ can express dependencies between variants through presence conditions, while our
 approach is limited to express dependencies by nesting choices.
 
 Notably, a major limitation of our method for variational \ac{sat} and \ac{smt}
-solving \emph{requires} that all points of variation are known \emph{before} the
-run-time of the solver. This is a direct consequence of \ac{vpl}, by
+solving is that it \emph{requires} that all points of variation to be known
+\emph{before} running the solver. This is a direct consequence of \ac{vpl}; by
 construction one can only make a \ac{vpl} formula if a point of variation is
-known. If one does not know, or needs to discover the points of variation during
+known. If one does not know, or needs to discover the points of variation at
 runtime then the \ac{vpl} formula cannot be constructed. This limitation is a
-significant difference from the aforementioned variational systems. We return to
-this point in \autoref{section:conclusion:future-work}, but using variational
-\ac{sat} solvers effectively in these domains is an open research question.
+significant difference from incremental solvers. We return to this point in
+\autoref{section:conclusion:future-work}, but using variational \ac{sat} solvers
+effectively in these domains is an open research question.
 
 %%% Local Variables:
 %%% mode: latex

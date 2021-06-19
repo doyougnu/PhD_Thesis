@@ -5,7 +5,7 @@ constructs a \ac{sat} solver that exploits shared terms and prevents redundant
 computation. However, the projects differ in important ways. Visser et al.'s
 solver is oriented for program analysis and does not use incremental \ac{sat}
 solving. Rather, it employs heuristics to find canonical forms of sliced
-programs, and caches solver results on these canonical forms in a key-value
+programs and caches solver results on these canonical forms in a key-value
 store~\citep{redis}. In contrast, variational \ac{sat} solving is domain
 agnostic, solves \ac{sat} problems expressed in \ac{vpl}, returns a variational
 model, and uses incremental \ac{sat} solving.
@@ -23,8 +23,8 @@ assertion stack idea developed in~\citet{kim2000solving}. The incremental
 \ac{sat} problem was devised as a solution to verification and optimization
 problems in electronic design automation such as covering
 problems~\cite{10.1145/217474.217603}, detecting delay
-faults\cite{10.1145/343647.343801}, and model
-checking\cite{Clarke:1986:AVF:5397.5399}. The first incremental solver to gain
+faults~\cite{10.1145/343647.343801}, and model
+checking~\cite{Clarke:1986:AVF:5397.5399}. The first incremental solver to gain
 traction was \texttt{SATIRE} created by \citet{10.1145/378239.379019}.
 
 Just two years later, \citet{10.1007/978-3-540-24605-3_37} made a major advance
@@ -36,22 +36,22 @@ simplified the existing notions of incrementality from the state of the art
 incremental solvers \texttt{SATIRE} and
 \texttt{PBS}~\cite{10.1145/774572.774638} and combined propagation strategies
 from the \texttt{Chaff}~\cite{Moskewicz:2001:CEE:378239.379017} solver such as
-conflict-driven backtracking\cite{Zhang:2001:ECD:603095.603153} and dynamic
+conflict-driven backtracking~\cite{Zhang:2001:ECD:603095.603153} and dynamic
 variable ordering~\cite{Moskewicz:2001:CEE:378239.379017}. These combinations
 lead to a solver that was performent, and whose implementation was small and
 communicative. That same year, the first SMTLIB standard would be proposed by
 \citet{SMT-LIBformat} although incremental \ac{sat} commands would not be
-incorporated until the 2.0 version\cite{BarST-RR-10} in 2010.
+incorporated until the 2.0 version~\cite{BarST-RR-10} in 2010.
 
 The use of choices in the variational solvers is similar to the concept of
 \textit{facets} by~\cite{austin2012multiple} and \textit{faceted execution}
 by~\cite{Schmitz2018FacetedSM,Micinski2018AbstractingFE,10.1145/2465106.2465121},
 in that both choices and facets syntactically demarcate terms in an object
 language that must be specially handled, and yet must also operate with terms
-outside of the choice or facet. Facets are very similar to choices, facets use a
-label to determine branches (or alternatives in our language), facets are
-synchronized by these labels and are treated as tree-data structures; similar to
-our use of choices and the tag-tree representation of the choice
+outside of the choice or facet. Facets are very similar to choices; facets use a
+label to determine branches (or alternatives in our language), are synchronized
+by these labels, and are treated as tree-data structures, similar to our use of
+choices and the tag-tree representation of the choice
 calculus~\cite{Walk13thesis}. Lastly, facets are similarly undetermined until
 they are reified.
 

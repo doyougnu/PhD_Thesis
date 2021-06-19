@@ -74,17 +74,18 @@ With these functions and definitions we can prove that \ac{vpl} reduces to
 %
 \begin{proof}
   This follows directly from the semantics of configuration in
-  \autoref{fig:cc:cfg}, the definition of a total configuration, and
-  \autoref{lemma:vpl:deterministic}. The proof is by structural induction on
-  $\kf{f}$ and case analysis. The only interesting case is the case for choices.
-  Since $C$ is total we have $C : D \rightarrow \booleans{}$ instead of $C : D
-  \rightarrow \booleans{}_{\bot}$, thus the last case for choices, where
-  $\kf{C(D)} = \bot$, can never happen and therefore configuration of a formula
-  $\kf{f}$ with a total configuration is a total function. The other base case
-  is over terminals, which are in \pl{} by definition, and each other case
-  propagate the total configuration to a base case. Thus each choice and its'
-  alternatives are recursively reified for $\kf{f}$, and by definition a
-  \ac{vpl} formula which lacks choices is $\in \pl{}$.
+  \autoref{fig:cc:cfg}, the definition of a total configuration, and that the
+  semantics of configuration are deterministic. The proof is by structural
+  induction on $\kf{f}$ and case analysis. The only interesting case is the case
+  for choices. Since $C$ is total we have $C : D \rightarrow \booleans{}$
+  instead of $C : D \rightarrow \booleans{}_{\bot}$, thus the last case for
+  choices, where $\kf{C(D)} = \bot$, can never happen and therefore
+  configuration of a formula $\kf{f}$ with a total configuration is a total
+  function. The other base case is over terminals, which are in \pl{} by
+  definition, and each other case propagate the total configuration to a base
+  case. Thus each choice and its' alternatives are recursively reified for
+  $\kf{f}$, and by definition a \ac{vpl} formula which lacks choices is $\in
+  \pl{}$.
 \end{proof}
 
 
