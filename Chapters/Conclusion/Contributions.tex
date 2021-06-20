@@ -10,15 +10,15 @@ calculus to propositional logic as the object language. We defined the
 denotational semantics of the logic via configuration, and defined fundamental
 concepts such as variants and synchronization.
 
-In \autoref{chapter:vsat} we formalized our approach to variational
-satisfiability solving based on this logic. Our approach is to variationalize
-non-variational solvers by constructing a compiler to a standardized input
-format. We saw that this approach has many desirable properties: First, the
-stages of accumulation, evaluation, and choice removal cleanly separate
-concerns. Second, sharing of plain terms is guaranteed between variants because
-we use a zipper to capture evaluation contexts. Third, since our design
-integrates plain base solvers, our variational solver can take advantage of
-advances made by the \ac{sat} and \ac{smt} communities.
+In \autoref{chapter:vsat} we formalized the variational satisfiability problem
+and our approach to variational satisfiability solving based on this logic. Our
+approach is to variationalize non-variational solvers by constructing a compiler
+to a standardized input format. We saw that this approach has many desirable
+properties: First, the stages of accumulation, evaluation, and choice removal
+cleanly separate concerns. Second, sharing of plain terms is guaranteed between
+variants because we use a zipper to capture evaluation contexts. Third, since
+our design integrates plain base solvers, our variational solver can take
+advantage of advances made by the \ac{sat} and \ac{smt} communities.
 %
 % Lastly, we proved that our design is variation preserving,
 % thereby showing that the variational solver is sound up to the soundness of the
