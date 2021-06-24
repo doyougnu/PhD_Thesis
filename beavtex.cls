@@ -159,7 +159,7 @@
 % Redefine the default (plain) pagestyle
 \renewcommand{\ps@plain}{%
   \renewcommand{\@oddhead}{%
-    \ifnum\value{page}=1\else
+    \ifnum\value{page}=0\else
     \if@preprint
     \textit{\small Draft}\hfil\@formatdate
     \fi
