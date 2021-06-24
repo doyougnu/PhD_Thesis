@@ -1,7 +1,8 @@
 \label{chapter:vsat}
 
 This chapter presents the variational satisfiability solving algorithm as a
-compiler. First we present a general overview of the solving algorithm in
+compiler. First we formalize the variational satisfiability problem. Next we
+present a general overview of the solving algorithm in
 \autoref{section:vsat:approach}. \autoref{section:vsat:approach} describes the
 algorithm in terms of communication between four subsystems, introduces the
 concept of \emph{variational cores}, and the intermediate language that each
@@ -12,6 +13,26 @@ conclude the chapter with \autoref{section:vsat:formalization}.
 \autoref{section:vsat:formalization} presents inference rules to specify the
 behavior of an abstract variational satisfiability solver by formalizing the
 interplay between these phases, and thus the interplay between the subsystems.
+
+Now that we have defined \ac{vpl}, we can define the variational satisfiability
+problem. Like the Boolean satisfiability problem, the variational satisfiability
+problem is concerned with checking satisfiability, only in this case we want to
+check satisfiability of all plain variants. Thus, we define the problem as
+finding a partition in the configuration space of a formula in \ac{vpl}.
+
+\begin{definition}[Variational Satisfiability Problem]
+  For a \ac{vpl} formula \fV{}. Let $\configuration{}^{*}$ be the set of all
+  total configurations of \fV{}. Find a partition $\kf{(S,U)}$ of
+  $\configuration{}^{*}$ such that \sem[\configuration{}]{\fV{}} is satisfiable
+   $\Leftrightarrow \configuration{} \in \kf{S}$.
+\end{definition}
+
+We say a \ac{vpl} formula \fV{} \emph{is satisfiable} if $\kf{S} \neq
+\varnothing$, \fV{} is \emph{totally satisfiable} if $\kf{U} = \varnothing$, and
+\fV{} is \emph{unsatisfiable} if $\kf{S} = \varnothing$. Rather than return the
+partition of all total configurations, our variational satisfiability algorithm
+defines and returns variational models. We define these models in
+\autoref{section:vsat:models}.
 
 \section{General Approach}
 \input{Chapters/Vsat/Approach}
